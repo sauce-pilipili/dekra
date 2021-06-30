@@ -1,0 +1,682 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: var(--grey-font);
+}
+
+body {
+  background-color: var(--main-bg);
+}
+
+/****************** STYLE DE LA PAGE ***********************/
+
+.main {
+  display: flex;
+  height: 100%;
+  min-height: 100vh;
+}
+
+/****************** STYLE DE LA BARRE DE NAVIGATION ***********************/
+
+.navigation {
+  background-color: white;
+  width: 24%;
+}
+
+.logoNav {
+  text-align: center;
+}
+
+.logoNav img {
+  width: 90%;
+  padding: 42px;
+}
+
+.navigation h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.3rem;
+  margin-top: 25px;
+}
+
+.navigation-list {
+  padding: 50px;
+}
+
+.navigation-list p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+}
+
+.navigation-list ul {
+  display: grid;
+  margin-top: 55px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+}
+
+.navigation-list ul a {
+  margin-bottom: 33px;
+  /* color: var(--grey-font); */
+}
+
+.navigation-list ul a:active {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+}
+
+/******** Division SVG + Lien **********/
+
+.menus {
+  display: flex;
+}
+
+.menus a {
+  margin-left: 18px;
+}
+
+/****************** STYLE DU CONTENU ( PARTIE DE DROITE ) ***********************/
+
+.content {
+  width: 100%;
+  background-color: var(--main-bg);
+}
+
+.container {
+  margin: 100px;
+}
+
+/******************** Style des boutons vert  ***********************/
+
+.buttongreen {
+  background-color: var(--green-bg);
+  margin: 0 auto;
+  padding: 20px 37px;
+  border-radius: 10px;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  font-family: var(--main-font);
+  border: none;
+  cursor: pointer;
+}
+
+/******************** Style des liens deconexion ( vert )  ***********************/
+
+.deconnexion {
+  color: var(--green-bg);
+}
+
+/******************** Style des h2  ***********************/
+
+h2 {
+  color: var(--green-bg);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  margin-bottom: 30px;
+  font-size: 2.7rem;
+}
+h4 {
+  color: var(--green-bg);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  margin-bottom: 50px;
+  font-size: 3.6rem;
+}
+
+h5 {
+  color: var(--green-bg);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  margin-bottom: 30px;
+  font-size: 1.6rem;
+}
+/******************* Style des divisions profil/ajout client ****************************/
+
+.profil {
+  border-radius: 10px;
+  width: 100%;
+  padding: 60px;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px 65px;
+  grid-template-areas:
+    ". ."
+    ". .";
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+  margin-top: 50px;
+}
+
+.profil p {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  margin-left: 5px;
+}
+
+.profil input {
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: rgb(185, 185, 185) solid 1px;
+  width: 100%;
+}
+
+.profil select {
+  font-family: "Montserrat", sans-serif;
+  padding: 12px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: rgb(185, 185, 185) solid 1px;
+  width: 100%;
+}
+
+.profil .level select {
+  width: 70%;
+}
+
+.profil button {
+  margin-top: 30px;
+  margin-left: 0;
+}
+
+/* Ajout controleur */
+
+.controller-add {
+  border-radius: 10px;
+  width: 100%;
+  padding: 60px;
+  background-color: white;
+  font-family: "Montserrat", sans-serif;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px 65px;
+  grid-template-areas:
+    ". ."
+    ". .";
+}
+.grid p {
+  display: grid;
+  margin-bottom: 10px;
+  font-weight: 900;
+  font-size: 1.2rem;
+  margin-left: 5px;
+}
+
+.grid input {
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: rgb(185, 185, 185) solid 1px;
+  width: 100%;
+}
+
+.tel {
+  width: 50%;
+}
+
+.grid2 {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  display: flex;
+  width: 100%;
+}
+
+.grid2 select,
+.div-coor select {
+  width: 90%;
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: rgb(185, 185, 185) solid 1px;
+}
+
+.department-intervention,
+.speciality-control {
+  width: 50%;
+}
+
+/*********************** Style de l'ajout rdv    ****************************/
+
+.controleur {
+  display: flex;
+  width: 100%;
+  font-size: 1.2rem;
+}
+
+.controleur-name {
+  font-weight: 900;
+  font-size: 1.3rem;
+}
+
+.department {
+  display: flex;
+}
+
+.speciality {
+  display: flex;
+}
+.speciality {
+  display: flex;
+}
+
+.checkbox input {
+  width: 22px;
+  height: 22px;
+}
+
+.controleur-profil {
+  width: 90%;
+  margin-left: 30px;
+}
+
+/* ******************************* */
+
+.rdv-container {
+  margin: 100px;
+}
+
+.control-benef {
+  display: flex;
+}
+.controleur-select-container {
+  width: 85%;
+}
+.fiche-beneficiaire-container {
+  width: 100%;
+  padding-top: 50px;
+  padding-left: 50px;
+  padding-bottom: 50px;
+}
+.controleur-select {
+  height: 750px;
+  overflow-y: scroll;
+  scrollbar-color: rebeccapurple green;
+  scrollbar-width: thin;
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px;
+  font-family: "Montserrat", sans-serif;
+}
+
+/*  style update  */
+
+.update-container {
+  border-radius: 10px;
+  width: 100%;
+  padding: 60px;
+  background-color: white;
+  height: 100%;
+  font-family: "Montserrat", sans-serif;
+}
+
+.update-container p {
+  font-weight: 900;
+  padding: 7px;
+  font-size: 1.2rem;
+}
+
+.tel-select {
+  width: 40% !important;
+}
+
+.postal {
+  width: 90%;
+  height: 80%;
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: rgb(185, 185, 185) solid 1px;
+}
+
+.div-mail-benef input {
+  width: 90%;
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: rgb(185, 185, 185) solid 1px;
+}
+
+.coordonnees {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ". ."
+    ". a1"
+    ". a1";
+  gap: 20px;
+}
+.a1 {
+  grid-area: a1;
+}
+.rdv-container2 {
+  width: 100%;
+}
+.fiche-rdv {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+
+.fiche-rdv input {
+  width: 270px;
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: rgb(185, 185, 185) solid 1px;
+}
+
+.statut-rdv {
+  margin-top: 40px;
+  margin-bottom: 50px;
+}
+.statut-rdv select {
+  width: 45%;
+  font-family: "Montserrat", sans-serif;
+  padding: 12px 20px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  border: rgb(185, 185, 185) solid 1px;
+}
+
+/*********************** Style des FICHES    ****************************/
+
+.fiche {
+  border-radius: 10px;
+  width: 100%;
+  padding: 60px;
+  background-color: white;
+}
+
+.fiche hr {
+  margin: 22px 0px 22px 0px;
+  border-color: rgba(182, 182, 182, 0.589);
+}
+
+.row {
+  font-family: "Montserrat", sans-serif;
+  display: flex;
+  justify-content: space-between;
+}
+
+.row p {
+  font-size: 1.3rem;
+}
+.row-name {
+  font-size: 1.2rem;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+}
+
+.speciality-tags {
+  display: flex;
+}
+
+.speciality-tags p {
+  background-color: #f5f4f1;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: #bcbcbc solid 1px;
+  margin: 0 5px;
+}
+/* LOT CONTROLEUR */
+
+.lot-controleur {
+  background-color: white;
+  font-family: "Montserrat", sans-serif;
+  padding: 100px;
+  width: 40%;
+  border-radius: 10px;
+}
+.lot-controleur input {
+  padding: 15 25px;
+  font-size: 1.2rem;
+  font-family: "Montserrat", sans-serif;
+  border-radius: 10px;
+}
+
+.lot-controleur label {
+  margin-bottom: 50px;
+}
+
+/*********************** Style des tableaux  *********************************/
+
+table {
+  border-collapse: collapse;
+  padding: 20px;
+  width: 100%;
+}
+
+table tr {
+  border-bottom: 1px solid rgb(202, 202, 202);
+  height: 90px;
+}
+
+table tr:last-child {
+  border: none;
+}
+
+.table,
+.profil {
+  background-color: white;
+  margin-top: 30px;
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
+}
+.table-title-check input {
+  border-radius: 10px;
+}
+.table-title input,
+.table-check input {
+  width: 20px;
+  height: 20px;
+  padding: 10px;
+  border-radius: 30px;
+}
+
+.table-title-check {
+  text-align: center;
+  width: 6%;
+  padding: 10px;
+}
+
+.table-check {
+  text-align: center;
+}
+
+.table-title-name,
+.table-title-client,
+.table-title-rdv,
+.table-title-statut,
+.table-title-benef,
+.table-title-department,
+.table-title-speciality,
+.table-title-mail,
+.table-title-level,
+.table-title-date {
+  /* width: 100%; */
+  text-align: left;
+  font-weight: 1000;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+}
+
+.table-name {
+  font-size: 1.3rem;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 900;
+}
+
+.table-client,
+.table-rdv,
+.table-statut-wait,
+.table-statut-ok,
+.table-benef,
+.table-department,
+.table-speciality,
+.table-mail,
+.table-level,
+.table-date {
+  font-size: 1.3rem;
+}
+
+.table-statut-ok,
+.table-statut-wait {
+  color: white;
+  font-family: "Montserrat", sans-serif;
+  text-align: center;
+}
+.table-statut-ok p {
+  background-color: #007f3d;
+  padding: 8px;
+  width: 80%;
+}
+.table-statut-wait p {
+  background-color: #7f4e00;
+  padding: 8px;
+  width: 80%;
+}
+
+/*********************** Style des input recherche membre/client  ***************************/
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+}
+
+.search-input {
+  display: flex;
+  height: 50px;
+  border-radius: 10px;
+  background: white;
+  width: 30%;
+}
+
+.search-input input {
+  padding: 15 25px;
+  border: none;
+  font-size: 1.3rem;
+  font-family: "Montserrat", sans-serif;
+  border-radius: 10px;
+  width: 100%;
+  /* margin-right: 40px; */
+}
+
+.search-controleurs svg {
+  margin-right: 10px;
+  text-align: center;
+}
+
+.iconsearch {
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/******************** Style des select département et spécialités ********************/
+.profil select {
+  width: 100%;
+}
+.search-container select {
+  border: none;
+  padding: 13px 22px;
+  border-radius: 10px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  color: grey;
+  margin-right: 10px;
+}
+
+.search-controleurs {
+  background-color: white;
+  border-radius: 10px;
+}
+
+.search-controleurs svg {
+  padding-top: 10px;
+}
+
+/******************* Style des tags  ***********************/
+
+.tags {
+  display: flex;
+  gap: 10px;
+}
+
+.tags p {
+  background-color: #f5f4f1;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: #bcbcbc solid 1px;
+}
+
+.tags-spe {
+  display: flex;
+  gap: 10px;
+}
+
+.tags-spe p {
+  background-color: #f5f4f1;
+  padding: 6px 5px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  border: rgb(141, 141, 141) solid 1px;
+}
+
+/********************* Style icone add + delete   *************************/
+
+.addanddelete {
+  display: flex;
+  margin-left: 100px;
+  gap: 17px;
+}
+.addicon,
+.delicon {
+  padding: 12px;
+  margin: auto 0;
+  border-radius: 10px;
+  background-color: white;
+}
+
+/******************************** Style de la pagination *********************************/
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  color: grey;
+  width: 95%;
+}
+.icones-page {
+  display: flex;
+  gap: 10px;
+}
+.precedent {
+  fill: rgb(184, 184, 184);
+}
+.precedent,
+.suivant {
+  padding: 4px 20px;
+  border-radius: 10px;
+  background-color: white;
+}

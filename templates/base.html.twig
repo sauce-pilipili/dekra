@@ -6,6 +6,10 @@
         {# Run `composer require symfony/webpack-encore-bundle`
            and uncomment the following Encore helpers to start using Symfony UX #}
         {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('/css/dashboard.css') }}">
+            <link rel="stylesheet" href="{{ asset('/css/login.css') }}">
+            <link rel="stylesheet" href="{{ asset('/css/root.css') }}">
+            <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
             {#{{ encore_entry_link_tags('app') }}#}
         {% endblock %}
 

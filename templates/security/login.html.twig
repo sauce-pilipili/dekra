@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+
+    <div class="container-login">
+        <div class="logo">
+            <img src="{{ asset('/img/MEDIUMLOGO.png') }}" alt="LogoDekra">
+        </div>
+
+        <!-- Definir l'action et la mÃŠthode par rapport au back  -->
+{#        <form action="">#}
+{#            <input type="text" name="" placeholder="Email">#}
+{#            <!-- Voir pour ajouter le SVG dans l'input -->#}
+{#            <input type="password" name="" placeholder="Mot de passe">#}
+{#            <a href="#">Mot de passe oublié ?</a>#}
+{#            <button class="buttongreen" type="submit">Se connecter</button>#}
+{#        </form>#}
+        <form method="post">
+            {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+            {% if app.user %}
+                <div class="mb-3">
+                    Vous etes COnnecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                </div>
+            {% endif %}
+            <input type="email" value="{{ last_username }}" placeholder="Email" name="email" id="inputEmail"  autocomplete="email" required autofocus>
+            <input type="password" name="password" id="inputPassword" placeholder="Mot de passe"  autocomplete="current-password" required>
+            <input type="hidden" name="_csrf_token"
+                   value="{{ csrf_token('authenticate') }}">
+{#            <div class="checkbox mb-3">#}
+{#                <label>#}
+{#                    <input type="checkbox" name="_remember_me"> Se souvenir de moi#}
+{#                </label>#}
+{#            </div>#}
+
+            <a href="{{path('app_reset_password')}}">Mot de passe oublié ?</a>
+            <button class="buttongreen" type="submit">
+                Sign in
+            </button>
+        </form>
+    </div>
+
+{% endblock %}

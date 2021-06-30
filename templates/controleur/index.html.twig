@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Controleur index{% endblock %}
+
+{% block body %}
+    <h1>Controleur index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for controleur in controleurs %}
+            <tr>
+                <td>{{ controleur.id }}</td>
+                <td>{{ controleur.nom }}</td>
+                <td>{{ controleur.prenom }}</td>
+                <td>
+                    <a href="{{ path('controleur_show', {'id': controleur.id}) }}">show</a>
+                    <a href="{{ path('controleur_edit', {'id': controleur.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('controleur_new') }}">Create new</a>
+{% endblock %}

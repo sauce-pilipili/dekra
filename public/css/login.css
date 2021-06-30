@@ -1,0 +1,39 @@
+.container-login {
+  background-color: white;
+  margin: 10% auto;
+  height: 85%;
+  width: 32%;
+  border-radius: 10px;
+  padding: 70px;
+}
+
+.container-login form {
+  display: grid;
+  margin: 0 auto;
+}
+.container-login input {
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  margin: 0 auto;
+  border: rgb(54, 54, 54) solid 1px;
+  margin-bottom: 35px;
+  font-size: 1.2rem;
+}
+.container-login a {
+  color: black;
+  font-size: 1.2rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 50px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 60px;
+}
+.logo img {
+  width: 47%;
+  height: 100%;
+}

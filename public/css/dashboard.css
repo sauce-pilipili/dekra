@@ -1,0 +1,54 @@
+.welcome-container {
+  margin: 0 auto;
+  text-align: center;
+  padding: 200px;
+  margin: 100px;
+  background-color: white;
+}
+
+.welcome-container p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.3rem;
+  width: 80%;
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 50px;
+}
+
+.welcome-container h4 {
+  font-size: 4.2rem;
+}
+
+.icones {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.icones a {
+  font-family: "Montserrat", sans-serif;
+  color: black;
+  width: 100%;
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.clients,
+.prestations,
+.beneficiaires,
+.membres {
+  display: grid;
+  width: 30%;
+}
+
+.center-icone {
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
+
+.deconnexion {
+  color: var(--green-bg);
+}

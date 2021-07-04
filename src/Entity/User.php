@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -56,6 +58,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
+
+
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="users")
+     */
+    private $AdminID;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="AdminID")
+     */
+    private $users;
+
+
+
+    public function __construct()
+    {
+        $this->AdminID = new ArrayCollection();
+        $this->users = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -193,4 +215,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getAdminID(): Collection
+    {
+        return $this->AdminID;
+    }
+
+    public function addAdminID(self $adminID): self
+    {
+        if (!$this->AdminID->contains($adminID)) {
+            $this->AdminID[] = $adminID;
+        }
+
+        return $this;
+    }
+
+    public function removeAdminID(self $adminID): self
+    {
+        $this->AdminID->removeElement($adminID);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(self $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addAdminID($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(self $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeAdminID($this);
+        }
+
+        return $this;
+    }
+
+
 }

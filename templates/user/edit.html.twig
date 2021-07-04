@@ -10,6 +10,14 @@
         <div class="content">
 
             <div class="container">
+                {% for message in app.flashes('success') %}
+                    <div class="alert success-alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('danger') %}
+                    <div class="alert danger-alert">{{ message }}</div>
+                {% endfor %}
                 <h4>Votre profil</h4>
                 {{ form_start(form) }}
                 <div class="profil">
@@ -20,7 +28,8 @@
                     </div>
                     <div class="mdp">
                         <p>Mot de passe</p>
-                        <input type="password">
+                        {{ form_row(form.password.first) }}
+{#                        <input type="password">#}
                     </div>
                     <div class="mail">
                         <p>Email</p>
@@ -29,18 +38,20 @@
                     </div>
                     <div class="mdp-confirm">
                         <p>Confirmation du mot de passe</p>
-                        <input type="password">
+                        {{ form_row(form.password.second) }}
+{#                        <input type="password">#}
                     </div>
-                    <div class="level">
-                        <p>Niveau</p>
-                        <select>
-                            <option value="" selected>Administrateur</option>
-                            <option value="">Administrateur région</option>
-                            <option value="">Client</option>
-                            <option value="">Call-center</option>
-                        </select>
-                        <button class="buttongreen">Enregistrer</button>
-                    </div>
+{#                    <div class="level">#}
+{#                        <p>Niveau</p>#}
+{#                        <select>#}
+{#                            <option value="" selected>Administrateur</option>#}
+{#                            <option value="">Administrateur région</option>#}
+{#                            <option value="">Client</option>#}
+{#                            <option value="">Call-center</option>#}
+{#                        </select>#}
+                        <button type="submit" class="buttongreen">Enregistrer</button>
+{#                    </div>#}
+                    {{ form_end(form) }}
                 </div>
             </div>
         </div>

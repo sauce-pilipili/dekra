@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Departements{% endblock %}
+
+{% block body %}  <div class="main">
+
+    {{ include('include/_navigation.html.twig') }}
+    <div class="content">
+
+
+        <div class="container">
+            {% for message in app.flashes('success') %}
+                <div class="alert success-alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('danger') %}
+                <div class="alert danger-alert">{{ message }}</div>
+            {% endfor %}
+            <h4>Les départements</h4>
+
+
+            <div class="addanddelete">
+                <div class="addicon">
+                    <a href="{{ path('departements_new') }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 19 19">
+                            <defs>
+                                <style>
+                                    .a {
+                                        fill: #0d0d0d;
+                                    }
+                                </style>
+                            </defs>
+                            <path
+                                    d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
+                                    transform="translate(-4 -4)"/>
+                        </svg>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="table">
+            <table>
+                <tr class="table-title">
+                    <th class="table-title-speciality">Numéro</th>
+                    <th class="table-title-speciality">Nom</th>
+                    <th class="table-title-speciality">Edit</th>
+                    <th class="table-title-speciality">Supprimer</th>
+                </tr>
+                {% for dep in departements %}
+                    <tr>
+                        <td class="table-name">{{ dep.numero }} </td>
+                        <td class="table-name">{{ dep.name }} </td>
+                        <td class="table-name">
+                            <div class="addicon">
+                                <a href="{{ path('departements_edit', {'id': dep.id}) }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18"
+                                         viewBox="0 0 19 19">
+                                        <defs>
+                                            <style>
+                                                .a {
+                                                    fill: #0d0d0d;
+                                                }
+                                            </style>
+                                        </defs>
+                                        <path
+                                                d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
+                                                transform="translate(-4 -4)"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
+                        <td><form method="post" action="{{ path('departements_delete', {'id': dep.id}) }}" onsubmit="return confirm('êtes vous sûr de vouloir supprimer ce département il sera effacé de la mobilité des controleurs affecté a celui-ci');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dep.id) }}">
+                                <button class="btn"><div class="delicon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18"
+                                             viewBox="0 0 20 20">
+                                            <defs>
+                                                <style>
+                                                    .a {
+                                                        fill: #0d0d0d;
+                                                    }
+                                                </style>
+                                            </defs>
+                                            <path
+                                                    d="M7,4A2,2,0,0,1,9,2h6a2,2,0,0,1,2,2V6h4a1,1,0,0,1,0,2H19.931l-.867,12.142A2,2,0,0,1,17.069,22H6.931a2,2,0,0,1-1.995-1.858L4.069,8H3A1,1,0,0,1,3,6H7ZM9,6h6V4H9ZM6.074,8l.857,12H17.069l.857-12ZM10,10a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,10,10Zm4,0a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,14,10Z"
+                                                    transform="translate(-2 -2)"/>
+                                        </svg>
+                                    </div></button>
+                            </form>
+
+                        </td>
+
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

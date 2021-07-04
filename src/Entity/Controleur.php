@@ -39,6 +39,10 @@ class Controleur
      */
     private $specialite;
 
+    public function __tostring(){
+        return $this->nom;
+    }
+
     public function __construct()
     {
         $this->departement = new ArrayCollection();

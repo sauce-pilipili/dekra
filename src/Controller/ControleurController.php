@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Controleur;
 use App\Form\ControleurType;
 use App\Repository\ControleurRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +19,16 @@ class ControleurController extends AbstractController
     /**
      * @Route("/index", name="controleur_index", methods={"GET"})
      */
-    public function index(ControleurRepository $controleurRepository): Response
+    public function index(Request $request,ControleurRepository $controleurRepository, PaginatorInterface $paginator): Response
     {
+        if ($request->isMethod('post')){
+
+        }
+
+        $controleursAPaginer = $controleurRepository->findAll();
+        $controleur = $paginator->paginate($controleursAPaginer,$request->query->getInt('page',1),6);
         return $this->render('controleur/index.html.twig', [
-            'controleurs' => $controleurRepository->findAll(),
+            'controleurs' => $controleur,
         ]);
     }
 

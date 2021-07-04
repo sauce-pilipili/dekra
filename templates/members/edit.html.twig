@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contrôleurs{% endblock %}
+{% block title %}Membres{% endblock %}
 
 {% block body %}
     <div class="main">
@@ -18,27 +18,27 @@
                 {% for message in app.flashes('danger') %}
                     <div class="alert danger-alert">{{ message }}</div>
                 {% endfor %}
-                <h4>Modifier le contrôleur</h4>
+                <h4>Modifier un membre</h4>
 
                 {{ form_start(form) }}
                 <div class="profil">
                     <div class="name">
-                        <p>Numéro</p>
-                        {{ form_row(form.nom) }}
-                    </div>
-                    <div class="name">
                         <p>Nom</p>
-                        {{ form_row(form.prenom) }}
+                        {{ form_row(form.name) }}
                     </div>
-                    <div class="name">
-                        <p>Numéro</p>
-                        {{ form_row(form.departement,{'label': false}) }}
+                    <div class="mdp">
+                        <p>Région</p>
+                        {% for r in user.roles | slice(0,1) %}{{ r }} {%  endfor %}
+                       {{ form_row(form.region) }}
                     </div>
-                    <div class="name">
-                        <p>Nom</p>
-                        {{ form_row(form.specialite,{'label': false}) }}
+                    <div class="mail">
+                        <p>Email</p>
+                        {{ form_row(form.email) }}
                     </div>
-
+                    <div class="mdp-confirm">
+                        <p>niveau d'accès</p>
+                    {{ form_row(form.roles) }}
+                    </div>
                     <button type="submit" class="buttongreen">Enregistrer</button>
                     {{ form_end(form) }}
                 </div>
@@ -47,5 +47,6 @@
 
     </div>
 
-    {{ include('controleur/_delete_form.html.twig') }}
+
+
 {% endblock %}

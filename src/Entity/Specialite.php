@@ -29,6 +29,9 @@ class Specialite
      */
     private $controleurs;
 
+    public function __toString() {
+        return $this->name;
+    }
     public function __construct()
     {
         $this->controleurs = new ArrayCollection();

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contrôleurs{% endblock %}
+{% block title %}Specialitées{% endblock %}
 
 {% block body %}
     <div class="main">
@@ -18,25 +18,13 @@
                 {% for message in app.flashes('danger') %}
                     <div class="alert danger-alert">{{ message }}</div>
                 {% endfor %}
-                <h4>Modifier le contrôleur</h4>
+                <h4>Modifier la specialité</h4>
 
                 {{ form_start(form) }}
                 <div class="profil">
                     <div class="name">
-                        <p>Numéro</p>
-                        {{ form_row(form.nom) }}
-                    </div>
-                    <div class="name">
                         <p>Nom</p>
-                        {{ form_row(form.prenom) }}
-                    </div>
-                    <div class="name">
-                        <p>Numéro</p>
-                        {{ form_row(form.departement,{'label': false}) }}
-                    </div>
-                    <div class="name">
-                        <p>Nom</p>
-                        {{ form_row(form.specialite,{'label': false}) }}
+                        {{ form_row(form.name) }}
                     </div>
 
                     <button type="submit" class="buttongreen">Enregistrer</button>
@@ -47,5 +35,4 @@
 
     </div>
 
-    {{ include('controleur/_delete_form.html.twig') }}
 {% endblock %}

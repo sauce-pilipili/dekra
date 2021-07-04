@@ -29,6 +29,15 @@ class Departements
      */
     private $controleurs;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $name;
+
+    public function __toString() {
+        return $this->numero.' '.$this->name;
+    }
+
     public function __construct()
     {
         $this->controleurs = new ArrayCollection();
@@ -74,6 +83,18 @@ class Departements
         if ($this->controleurs->removeElement($controleur)) {
             $controleur->removeDepartement($this);
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

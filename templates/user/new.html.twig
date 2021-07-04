@@ -1,11 +1,75 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New User{% endblock %}
+{% block title %}Members{% endblock %}
 
 {% block body %}
-    <h1>Create new User</h1>
+    <div class="main">
 
-    {{ include('user/_form.html.twig') }}
+        {{ include('include/_navigation.html.twig') }}
+
+        <div class="content">
+
+            <div class="container">
+                <h4>Ajout d'un membre</h4>
+                {{ form_start(form) }}
+                <div class="profil">
+                    <div class="name">
+                        <p>Nom</p>
+                        {{ form_row(form.name) }}
+{#                        <input type="text" placeholder="Nom">#}
+                    </div>
+                    <div class="region">
+                        <p>Région</p>
+                        {{ form_row(form.region) }}
+{#                        <select>#}
+{#                            <option class="tags">Région</option>#}
+{#                            <option>Aquitaine</option>#}
+{#                            <option>Corse</option>#}
+{#                            <option>Bretagne</option>#}
+{#                        </select>#}
+                    </div>
+
+                    <div class="mail">
+                        <p>Adresse mail</p>
+{{ form_row(form.email) }}
+{#                        <input type="email" placeholder="manon@entreprise.com">#}
+                    </div>
+                    <div class="mdp">
+                        <p>Mot de passe</p>
+                        {{ form_row(form.password.first) }}
+{#                        <input type="pasword">#}
+                    </div>
+{#                    <div class="telephone">#}
+{#                        <p>Numéro de téléphone</p>#}
+{#                        <input type="tel" placeholder="06 06 06 06 06">#}
+{#                    </div>#}
+                    <div class="level">
+                        <p>Niveau</p>
+                        {{ form_row(form.roles) }}
+{#                        <select>#}
+{#                            <option class="tags">Call center</option>#}
+{#                            <option>Administrateur</option>#}
+{#                            <option>Administrateur Région</option>#}
+{#                            <option>Client</option>#}
+{#                        </select>#}
+                    </div>
+                    <div class="mdp-confirm">
+                        <p>Vérification du mot de passe</p>
+                        {{ form_row(form.password.second) }}
+{#                        <input type="pasword">#}
+                    </div>
+
+                    <div></div>
+                    <button class="buttongreen">Ajouter</button>
+                </div>
+            </div>
+{{ form_end(form) }}
+        </div>
+
+    </div>
+
+
+{#    {{ include('user/_form.html.twig') }}#}
 
     <a href="{{ path('user_index') }}">back to list</a>
 {% endblock %}

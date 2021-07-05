@@ -39,7 +39,10 @@ body {
   border-radius:5px;
   box-shadow:0 0 15px 5px #ccc;
 }
-
+.btn-submit{
+  background-color: transparent;
+  border: none;
+}
 
 
 
@@ -617,7 +620,7 @@ table tr:last-child {
 .profil select {
   width: 100%;
 }
-.search-container select {
+.search-container-select {
   border: none;
   padding: 13px 22px;
   border-radius: 10px;
@@ -628,6 +631,8 @@ table tr:last-child {
 }
 
 .search-controleurs {
+  display: flex;
+  flex-direction: row;
   background-color: white;
   border-radius: 10px;
 }

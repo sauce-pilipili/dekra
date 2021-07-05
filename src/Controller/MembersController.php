@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\SuperAdminToMembersType;
-use App\Form\UserEditType;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,16 +26,28 @@ class MembersController extends AbstractController
     }
 
     /**
-     * @Route("/members/members", name="members_members")
+     * @Route("/members/members", name="members_members", methods={"GET","POST"})
      */
     public function members(Request $request,UserRepository $userRepository,PaginatorInterface $paginator): Response
 
     {
         $userAPAginer = $userRepository->findAll();
 
+        if ($request->isXmlHttpRequest()){
+//            $data = json_decode(
+//                $request->getContent(),true
+//            );
+$data = $request->request->get('data');
+            $users = $userRepository->find(10);
+            return new JsonResponse([
+//                'content' => $this->renderView('include/_membersContent.html.twig',compact('users')),
+                'content' => $data
+            ]);
+
+        }
         $user = $paginator->paginate($userAPAginer,$request->query->getInt('page',1),6);
         return $this->render('members/members.html.twig',[
-            'users' => $user
+            'users' => $user,
         ]);
     }
     /**

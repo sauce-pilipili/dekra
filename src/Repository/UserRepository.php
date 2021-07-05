@@ -53,8 +53,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     /**
-    //  * @return User[] Returns an array of User objects
-    //  */
+      * @return User[] Returns an array of User objects
+      */
     public function findAllcomplete()
     {
         return $this->createQueryBuilder('u')
@@ -63,6 +63,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
             ;
     }
+    /**
+     //* @return User[] Returns an array of User objects
+     */
+
+    public function findBySearch($data){
+        $qb = $this->createQueryBuilder('u')
+            ->andWhere('u.name LIKE :val')
+            ->setParameter('val','%'.$data.'%');
+        return $qb->getQuery()->getResult();
+    }
+
 
 
     /*

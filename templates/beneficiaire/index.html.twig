@@ -28,38 +28,42 @@
                 {% endfor %}
                 <h4>Les bénéficiaires</h4>
                 <div class="search-container">
-                    <div class="search-input">
-                        <svg class="iconsearch" xmlns="http://www.w3.org/2000/svg" width="53 " height="43"
-                             viewBox="0 0 23.414 24.414">
-                            <defs>
-                                <style>
-                                    .a,
-                                    .c {
-                                        fill: white;
-                                    }
+                    {{ form_start(form) }}
+                    <div class="search-controleurs">
+                        {{ form_row(form.name, {'attr': {'class': 'search-container-select'}}) }}
+                        <button class="btn-submit" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+{#                    <div class="search-input">#}
+{#                        <svg class="iconsearch" xmlns="http://www.w3.org/2000/svg" width="53 " height="43"#}
+{#                             viewBox="0 0 23.414 24.414">#}
+{#                            <defs>#}
+{#                                <style>#}
+{#                                    .a,#}
+{#                                    .c {#}
+{#                                        fill: white;#}
+{#                                    }#}
 
-                                    .a {
-                                        stroke: #000;
-                                        stroke-linecap: round;
-                                        stroke-width: 2px;
-                                    }
+{#                                    .a {#}
+{#                                        stroke: #000;#}
+{#                                        stroke-linecap: round;#}
+{#                                        stroke-width: 2px;#}
+{#                                    }#}
 
-                                    .b {
-                                        stroke: none;
-                                    }
-                                </style>
-                            </defs>
-                            <g transform="translate(-559 -341.469)">
-                                <g class="a" transform="translate(559 341.469)">
-                                    <ellipse class="b" cx="8.767" cy="8.767" rx="8.767" ry="8.767"/>
-                                    <ellipse class="c" cx="8.767" cy="8.767" rx="7.767" ry="7.767"/>
-                                </g>
-                                <path class="a" d="M12333.379,179.471l-8.019-8.085"
-                                      transform="translate(-11752.379 184.998)"/>
-                            </g>
-                        </svg>
-                        <input type="search" placeholder="Rechercher un client">
-                    </div>
+{#                                    .b {#}
+{#                                        stroke: none;#}
+{#                                    }#}
+{#                                </style>#}
+{#                            </defs>#}
+{#                            <g transform="translate(-559 -341.469)">#}
+{#                                <g class="a" transform="translate(559 341.469)">#}
+{#                                    <ellipse class="b" cx="8.767" cy="8.767" rx="8.767" ry="8.767"/>#}
+{#                                    <ellipse class="c" cx="8.767" cy="8.767" rx="7.767" ry="7.767"/>#}
+{#                                </g>#}
+{#                                <path class="a" d="M12333.379,179.471l-8.019-8.085"#}
+{#                                      transform="translate(-11752.379 184.998)"/>#}
+{#                            </g>#}
+{#                        </svg>#}
+{#                        <input type="search" placeholder="Rechercher un client">#}
+{#                    </div>#}
                     <div class="addanddelete">
                         <div class="addicon">
                             <a href="{{ path('beneficiaire_new') }}">

@@ -48,7 +48,7 @@ class ClientController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-
+            $this->addFlash('success','le client a été pris en compte');
             return $this->redirectToRoute('client');
         }
 
@@ -76,7 +76,7 @@ class ClientController extends AbstractController
                 );
             }
             $this->getDoctrine()->getManager()->flush();
-
+            $this->addFlash('success','le client a été pris en compte');
                 return $this->redirectToRoute('client');
 
 

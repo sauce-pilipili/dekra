@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Beneficiaire;
 use App\Form\DataBeneficiaireType;
+use App\Form\SearchBeneficiaireType;
+use App\Form\SearchBenType;
 use App\Repository\BeneficiaireRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,14 +17,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class BeneficiaireController extends AbstractController
 {
     /**
-     * @Route("/beneficiaire", name="beneficiaire")
+     * @Route("/beneficiaire", name="beneficiaire", methods={"GET","POST"})
      */
     public function index(Request $request,BeneficiaireRepository $beneficiaireRepository, PaginatorInterface $paginator): Response
     {
+
+        $form = $this->createForm(SearchBenType::class);
+        $form->handleRequest($request);
         $beneficiaireAPAginer = $beneficiaireRepository->findAll();
+        if ($form->isSubmitted()) {
+            $ben = $request->get('search_ben')['name'];
+            $beneficiaireAPAginer = $beneficiaireRepository->findBySearch($ben);
+        }
         $beneficiaire = $paginator->paginate($beneficiaireAPAginer,$request->query->getInt('page',1),6);
         return $this->render('beneficiaire/index.html.twig', [
             'beneficiaires' => $beneficiaire,
+            'form'=>$form->createView()
         ]);
     }
 
@@ -70,7 +80,7 @@ class BeneficiaireController extends AbstractController
                 // on supprime le fichier
                 $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                 unlink($fichierSupp);
-                $this->addFlash('success', 'bien joué');
+                $this->addFlash('success', 'la liste des bénéficiaires a été prise en compte');
                 return $this->render('beneficiaire/index.html.twig');
             }
         }

@@ -19,22 +19,20 @@ class BeneficiaireRepository extends ServiceEntityRepository
         parent::__construct($registry, Beneficiaire::class);
     }
 
-    // /**
-    //  * @return Beneficiaire[] Returns an array of Beneficiaire objects
-    //  */
-    /*
-    public function findByExampleField($value)
+     /**
+      * @return Beneficiaire[] Returns an array of Beneficiaire objects
+      */
+
+    public function findBySearch($value)
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
+            ->Where('b.name LIKE :val')
+            ->setParameter('val', '%'.$value.'%')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Beneficiaire

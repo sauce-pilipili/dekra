@@ -42,6 +42,12 @@ class Beneficiaire
      */
     private $ville;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="beneficiaires")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $client;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +109,18 @@ class Beneficiaire
     public function setVille(?string $ville): self
     {
         $this->ville = $ville;
+
+        return $this;
+    }
+
+    public function getClient(): ?User
+    {
+        return $this->client;
+    }
+
+    public function setClient(?User $client): self
+    {
+        $this->client = $client;
 
         return $this;
     }

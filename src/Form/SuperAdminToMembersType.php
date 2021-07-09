@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Region;
 use App\Entity\User;
+use ContainerFyJMW4c\getRolesRepositoryService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -22,7 +23,7 @@ class SuperAdminToMembersType extends AbstractType
                 'label' =>false
             ])
             ->add('roles', ChoiceType::class, ['choices' =>
-                [
+                [   'niveau d\'accès '=> "change",
                     'Call Center' => 'ROLE_CALL_CENTER',
                     'Client' => 'ROLE_CLIENT',
                     'Administrateur' => 'ROLE_ADMIN',
@@ -31,7 +32,8 @@ class SuperAdminToMembersType extends AbstractType
                 'mapped'=>false,
                 'label'=> false,
                 'required'  => true,
-                'multiple' => false
+                'multiple' => false,
+                'empty_data' => 'ok'
             ])
             ->add('name',TextType::class,[
                 'label'=>false

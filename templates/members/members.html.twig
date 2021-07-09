@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}DEKRA{% endblock %}
-
 {% block body %}
+
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
         <div class="content">
@@ -55,39 +55,15 @@
                     </div>
                     <div class="addanddelete">
                         <div class="addicon">
-                            <a href="{{ path('user_new') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 19 19">
-                                    <defs>
-                                        <style>
-                                            .a {
-                                                fill: #0d0d0d;
-                                            }
-                                        </style>
-                                    </defs>
-                                    <path
-                                            d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
-                                            transform="translate(-4 -4)"/>
-                                </svg>
-                            </a>
+                            <a href="{{ path('user_new') }}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 19 19"><defs><style>.a {fill: #0d0d0d;}</style></defs>
+                                    <path d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z" transform="translate(-4 -4)"/></svg></a>
                         </div>
 
                     </div>
                 </div>
-
-                <table class="table">
-                    <tr class="table-title">
-                        <th class="table-title-name">Nom</th>
-                        <th class="table-title-mail">Région</th>
-                        <th class="table-title-level">Niveau</th>
-                        <th class="table-title-date">Date d'ajout</th>
-                        <th class="table-title-date">Editer</th>
-                        <th class="table-title-date">Supprimer</th>
-                    </tr>
-
-                <div class="content" id="content">
-                    {{ include('include/_membersContent.html.twig') }}
-                </div>
-                </table>
+                    <div class="response-content" id="response-content">
+                        {{ include('include/_membersContent.html.twig') }}
+                    </div>
                 <div class="pagination">
                     <div class="navigation">
                         {{ knp_pagination_render(users) }}
@@ -101,5 +77,5 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-  <script src="{{ asset('js/membersSearch.js') }}"></script>
+     <script src="{{ asset('js/membersSearch.js') }}"></script>
 {% endblock %}

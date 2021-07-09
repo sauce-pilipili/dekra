@@ -8,6 +8,7 @@ use App\Form\UserEditType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/user")
+ * @Security("is_granted('ROLE_USER')")
  */
 class UserController extends AbstractController
 {
@@ -44,7 +46,6 @@ class UserController extends AbstractController
             $user->setRoles($role);
             $user->setRgpd(true);
             $user->setCreatedAt(new DateTime());
-
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
@@ -55,7 +56,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('dashboard_members');
+            return $this->redirectToRoute('members_members');
         }
 
         return $this->render('user/new.html.twig', [
@@ -79,8 +80,7 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-
-        $form = $this->createForm(UserEditType::class, $user);
+            $form = $this->createForm(UserEditType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -115,6 +115,6 @@ class UserController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('dashboard_members');
+        return $this->redirectToRoute('members_members');
     }
 }

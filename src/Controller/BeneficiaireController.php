@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Beneficiaire;
+use App\Entity\Departements;
 use App\Form\DataBeneficiaireType;
-use App\Form\SearchBeneficiaireType;
 use App\Form\SearchBenType;
 use App\Repository\BeneficiaireRepository;
+use App\Repository\DepartementsRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,28 +20,38 @@ class BeneficiaireController extends AbstractController
     /**
      * @Route("/beneficiaire", name="beneficiaire", methods={"GET","POST"})
      */
-    public function index(Request $request,BeneficiaireRepository $beneficiaireRepository, PaginatorInterface $paginator): Response
+    public function index(Request $request, BeneficiaireRepository $beneficiaireRepository, PaginatorInterface $paginator): Response
     {
 
         $form = $this->createForm(SearchBenType::class);
         $form->handleRequest($request);
-        $beneficiaireAPAginer = $beneficiaireRepository->findAll();
-        if ($form->isSubmitted()) {
+        $beneficiaireAPAginer = $beneficiaireRepository->findClientList($this->getUser());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
             $ben = $request->get('search_ben')['name'];
-            $beneficiaireAPAginer = $beneficiaireRepository->findBySearch($ben);
+            $beneficiaireAPAginer = $beneficiaireRepository->findBySearch($this->getUser(), $ben);
+            $beneficiaire = $paginator->paginate($beneficiaireAPAginer, $request->query->getInt('page', 1), 6);
+
+            return $this->render('beneficiaire/index.html.twig', [
+                'beneficiaires' => $beneficiaire,
+                'form' => $form->createView()
+            ]);
         }
-        $beneficiaire = $paginator->paginate($beneficiaireAPAginer,$request->query->getInt('page',1),6);
+
+        $beneficiaire = $paginator->paginate($beneficiaireAPAginer, $request->query->getInt('page', 1), 6);
         return $this->render('beneficiaire/index.html.twig', [
             'beneficiaires' => $beneficiaire,
-            'form'=>$form->createView()
+            'form' => $form->createView()
         ]);
     }
 
     /**
      * @Route("/beneficiaire/new", name="beneficiaire_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, DepartementsRepository $deprep): Response
     {
+        $client = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(DataBeneficiaireType::class);
         $form->handleRequest($request);
@@ -67,12 +78,18 @@ class BeneficiaireController extends AbstractController
                 $worksheet = $spreadsheet->getActiveSheet();
                 $rows = $worksheet->toArray();
                 $feuilleLength = $spreadsheet->getActiveSheet()->getHighestRow();
-                for ($i = 2; $i <= $feuilleLength-1; $i++) {
+//                for ($i = 2; $i <= $feuilleLength - 1; $i++) {
+                for ($i = 2; $i <= 5 - 1; $i++) {
                     $beneficiaire = new Beneficiaire();
+                    $beneficiaire->setClient($client);
                     $beneficiaire->setName($rows[$i][4]);
                     $beneficiaire->setPrenom($rows[$i][5]);
                     $beneficiaire->setAdresse($rows[$i][6]);
-                    $beneficiaire->setCodePostal($rows[$i][7]);
+                    $codePostal = $rows[$i][7];
+
+                    $dep = $deprep->DepartmentClient(mb_strimwidth($codePostal,0,2));
+                    dump($dep->getName());
+                    $beneficiaire->setCodePostal(mb_strimwidth($codePostal,0,2));
                     $beneficiaire->setVille($rows[$i][8]);
                     $em->persist($beneficiaire);
                 }
@@ -80,8 +97,10 @@ class BeneficiaireController extends AbstractController
                 // on supprime le fichier
                 $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                 unlink($fichierSupp);
-                $this->addFlash('success', 'la liste des bénéficiaires a été prise en compte');
-                return $this->render('beneficiaire/index.html.twig');
+                $this->addFlash('success', 'la liste a été correctement inserée');
+                return $this->render('beneficiaire/new.html.twig', [
+                    'form' => $form->createView(),
+                ]);
             }
         }
         return $this->render('beneficiaire/new.html.twig', [

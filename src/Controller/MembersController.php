@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\SuperAdminToMembersType;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+/**
+ * Class MembersController
+ * @package App\Controller
+ * @Security("is_granted('ROLE_SUPER_ADMIN')")
+ */
 class MembersController extends AbstractController
 {
     /**
@@ -28,46 +34,46 @@ class MembersController extends AbstractController
     /**
      * @Route("/members/members", name="members_members", methods={"GET","POST"})
      */
-    public function members(Request $request,UserRepository $userRepository,PaginatorInterface $paginator): Response
+    public function members(Request $request, UserRepository $userRepository, PaginatorInterface $paginator): Response
 
-    {
+    {   // chargement de tout les membres
         $userAPAginer = $userRepository->findAll();
+        // recherche du membres en ajax
+        if ($request->isXmlHttpRequest()) {
+            $data = $request->request->get('search');
 
-        if ($request->isXmlHttpRequest()){
-//            $data = json_decode(
-//                $request->getContent(),true
-//            );
-$data = $request->request->get('data');
-            $users = $userRepository->find(10);
+            $users = $userRepository->findBySearch($data);
             return new JsonResponse([
-//                'content' => $this->renderView('include/_membersContent.html.twig',compact('users')),
-                'content' => $data
+                'content' => $this->renderView('include/_membersContent.html.twig', compact('users')),
             ]);
 
         }
-        $user = $paginator->paginate($userAPAginer,$request->query->getInt('page',1),6);
-        return $this->render('members/members.html.twig',[
+        $user = $paginator->paginate($userAPAginer, $request->query->getInt('page', 1), 6);
+        return $this->render('members/members.html.twig', [
             'users' => $user,
         ]);
     }
+
     /**
      * @Route("members/{id}/edit", name="members_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-
+        $rolesSiPasDeChangement = $user->getRoles();
         $form = $this->createForm(SuperAdminToMembersType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-                $role[] = $form->get('roles')->getData();
-                $user->setRoles($role);
-//                $region[] = $form->get('region')->getData();
-//                $user->setRegion($region);
+                if($form->get('roles')->getData() === "change"){
+                    $user->setRoles($rolesSiPasDeChangement);
+                }else {
+                    $role[] = $form->get('roles')->getData();
+                    $user->setRoles($role);
+                }
             }
             $this->getDoctrine()->getManager()->flush();
-
+            $this->addFlash('success', 'le membres a bien été modifié');
             return $this->redirectToRoute('members_members');
 
         }

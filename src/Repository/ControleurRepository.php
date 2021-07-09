@@ -27,17 +27,17 @@ class ControleurRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('c');
 
-            if ($dep != null && $dep != '') {
-                $qb ->join('c.departement', 'd')
-                    ->andWhere('d.id = :val1')
-                    ->setParameter('val1', $dep);
-            }
-            if ($spe != null && $spe != '') {
-                $qb->join('c.specialite', 's')
-                    ->andWhere('s.id =:val2')
-                    ->setParameter('val2', $spe);
-            }
-            return $qb->getQuery()->getResult();
+        if ($dep != null && $dep != '') {
+            $qb->join('c.departement', 'd')
+                ->andWhere('d.id = :val1')
+                ->setParameter('val1', $dep);
+        }
+        if ($spe != null && $spe != '') {
+            $qb->join('c.specialite', 's')
+                ->andWhere('s.id =:val2')
+                ->setParameter('val2', $spe);
+        }
+        return $qb->getQuery()->getResult();
     }
 
 

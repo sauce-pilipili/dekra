@@ -1,9 +1,14 @@
 {% extends 'base.html.twig' %}
-{% block title %}Clients{% endblock %}
+
+{% block title %}New Region{% endblock %}
+
 {% block body %}
     <div class="main">
+
         {{ include('include/_navigation.html.twig') }}
+
         <div class="content">
+
             <div class="container">
                 {% for message in app.flashes('success') %}
                     <div class="alert success-alert">
@@ -13,18 +18,17 @@
                 {% for message in app.flashes('danger') %}
                     <div class="alert danger-alert">{{ message }}</div>
                 {% endfor %}
-                <h4>Modifier le Client</h4>
+                <h4>Nouvelle région</h4>
+
                 {{ form_start(form) }}
                 <div class="profil">
+
                     <div class="name">
                         <p>Nom</p>
                         {{ form_row(form.name) }}
                     </div>
-                    <div class="mail">
-                        <p>Email</p>
-                        {{ form_row(form.email) }}
-                    </div>
-                    <button type="submit" class="buttongreen">Enregistrer</button>
+
+                    <button type="submit" class="buttongreen">Ajouter</button>
                     {{ form_end(form) }}
                 </div>
             </div>

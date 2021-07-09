@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Departements;
 use App\Form\DepartementsType;
 use App\Repository\DepartementsRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,11 +13,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/departements")
+ *@Security("is_granted('ROLE_SUPER_ADMIN')")
  */
+
 class DepartementsController extends AbstractController
 {
     /**
      * @Route("/", name="departements_index", methods={"GET"})
+     *
      */
     public function index(DepartementsRepository $departementsRepository): Response
     {

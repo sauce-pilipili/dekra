@@ -28,7 +28,7 @@
                     </div>
                     <div class="mdp">
                         <p>Région</p>
-                        {% for r in user.roles | slice(0,1) %}{{ r }} {%  endfor %}
+
                        {{ form_row(form.region) }}
                     </div>
                     <div class="mail">
@@ -37,7 +37,9 @@
                     </div>
                     <div class="mdp-confirm">
                         <p>niveau d'accès</p>
-                    {{ form_row(form.roles) }}
+
+
+                    {{ form_widget (form.roles) }}
                     </div>
                     <button type="submit" class="buttongreen">Enregistrer</button>
                     {{ form_end(form) }}

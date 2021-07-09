@@ -1,0 +1,18 @@
+<h4>Bienvenue, {{ app.user.name }}</h4>
+<p>Vous êtes administrateur régional, cet interface va vous permettre d'effectuer les saisies des clients dans votre région</p>
+<div class="icones">
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="clients">
+            <svg class="center-icone" xmlns="http://www.w3.org/2000/svg" width="61" height="61"
+                 viewBox="0 0 71 71">
+                <path fill="black"
+                      d="M19.924,18.848A5.924,5.924,0,1,0,14,12.924,5.924,5.924,0,0,0,19.924,18.848Z"
+                      transform="translate(29.378 8.774)" />
+                <path fill="black"
+                      d="M3,10.889A7.889,7.889,0,0,1,10.889,3H66.111A7.889,7.889,0,0,1,74,10.889V66.111A7.889,7.889,0,0,1,66.111,74H10.889A7.889,7.889,0,0,1,3,66.111Zm63.111,0H10.889V42.127L24.2,31.475a3.945,3.945,0,0,1,4.928,0L46.1,45.048l5.392-5.392a3.945,3.945,0,0,1,5.578,0L66.111,48.7ZM10.889,66.111H66.111V59.856L54.278,48.023l-5.1,5.1a3.945,3.945,0,0,1-5.253.291L26.667,39.607,10.889,52.229Z"
+                      transform="translate(-3 -3)" />
+            </svg>
+            <a href="{{ path('client') }}">Voir les clients</a>
+        </div>
+    {% endif %}
+</div>

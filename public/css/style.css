@@ -43,8 +43,19 @@ body {
   background-color: transparent;
   border: none;
 }
-
-
+/****************** page error ***********************/
+.Background404 {
+  background-image: url("/public/img/road.jpg");
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.Background404 img{
+  overflow: hidden;
+}
+.back{
+  justify-content: center;
+}
 
 /****************** STYLE DE LA BARRE DE NAVIGATION ***********************/
 

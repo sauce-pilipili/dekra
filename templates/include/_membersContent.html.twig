@@ -1,3 +1,12 @@
+<table class="table">
+    <tr class="table-title">
+        <th class="table-title-name">Nom</th>
+        <th class="table-title-mail">Région</th>
+        <th class="table-title-level">Niveau</th>
+        <th class="table-title-date">Date d'ajout</th>
+        <th class="table-title-date">Editer</th>
+        <th class="table-title-date">Supprimer</th>
+    </tr>
 {% for user in users %}
 <tr>
     <td class="table-name">{{ user.name }}</td>
@@ -37,3 +46,4 @@
     </td>
 </tr>
 {% endfor %}
+</table>

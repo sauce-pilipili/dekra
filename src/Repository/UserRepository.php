@@ -53,6 +53,55 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
     /**
+    //  * @return User[] Returns an array of User objects
+    //  */
+    public function findClientInAJax($value,$data)
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.AdminID', 'admin')
+            ->where('admin.id = :value')
+            ->setParameter('value', $value->getID())
+            ->andWhere('u.roles like :val')
+            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
+            ->andWhere('MATCH_AGAINST(u.name, u.email) AGAINST (:data boolean)>0')
+            ->setParameter('data','%'.$data.'%')
+            ->orderBy('u.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    /**
+    //  * @return User[] Returns an array of User objects
+    //  */
+    public function findClientSuperAdmin($data)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles like :val')
+            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
+            ->andWhere('u.name LIKE :data')
+            ->setParameter('data','%'.$data.'%')
+            ->orderBy('u.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+    /**
+    //  * @return User[] Returns an array of User objects
+    //  */
+    public function finClientBySuperAdmin()
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles like :val')
+            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
+            ->orderBy('u.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
       * @return User[] Returns an array of User objects
       */
     public function findAllcomplete()

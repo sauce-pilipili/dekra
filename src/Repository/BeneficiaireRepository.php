@@ -19,30 +19,32 @@ class BeneficiaireRepository extends ServiceEntityRepository
         parent::__construct($registry, Beneficiaire::class);
     }
 
-     /**
-      * @return Beneficiaire[] Returns an array of Beneficiaire objects
-      */
+    /**
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     */
 
-    public function findBySearch($value)
+    public function findBySearch($user, $value)
     {
         return $this->createQueryBuilder('b')
-            ->Where('b.name LIKE :val')
-            ->setParameter('val', '%'.$value.'%')
+            ->where('b.client = :user')
+            ->setParameter('user', $user->getId())
+            ->andWhere('b.name LIKE :val')
+            ->setParameter('val', '%' . $value . '%')
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
 
-    /*
-    public function findOneBySomeField($value): ?Beneficiaire
+    /**
+     * //  * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     * //  */
+    public function findClientList($value)
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where('b.client = :value')
+            ->setParameter('value', $value->getID())
+            ->orderBy('b.id', 'DESC')
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

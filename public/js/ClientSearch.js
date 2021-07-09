@@ -8,7 +8,7 @@ $(document).ready(function () {
     function searchAjax(data) {
         $.ajax({
             method: "POST",
-            url: "/members/members",
+            url: "/client",
             data: {
                 search: data
             },
@@ -16,12 +16,8 @@ $(document).ready(function () {
             success: function (response) {
                 remplacement = $.parseJSON(response)
                 $('#response-content').html(remplacement.content);
-
-
             },
 
         })
     }
 });
-
-

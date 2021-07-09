@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @ORM\Table(name="User", indexes={@ORM\Index(columns={"name","email"},flags={"fulltext"})})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -71,12 +72,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Beneficiaire::class, mappedBy="client", orphanRemoval=true)
+     */
+    private $beneficiaires;
+
 
 
     public function __construct()
     {
         $this->AdminID = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->beneficiaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -263,6 +270,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->users->removeElement($user)) {
             $user->removeAdminID($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Beneficiaire[]
+     */
+    public function getBeneficiaires(): Collection
+    {
+        return $this->beneficiaires;
+    }
+
+    public function addBeneficiaire(Beneficiaire $beneficiaire): self
+    {
+        if (!$this->beneficiaires->contains($beneficiaire)) {
+            $this->beneficiaires[] = $beneficiaire;
+            $beneficiaire->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBeneficiaire(Beneficiaire $beneficiaire): self
+    {
+        if ($this->beneficiaires->removeElement($beneficiaire)) {
+            // set the owning side to null (unless already changed)
+            if ($beneficiaire->getClient() === $this) {
+                $beneficiaire->setClient(null);
+            }
         }
 
         return $this;

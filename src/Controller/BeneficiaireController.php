@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Beneficiaire;
-use App\Entity\Departements;
 use App\Form\DataBeneficiaireType;
 use App\Form\SearchBenType;
 use App\Repository\BeneficiaireRepository;
@@ -25,14 +24,20 @@ class BeneficiaireController extends AbstractController
 
         $form = $this->createForm(SearchBenType::class);
         $form->handleRequest($request);
-        $beneficiaireAPAginer = $beneficiaireRepository->findClientList($this->getUser());
+        $beneficiaireAPAginer = $beneficiaireRepository->findClientListAdmin();
+//            dd($beneficiaireAPAginer);
+        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_CLIENT')) {
+            $beneficiaireAPAginer = $beneficiaireRepository->findClientList($this->getUser());
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $ben = $request->get('search_ben')['name'];
-            $beneficiaireAPAginer = $beneficiaireRepository->findBySearch($this->getUser(), $ben);
+            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_CALL_CENTER')) {
+                $beneficiaireAPAginer = $beneficiaireRepository->findByName($ben);
+            } else {
+                $beneficiaireAPAginer = $beneficiaireRepository->findBySearch($this->getUser(), $ben);
+            }
             $beneficiaire = $paginator->paginate($beneficiaireAPAginer, $request->query->getInt('page', 1), 6);
-
             return $this->render('beneficiaire/index.html.twig', [
                 'beneficiaires' => $beneficiaire,
                 'form' => $form->createView()
@@ -79,17 +84,18 @@ class BeneficiaireController extends AbstractController
                 $rows = $worksheet->toArray();
                 $feuilleLength = $spreadsheet->getActiveSheet()->getHighestRow();
 //                for ($i = 2; $i <= $feuilleLength - 1; $i++) {
-                for ($i = 2; $i <= 5 - 1; $i++) {
+                for ($i = 2; $i <= $feuilleLength - 1; $i++) {
                     $beneficiaire = new Beneficiaire();
+                    $beneficiaire->setStatut(0);
                     $beneficiaire->setClient($client);
                     $beneficiaire->setName($rows[$i][4]);
                     $beneficiaire->setPrenom($rows[$i][5]);
                     $beneficiaire->setAdresse($rows[$i][6]);
                     $codePostal = $rows[$i][7];
-
-                    $dep = $deprep->DepartmentClient(mb_strimwidth($codePostal,0,2));
-                    dump($dep->getName());
-                    $beneficiaire->setCodePostal(mb_strimwidth($codePostal,0,2));
+                    $departement = $deprep->findOneBy(['numero' => mb_strimwidth($codePostal, 0, 2)]);
+//                    dd($beneficiaire->getName(),$beneficiaire->getPrenom(),$departement,$deprep->DepartmentClient(mb_strimwidth($codePostal,0,2)));
+                    $beneficiaire->addDepartement($departement);
+                    $beneficiaire->setCodePostal($codePostal);
                     $beneficiaire->setVille($rows[$i][8]);
                     $em->persist($beneficiaire);
                 }
@@ -106,5 +112,29 @@ class BeneficiaireController extends AbstractController
         return $this->render('beneficiaire/new.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/beneficiaire/show{id}", name="beneficiaire_show", methods={"GET"})
+     */
+    public function show($id, BeneficiaireRepository $beneficiaireRepository)
+    {
+        $beneficiaire = $beneficiaireRepository->find($id);
+
+        return $this->render('beneficiaire/show.html.twig', [
+            'beneficiaire' => $beneficiaire
+        ]);
+    }
+    /**
+     * @Route("/beneficiaire{id}", name="beneficiaire_delete", methods={"POST"})
+     */
+    public function delete(Request $request, Beneficiaire $beneficiaire): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $beneficiaire->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($beneficiaire);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('beneficiaire');
     }
 }

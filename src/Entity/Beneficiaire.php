@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BeneficiaireRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,6 +49,26 @@ class Beneficiaire
      * @ORM\JoinColumn(nullable=false)
      */
     private $client;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Departements::class, inversedBy="beneficiaires",cascade={"persist"})
+     */
+    private $departement;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $rdv;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $statut;
+
+    public function __construct()
+    {
+        $this->departement = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +143,54 @@ class Beneficiaire
     public function setClient(?User $client): self
     {
         $this->client = $client;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|departements[]
+     */
+    public function getDepartement(): Collection
+    {
+        return $this->departement;
+    }
+
+    public function addDepartement(departements $departement): self
+    {
+        if (!$this->departement->contains($departement)) {
+            $this->departement[] = $departement;
+        }
+
+        return $this;
+    }
+
+    public function removeDepartement(departements $departement): self
+    {
+        $this->departement->removeElement($departement);
+
+        return $this;
+    }
+
+    public function getRdv(): ?\DateTimeInterface
+    {
+        return $this->rdv;
+    }
+
+    public function setRdv(?\DateTimeInterface $rdv): self
+    {
+        $this->rdv = $rdv;
+
+        return $this;
+    }
+
+    public function getStatut(): ?bool
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?bool $statut): self
+    {
+        $this->statut = $statut;
 
         return $this;
     }

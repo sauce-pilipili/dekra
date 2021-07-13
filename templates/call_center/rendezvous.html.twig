@@ -1,0 +1,190 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}RDV bénéficiaire{% endblock %}
+
+{% block body %}
+    <div class="main">
+
+        {{ include('include/_navigation.html.twig') }}
+
+        <div class="content">
+            <div class="rdv-container">
+                <h4>Ajouter un rendez-vous</h4>
+                <div class="control-benef">
+
+                    <div class="controleur-select-container">
+
+                        <div class="controleur-select">
+                            <h5>Sélectionner un contrôleur</h5>
+                            <div class="list-controleur">
+                                {% for cont in controlleurs %}
+                                    <div class="controleur">
+                                        <div class="checkbox"><input type="checkbox"></div>
+                                        <div class="controleur-profil">
+                                            <p class="controleur-name">{{ cont.nom }} {{ cont.prenom }}</p> <br>
+                                            <div class="department">
+                                                <p>Département</p>
+                                                <div class="speciality-tags">
+                                                    {% for dep in cont %}
+                                                    <p class="tags">{{ dep.numero }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <div class="speciality">
+                                                <p>Spécialités</p>
+
+                                                <div class="speciality-tags">
+                                                    <p class="tags">Spécialité 1</p>
+                                                    <p class="tags">Spécialité 2</p>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> <br>
+                                    <hr> <br>
+                                {% endfor %}
+                                <div class="controleur">
+                                    <div class="checkbox"><input type="checkbox"></div>
+                                    <div class="controleur-profil">
+                                        <p class="controleur-name">Sophie SEGUIN</p> <br>
+                                        <div class="department">
+                                            <p>Département</p>
+                                            <div class="speciality-tags">
+                                                <p class="tags">33</p>
+                                                <p class="tags">64</p>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="speciality">
+                                            <p>Spécialités</p>
+
+                                            <div class="speciality-tags">
+                                                <p class="tags">Spécialité 1</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+                                <br>
+                                <div class="controleur">
+                                    <div class="checkbox"><input type="checkbox"></div>
+                                    <div class="controleur-profil">
+                                        <p class="controleur-name">Jean-Phillipe MARTIN</p> <br>
+                                        <div class="department">
+                                            <p>Département</p>
+                                            <div class="speciality-tags">
+                                                <p class="tags">33</p>
+                                                <p class="tags">64</p>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="speciality">
+                                            <p>Spécialités</p>
+
+                                            <div class="speciality-tags">
+                                                <p class="tags">Spécialité 1</p>
+                                                <p class="tags">Spécialité 2</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+                                <br>
+                                <div class="controleur">
+                                    <div class="checkbox"><input type="checkbox"></div>
+                                    <div class="controleur-profil">
+                                        <p class="controleur-name">Yves LACOUR</p> <br>
+                                        <div class="department">
+                                            <p>Département</p>
+                                            <div class="speciality-tags">
+
+                                                <p class="tags">64</p>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="speciality">
+                                            <p>Spécialités</p>
+
+                                            <div class="speciality-tags">
+                                                <p class="tags">Spécialité 1</p>
+                                                <p class="tags">Spécialité 2</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fiche-beneficiaire-container">
+                        <h5>Le bénéficiaire</h5>
+                        <div class="fiche-beneficiaire"></div>
+
+                        <div class="fiche-benef-rdv">
+                            <div class="row">
+                                <p class="row-name">Nom du client</p>
+                                <p>Entreprise</p>
+                            </div>
+                            <br>
+                            <hr>
+                            <br>
+                            <div class="row">
+                                <p class="row-name">Nom du bénéficiare</p>
+                                <p>Jean TRUC</p>
+                            </div>
+                            <br>
+                            <hr>
+                            <br>
+                            <div class="row">
+                                <p class="row-name">Numéro de téléphone</p>
+                                <p>06 06 06 06 06</p>
+                            </div>
+                            <br>
+                            <hr>
+                            <br>
+                            <div class="row">
+                                <p class="row-name">Adresse mail</p>
+                                <p>richard@maildubeneficiare.com</p>
+                            </div>
+                            <br>
+                            <!-- </div> -->
+                            <hr>
+                            <br>
+                            <div class="row">
+                                <p class="row-name">Spécialités</p>
+                                <p>Spécialité 1</p>
+                            </div>
+                            <br>
+                            <hr>
+                            <br>
+                            <div class="row">
+                                <p class="row-name">Département</p>
+                                <p>33</p>
+                            </div>
+                            <br>
+                            <hr>
+                            <br>
+                            <div class="row">
+                                <p class="row-name">Adresse</p>
+                                <p>64, rue du Machin BORDEAUX 33000</p>
+                            </div>
+                            <br>
+                            <hr>
+                            <br>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

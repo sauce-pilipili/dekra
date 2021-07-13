@@ -4,11 +4,8 @@
 
 {% block body %}
     <div class="main">
-
         {{ include('include/_navigation.html.twig') }}
         <div class="content">
-
-
             <div class="container">
                 {% for message in app.flashes('success') %}
                     <div class="alert success-alert">
@@ -42,7 +39,7 @@
 
                 </div>
 
-            </div>
+
 
             <div class="table">
                 <table>
@@ -99,6 +96,7 @@
                         </tr>
                     {% endfor %}
                 </table>
+            </div>
             </div>
         </div>
     </div>

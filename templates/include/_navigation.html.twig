@@ -101,7 +101,7 @@
                 <a href="{{ path('members_members') }}">Les membres</a>
             </div>
             {% endif %}
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
+            {% if is_granted('ROLE_CALL_CENTER') %}
                 <div class="menus">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 23 23">
 
@@ -123,7 +123,17 @@
                 <a id="beneficiaires" href="{{ path('beneficiaire') }}">Les bénéficiaires</a>
             </div>
             {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="menus">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 23 23">
 
+                        <path fill="#4a4a49"
+                              d="M11.2,4.3a4.6,4.6,0,1,0,4.6,4.6A4.6,4.6,0,0,0,11.2,4.3ZM4.3,8.9a6.9,6.9,0,1,1,6.9,6.9A6.9,6.9,0,0,1,4.3,8.9ZM19.053,4.021a1.15,1.15,0,0,1,1.626,0,6.9,6.9,0,0,1,0,9.758,1.15,1.15,0,0,1-1.626-1.626,4.6,4.6,0,0,0,0-6.505A1.15,1.15,0,0,1,19.053,4.021Zm.807,14.95a1.15,1.15,0,0,1,1.394-.837A4.564,4.564,0,0,1,24.3,20.6,7.37,7.37,0,0,1,25,23.85a1.15,1.15,0,0,1-2.3,0,5.094,5.094,0,0,0-.454-2.217,2.269,2.269,0,0,0-1.55-1.267A1.15,1.15,0,0,1,19.859,18.971ZM7.175,20.4A3.2,3.2,0,0,0,4.3,23.85a1.15,1.15,0,0,1-2.3,0c0-3.027,2.177-5.75,5.175-5.75h8.05c3,0,5.175,2.723,5.175,5.75a1.15,1.15,0,0,1-2.3,0,3.2,3.2,0,0,0-2.875-3.45Z"
+                              transform="translate(-2 -2)" />
+                    </svg>
+                    <a id="beneficiaires" href="{{ path('beneficiaire') }}">Les bénéficiaires</a>
+                </div>
+            {% endif %}
             <div class="menus">
                 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 21 24">
 

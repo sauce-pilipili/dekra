@@ -34,6 +34,11 @@ class Departements
      */
     private $name;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Beneficiaire::class, mappedBy="departement")
+     */
+    private $beneficiaires;
+
     public function __toString() {
         return $this->numero.' '.$this->name;
     }
@@ -41,6 +46,7 @@ class Departements
     public function __construct()
     {
         $this->controleurs = new ArrayCollection();
+        $this->beneficiaires = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,6 +101,33 @@ class Departements
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Beneficiaire[]
+     */
+    public function getBeneficiaires(): Collection
+    {
+        return $this->beneficiaires;
+    }
+
+    public function addBeneficiaire(Beneficiaire $beneficiaire): self
+    {
+        if (!$this->beneficiaires->contains($beneficiaire)) {
+            $this->beneficiaires[] = $beneficiaire;
+            $beneficiaire->addDepartement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBeneficiaire(Beneficiaire $beneficiaire): self
+    {
+        if ($this->beneficiaires->removeElement($beneficiaire)) {
+            $beneficiaire->removeDepartement($this);
+        }
 
         return $this;
     }

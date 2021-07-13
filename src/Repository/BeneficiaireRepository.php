@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Beneficiaire;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -34,6 +35,19 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     */
+
+    public function findByName($value)
+    {
+        return $this->createQueryBuilder('b')
+            ->Where('b.name LIKE :val')
+            ->setParameter('val', '%' . $value . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
 
     /**
      * //  * @return Beneficiaire[] Returns an array of Beneficiaire objects
@@ -41,8 +55,22 @@ class BeneficiaireRepository extends ServiceEntityRepository
     public function findClientList($value)
     {
         return $this->createQueryBuilder('b')
+            ->join('b.client','c')
             ->where('b.client = :value')
             ->setParameter('value', $value->getID())
+            ->orderBy('b.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+    /**
+     * //  * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     * //  */
+    public function findClientListAdmin()
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b','u','d')
+            ->join('b.client','u')
+            ->join('b.departement','d')
             ->orderBy('b.id', 'DESC')
             ->getQuery()
             ->getResult();

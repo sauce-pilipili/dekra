@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bénéficiaires{% endblock %}
+
+{% block body %}
+    <div class="main">
+
+        {{ include('include/_navigation.html.twig') }}
+
+        <div class="content">
+
+            <div class="container">
+                {% for message in app.flashes('success') %}
+                    <div class="alert success-alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('danger') %}
+                    <div class="alert danger-alert">{{ message }}</div>
+                {% endfor %}
+                {% for message in app.flashes('success') %}
+                    <div class="alert success-alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% for message in app.flashes('danger') %}
+                    <div class="alert danger-alert">{{ message }}</div>
+                {% endfor %}
+
+                <h4>Bénéficiaire</h4>
+                <div class="fiche">
+                    <div class="row">
+                        <p class="row-name">Nom du client</p>
+
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Nom du bénéficiaire</p>
+                        <p>{{ beneficiaire.name }} {{ beneficiaire.prenom }}</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Nom du contrôleur</p>
+                        <p>Richard</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Spécialités</p>
+                        <div class="speciality-tags">
+                            <p class="tags">Spécialité 1</p>
+                            <p class="tags">Spécialité 2</p>
+                            <p class="tags">Spécialité 3</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Adresse mail du bénéficiaire</p>
+                        <p>contact@entreprisemachinchouette.com</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Téléphone du bénéficiaire</p>
+                        <p>06 06 06 06 06</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Adresse d'intervention</p>
+                        <p>64, rue du Machin BORDEAUX 33000</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Date du rendez-vous</p>
+                        <p>17 Mai 2021 à 10H00</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Résultat</p>
+                        <p>En attente du rendez-vous</p>
+                    </div>
+                    <br><br>
+                    <button class="buttongreen">Modifier</button>
+
+                </div>
+
+            </div>
+
+                {% endblock %}
+                {% block javascripts %}
+
+{% endblock %}

@@ -2,31 +2,17 @@
     <tr class="table-title">
         <th class="table-title-name">Nom du client</th>
         <th class="table-title-date">Date d'ajout</th>
-        <th class="table-title-date">Editer</th>
-        <th class="table-title-date">Supprimer</th>
+        <th class="table-title-date table-edit">Editer</th>
+        <th class="table-title-date table-delete">Supprimer</th>
     </tr>
     {% for client in clients %}
         <tr>
             <td class="table-name">{{ client.name }}</td>
             <td class="table-date">{{ client.createdAt |format_datetime ( locale= 'fr', pattern=" EEEE dd MMMM YYYY HH:mm") }}</td>
-            <td class="table-name"><a href="{{ path('client_edit',{'id': client.id}) }}">Edit</a></td>
-            <td class="table-check"><form method="post" action="{{ path('user_delete', {'id': client.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+            <td class="table-name"><a href="{{ path('client_edit',{'id': client.id}) }}"><i class="fas fa-edit fa-2x"></i> </a></td>
+            <td class="table-check"><form method="post" action="{{ path('user_delete', {'id': client.id}) }}" onsubmit="return confirm('Êtes vous sûr de vouloir supprimer ce client');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ client.id) }}">
-                    <button class="btn"><span class="delicon">
-
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20">
-                                                <defs>
-                                                    <style>
-                                                        .a {
-                                                            fill: #0d0d0d;
-                                                        }
-                                                    </style>
-                                                </defs>
-                                                <path
-                                                        d="M7,4A2,2,0,0,1,9,2h6a2,2,0,0,1,2,2V6h4a1,1,0,0,1,0,2H19.931l-.867,12.142A2,2,0,0,1,17.069,22H6.931a2,2,0,0,1-1.995-1.858L4.069,8H3A1,1,0,0,1,3,6H7ZM9,6h6V4H9ZM6.074,8l.857,12H17.069l.857-12ZM10,10a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,10,10Zm4,0a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,14,10Z"
-                                                        transform="translate(-2 -2)"/>
-                                            </svg>
-                                        </span></button>
+                    <button class="btn"><i class="fas fa-trash fa-3x"></i></button>
                 </form></td>
         </tr>
     {% endfor %}

@@ -10,7 +10,7 @@
 
     {% if app.user %}
         <div class="mb-3">
-            Vous etes COnnecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+            Vous etes Connecté en tant que {{ app.user.username }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
         </div>
     {% endif %}
     <input type="email" value="{{ last_username }}" placeholder="Email" name="email" id="inputEmail"  autocomplete="email" required autofocus>

@@ -18,8 +18,11 @@
                 {% for message in app.flashes('danger') %}
                     <div class="alert danger-alert">{{ message }}</div>
                 {% endfor %}
-                <h4>Nouveau département</h4>
 
+                <div class="titlereturn">
+                    <h4>Nouveau département</h4>
+                    <a href="{{ path('departements_index') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+                </div>
                 {{ form_start(form) }}
                 <div class="profil">
                     <div class="name">
@@ -30,7 +33,6 @@
                         <p>Nom</p>
                         {{ form_row(form.name) }}
                     </div>
-
                     <button type="submit" class="buttongreen">Ajouter</button>
                     {{ form_end(form) }}
                 </div>

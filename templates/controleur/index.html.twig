@@ -23,26 +23,14 @@
 
                         {{ form_row(form.name, {'attr': {'class': 'search-container-select'}}) }}
                         {{ form_row(form.specialite, {'attr': {'class': 'search-container-select'}}) }}
-                        <button class="btn-submit" type="submit"><i class="fa fa-search" aria-hidden="true"></i>
-
+                        <button class="btn-submit" type="submit"><i class="fa fa-search fa-2x" aria-hidden="true"></i>
                         </button>
                     </div>
                     {{ form_end(form) }}
                     <div class="addanddelete">
                         <div class="addicon">
                             <a href="{{ path('controleur_new') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 19 19">
-                                    <defs>
-                                        <style>
-                                            .a {
-                                                fill: #0d0d0d;
-                                            }
-                                        </style>
-                                    </defs>
-                                    <path
-                                            d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
-                                            transform="translate(-4 -4)"/>
-                                </svg>
+                                <i class="far fa-plus-square fa-3x"></i>
                             </a>
                         </div>
                     </div>
@@ -55,8 +43,8 @@
                             <th class="table-title-name">Nom du contrôleur</th>
                             <th class="table-title-department">Départements</th>
                             <th class="table-title-name">Spécialitées</th>
-                            <th class="table-title-name">Editer</th>
-                            <th class="table-title-speciality">Supprimer</th>
+                            <th class="table-title-speciality table-edit">Editer</th>
+                            <th class="table-title-speciality table-delete">Supprimer</th>
                         </tr>
 
                         {% for controleur in controleurs %}
@@ -65,7 +53,7 @@
                                 <td class="table-department">
                                     <div class="tags-spe">
                                         {% for dep in controleur.departement %}
-                                            <p>{{ dep.numero }}.{{ dep.name }}</p>
+                                            <p>{{ dep.numero }}</p>
                                         {% endfor %}
                                     </div>
                                 </td>
@@ -76,23 +64,11 @@
                                         {% endfor %}
                                     </div>
                                 </td>
-                                <td>
-                                <td>
+
+                                <td class="table-name">
                                     <div class="addicon">
                                         <a href="{{ path('controleur_edit', {'id': controleur.id}) }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18"
-                                                 viewBox="0 0 19 19">
-                                                <defs>
-                                                    <style>
-                                                        .a {
-                                                            fill: #0d0d0d;
-                                                        }
-                                                    </style>
-                                                </defs>
-                                                <path
-                                                        d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
-                                                        transform="translate(-4 -4)"/>
-                                            </svg>
+                                            <i class="fas fa-edit fa-2x"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -102,21 +78,7 @@
                                         <input type="hidden" name="_token"
                                                value="{{ csrf_token('delete' ~ controleur.id) }}">
                                         <button class="btn">
-                                            <span class="delicon">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18"
-                                                     viewBox="0 0 20 20">
-                                                    <defs>
-                                                        <style>
-                                                            .a {
-                                                                fill: #0d0d0d;
-                                                            }
-                                                        </style>
-                                                    </defs>
-                                                    <path
-                                                            d="M7,4A2,2,0,0,1,9,2h6a2,2,0,0,1,2,2V6h4a1,1,0,0,1,0,2H19.931l-.867,12.142A2,2,0,0,1,17.069,22H6.931a2,2,0,0,1-1.995-1.858L4.069,8H3A1,1,0,0,1,3,6H7ZM9,6h6V4H9ZM6.074,8l.857,12H17.069l.857-12ZM10,10a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,10,10Zm4,0a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,14,10Z"
-                                                            transform="translate(-2 -2)"/>
-                                                </svg>
-                                            </span></button>
+                                            <i class="fas fa-trash fa-3x"></i></button>
                                     </form>
                                 </td>
                             </tr>
@@ -124,7 +86,7 @@
                     </table>
                 </div>
                 <div class="pagination">
-                    <div class="navigation">
+                    <div class="navigation-knp">
                         {{ knp_pagination_render(controleurs) }}
                     </div>
                 </div>

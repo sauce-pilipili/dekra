@@ -23,20 +23,9 @@
 
 
                     <div class="addanddelete">
-                        <div class="addicon">
+                        <div class="addicon" style="margin-left: 90%">
                             <a href="{{ path('specialite_new') }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18" viewBox="0 0 19 19">
-                                    <defs>
-                                        <style>
-                                            .a {
-                                                fill: #0d0d0d;
-                                            }
-                                        </style>
-                                    </defs>
-                                    <path
-                                            d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
-                                            transform="translate(-4 -4)"/>
-                                </svg>
+                                <i class="far fa-plus-square fa-3x"></i>
                                 </a>
 
                         </div>
@@ -48,51 +37,28 @@
                 <div class="table">
                     <table>
                         <tr class="table-title">
-                            <th class="table-title-name">ID</th>
-                            <th class="table-title-speciality">Spécialités</th>
-                            <th class="table-title-speciality">Edit</th>
-                            <th class="table-title-speciality">Supprimer</th>
+
+                            <th class="table-title-speciality">Spécialitées</th>
+                            <th class="table-title-speciality table-edit">Editer</th>
+                            <th class="table-title-speciality table-delete">Supprimer</th>
                         </tr>
                         {% for spe in specialites %}
                             <tr>
-                                <td class="table-name">{{ spe.id }} </td>
+
                                 <td class="table-name">{{ spe.name }} </td>
                                 <td class="table-name">
-                                        <div class="addicon">
-                                            <a href="{{ path('specialite_edit', {'id': spe.id}) }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18"
-                                                     viewBox="0 0 19 19">
-                                                    <defs>
-                                                        <style>
-                                                            .a {
-                                                                fill: #0d0d0d;
-                                                            }
-                                                        </style>
-                                                    </defs>
-                                                    <path
-                                                            d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
-                                                            transform="translate(-4 -4)"/>
-                                                </svg>
+                                        <div class="addicon" >
+                                            <a style="background-color: transparent; border: none;" href="{{ path('specialite_edit', {'id': spe.id}) }}">
+                                                <i class="fas fa-edit fa-2x"></i>
                                             </a>
                                         </div>
                                     </td>
-                                <td><form method="post" action="{{ path('specialite_delete', {'id': spe.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                <td>
+                                    <form method="post" action="{{ path('specialite_delete', {'id': spe.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ spe.id) }}">
-                                        <button class="btn"><div class="delicon">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="18"
-                                                     viewBox="0 0 20 20">
-                                                    <defs>
-                                                        <style>
-                                                            .a {
-                                                                fill: #0d0d0d;
-                                                            }
-                                                        </style>
-                                                    </defs>
-                                                    <path
-                                                            d="M7,4A2,2,0,0,1,9,2h6a2,2,0,0,1,2,2V6h4a1,1,0,0,1,0,2H19.931l-.867,12.142A2,2,0,0,1,17.069,22H6.931a2,2,0,0,1-1.995-1.858L4.069,8H3A1,1,0,0,1,3,6H7ZM9,6h6V4H9ZM6.074,8l.857,12H17.069l.857-12ZM10,10a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,10,10Zm4,0a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,14,10Z"
-                                                            transform="translate(-2 -2)"/>
-                                                </svg>
-                                            </div></button>
+                                        <button class="btn">
+                                            <i class="fas fa-trash fa-3x"></i>
+                                            </button>
                                     </form>
 
                                 </td>

@@ -1,18 +1,19 @@
 .welcome-container {
-  margin: 0 auto;
   text-align: center;
-  padding: 200px;
-  margin: 100px;
+  padding: 100px;
+  margin: 90px;
   background-color: white;
 }
 
 .welcome-container p {
   font-family: "Montserrat", sans-serif;
   font-size: 1.3rem;
-  width: 80%;
+  width: 100%;
+  margin-bottom: 35px;
   text-align: center;
-  margin: 0 auto;
-  margin-bottom: 50px;
+
+
+
 }
 
 .welcome-container h4 {

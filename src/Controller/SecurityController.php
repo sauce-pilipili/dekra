@@ -24,15 +24,7 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        if ($request->isXmlHttpRequest()){
-            $info = $request->request->get('screen');
-//                return new JsonResponse(['content' => $this->renderView('include/_screenWidtherror.html.twig')
-                return new JsonResponse(['content' => $info
-                ]);
-//            }else{
-//                return new JsonResponse(['content' => $this->renderView('include/_screenWidthaccept.html.twig',compact('lastUsername','error'))]);
-//            }
-        }
+
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 

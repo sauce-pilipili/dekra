@@ -19,35 +19,6 @@
                 <h4>Les membres</h4>
                 <div class="search-container">
                     <div class="search-input">
-                        <svg class="iconsearch" xmlns="http://www.w3.org/2000/svg" width="53 " height="43"
-                             viewBox="0 0 23.414 24.414">
-                            <defs>
-                                <style>
-                                    .a,
-                                    .c {
-                                        fill: white;
-                                    }
-
-                                    .a {
-                                        stroke: #000;
-                                        stroke-linecap: round;
-                                        stroke-width: 2px;
-                                    }
-
-                                    .b {
-                                        stroke: none;
-                                    }
-                                </style>
-                            </defs>
-                            <g transform="translate(-559 -341.469)">
-                                <g class="a" transform="translate(559 341.469)">
-                                    <ellipse class="b" cx="8.767" cy="8.767" rx="8.767" ry="8.767"/>
-                                    <ellipse class="c" cx="8.767" cy="8.767" rx="7.767" ry="7.767"/>
-                                </g>
-                                <path class="a" d="M12333.379,179.471l-8.019-8.085"
-                                      transform="translate(-11752.379 184.998)"/>
-                            </g>
-                        </svg>
                         <form id="filters">
                             <input class="members-search" id="members-search" type="text"
                                    placeholder="Rechercher un membre">
@@ -55,8 +26,7 @@
                     </div>
                     <div class="addanddelete">
                         <div class="addicon">
-                            <a href="{{ path('user_new') }}"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 19 19"><defs><style>.a {fill: #0d0d0d;}</style></defs>
-                                    <path d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z" transform="translate(-4 -4)"/></svg></a>
+                            <a href="{{ path('user_new') }}"><i class="far fa-plus-square fa-3x"></i></a>
                         </div>
 
                     </div>
@@ -65,7 +35,7 @@
                         {{ include('include/_membersContent.html.twig') }}
                     </div>
                 <div class="pagination">
-                    <div class="navigation">
+                    <div class="navigation-knp">
                         {{ knp_pagination_render(users) }}
                     </div>
 

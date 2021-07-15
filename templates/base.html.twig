@@ -23,31 +23,7 @@
     <body>
         {% block body %}{% endblock %}
     </body>
-    <script>
-        const screenSize = $(window).width();
-        $(document).ready( function (){
-               mobile(screenSize);
-               console.log('taille de' , screenSize)
 
-        });
-
-        function mobile(info){
-            console.log('info',info)
-            $.ajax({
-                method:"post",
-                url :"/",
-                data : {
-                    screen: info
-                },
-                dataType : "html",
-                success: function (response){
-                    remplacement = $.parseJSON(response)
-                    console.log(remplacement)
-                    $('#container-login').html(remplacement.content)
-                },
-            })
-        };
-    </script>
     {% block javascripts %}
         {#{{ encore_entry_script_tags('app') }}#}
     {% endblock %}

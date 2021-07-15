@@ -84,14 +84,14 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+
                 $user->setPassword(
                     $passwordEncoder->encodePassword(
                         $user,
                         $form->get('password')->getData()
                     )
                 );
-            }
+
             $this->getDoctrine()->getManager()->flush();
 
                 return $this->redirectToRoute('dashboard_controler');

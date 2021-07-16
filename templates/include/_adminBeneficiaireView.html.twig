@@ -1,15 +1,15 @@
 <div class="table">
     <table>
         <tr class="table-title">
-            <th class="table-title-name">Bénéficiaires</th>
+            <th class="table-title-name paddingleft20px">Bénéficiaires</th>
             <th class="table-title-date">Client</th>
             <th class="table-title-date">Rendez-Vous</th>
             <th class="table-title-date">Statut</th>
-            <th class="table-title-date">Supprimer</th>
+            <th class="table-title-date paddingright20px">Supprimer</th>
         </tr>
         {% for b in beneficiaires %}
             <tr>
-                <td class="table-name"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{{ b.name }} {{ b.prenom }}</a></td>
+                <td class="table-name paddingleft20px"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{{ b.name }} {{ b.prenom }}</a></td>
                 <td class="table-date">{{ b.client.name }}</td>
                 <td class="table-date">{{ b.rdv }}</td>
 
@@ -23,9 +23,7 @@
                 </td>
                     {% endif %}
 
-
-{#                <td class="table-name"><a href="{{ path('client_edit',{'id': b.id}) }}">Edit</a></td>#}
-                <td class="table-check">
+                <td class="paddingright20px">
                     <form method="post" action="{{ path('beneficiaire_delete', {'id': b.id}) }}"
                           onsubmit="return confirm('Confirmer la suppression du bénéficiaire?')">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ b.id) }}">

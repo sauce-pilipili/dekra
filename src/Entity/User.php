@@ -77,6 +77,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $beneficiaires;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $telephone;
+
 
 
     public function __construct()
@@ -301,6 +306,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $beneficiaire->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): self
+    {
+        $this->telephone = $telephone;
 
         return $this;
     }

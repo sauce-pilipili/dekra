@@ -4,16 +4,12 @@
 
 {% block body %}
     <div class="main">
-
         {{ include('include/_navigation.html.twig') }}
-
         <div class="content">
             <div class="rdv-container">
                 <h4>Ajouter un rendez-vous</h4>
                 <div class="control-benef">
-
                     <div class="controleur-select-container">
-
                         <div class="controleur-select">
                             <h5>Sélectionner un contrôleur</h5>
                             <div class="list-controleur">
@@ -26,7 +22,7 @@
                                                 <p>Département</p>
                                                 <div class="speciality-tags">
                                                     {% for dep in cont %}
-                                                    <p class="tags">{{ dep.numero }}</p>
+                                                        <p class="tags">{{ dep.numero }}</p>
                                                     {% endfor %}
                                                 </div>
                                             </div>

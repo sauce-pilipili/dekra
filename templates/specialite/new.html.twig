@@ -5,26 +5,13 @@
 
     {% block body %}
         <div class="main">
-
             {{ include('include/_navigation.html.twig') }}
-
             <div class="content">
-
                 <div class="container">
-                    {% for message in app.flashes('success') %}
-                        <div class="alert success-alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                    {% for message in app.flashes('danger') %}
-                        <div class="alert danger-alert">{{ message }}</div>
-                    {% endfor %}
                     <div class="titlereturn">
                         <h4>Nouvelle specialitée</h4>
                         <a href="{{ path('specialite_index') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
                     </div>
-
-
                     {{ form_start(form) }}
                     <div class="profil">
                         <div class="name">

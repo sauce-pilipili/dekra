@@ -21,7 +21,28 @@
 
     </head>
     <body>
+    {% for message in app.flashes('success') %}
+        <div class="greenalert">
+            <div class="close" id="close" onclick="$('.fas').parents('.greenalert').remove();"><i
+                        class="fas fa-times"></i></div>
+            <div class="success-alert">
+                <p>{{ message }}</p>
+            </div>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="redalert">
+            <div class="close" id="close" onclick="$('.fas').parents('.redalert').remove();"><i
+                        class="fas fa-times"></i></div>
+            <div class="danger-alert">
+                <p>{{ message }}</p>
+            </div>
+        </div>
+    {% endfor %}
         {% block body %}{% endblock %}
+<script>
+
+</script>
     </body>
 
     {% block javascripts %}

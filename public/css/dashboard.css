@@ -41,7 +41,8 @@
 .prestations,
 .beneficiaires,
 .membres {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   width: 30%;
 }
 

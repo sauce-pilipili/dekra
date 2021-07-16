@@ -5,14 +5,6 @@
         {{ include('include/_navigation.html.twig') }}
         <div class="content">
             <div class="welcome-container">
-                {% for message in app.flashes('success') %}
-                    <div class="alert success-alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('danger') %}
-                    <div class="alert danger-alert">{{ message }}</div>
-                {% endfor %}
                   {% if is_granted('ROLE_SUPER_ADMIN') %}
                 {{ include('include/_superAdminAccueilView.html.twig') }}
                  {% endif %}

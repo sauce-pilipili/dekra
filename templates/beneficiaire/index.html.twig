@@ -4,31 +4,11 @@
 
 {% block body %}
     <div class="main">
-
         {{ include('include/_navigation.html.twig') }}
-
         <div class="content">
-
             <div class="container">
-                {% for message in app.flashes('success') %}
-                    <div class="alert success-alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('danger') %}
-                    <div class="alert danger-alert">{{ message }}</div>
-                {% endfor %}
-                {% for message in app.flashes('success') %}
-                    <div class="alert success-alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('danger') %}
-                    <div class="alert danger-alert">{{ message }}</div>
-                {% endfor %}
                 <h4>Les bénéficiaires</h4>
                 <div class="search-container">
-
                     <div class="search-controleurs">
                         {{ form_start(form) }}
                         {{ form_row(form.name, {'attr': {'class': 'search-container-select'}}) }}
@@ -37,7 +17,6 @@
                         {{ form_end(form) }}
                     </div> {% if is_granted('ROLE_CLIENT') %}
                         <div class="addanddelete">
-
                             <div class="addicon">
                                 <a href="{{ path('beneficiaire_new') }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 19 19">
@@ -97,12 +76,8 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
-
     </div>
-
 {% endblock %}
 {% block javascripts %}
 

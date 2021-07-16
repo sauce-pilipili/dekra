@@ -4,20 +4,9 @@
 
 {% block body %}
     <div class="main">
-
         {{ include('include/_navigation.html.twig') }}
-
         <div class="content">
-
             <div class="container">
-                {% for message in app.flashes('success') %}
-                    <div class="alert success-alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('danger') %}
-                    <div class="alert danger-alert">{{ message }}</div>
-                {% endfor %}
                 <div class="titlereturn">
                     <h4>Modifier un membre</h4>
                     <a href="{{ path('members_members') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>

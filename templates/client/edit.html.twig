@@ -5,14 +5,6 @@
         {{ include('include/_navigation.html.twig') }}
         <div class="content">
             <div class="container">
-                {% for message in app.flashes('success') %}
-                    <div class="alert success-alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('danger') %}
-                    <div class="alert danger-alert">{{ message }}</div>
-                {% endfor %}
                 <div class="titlereturn">
                 <h4>Modifier le Client</h4>
                 <a href="{{ path('client') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
@@ -26,6 +18,10 @@
                     <div class="mail">
                         <p>Email</p>
                         {{ form_row(form.email) }}
+                    </div>
+                    <div class="mail">
+                        <p>Numéro de téléphone</p>
+                        {{ form_row(form.telephone) }}
                     </div>
                     <button type="submit" class="buttongreen">Enregistrer</button>
                     {{ form_end(form) }}

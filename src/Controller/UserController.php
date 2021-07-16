@@ -80,21 +80,21 @@ class UserController extends AbstractController
      */
     public function edit(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-            $form = $this->createForm(UserEditType::class, $user);
+        $form = $this->createForm(UserEditType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-                $user->setPassword(
-                    $passwordEncoder->encodePassword(
-                        $user,
-                        $form->get('password')->getData()
-                    )
-                );
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('password')->getData()
+                )
+            );
 
             $this->getDoctrine()->getManager()->flush();
 
-                return $this->redirectToRoute('dashboard_controler');
+            return $this->redirectToRoute('dashboard_controler');
 
         }
 
@@ -105,7 +105,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="user_delete", methods={"POST"})
+     * @Route("/{id}/delete/user", name="user_delete", methods={"POST"})
      */
     public function delete(Request $request, User $user): Response
     {
@@ -116,5 +116,19 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('members_members');
+    }
+
+    /**
+     * @Route("/{id}/delete/client", name="client_delete", methods={"POST"})
+     */
+    public function deleteClient(Request $request, User $user): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('client');
     }
 }

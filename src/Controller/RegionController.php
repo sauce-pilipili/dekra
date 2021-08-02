@@ -40,7 +40,7 @@ class RegionController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($region);
             $entityManager->flush();
-            $this->addFlash('success', 'la région à bien été créée');
+            $this->addFlash('success', 'La fiche région a été créée avec succès !');
             return $this->redirectToRoute('region_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -70,7 +70,7 @@ class RegionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'la région à bien été modifiée');
+            $this->addFlash('success', 'La fiche région a été modifiée avec succès !');
             return $this->redirectToRoute('region_index', [], Response::HTTP_SEE_OTHER);
         }
 

@@ -24,10 +24,10 @@ class BeneficiaireController extends AbstractController
 
         $form = $this->createForm(SearchBenType::class);
         $form->handleRequest($request);
-        $beneficiaireAPAginer = $beneficiaireRepository->findClientListAdmin();
-//            dd($beneficiaireAPAginer);
+        $beneficiaireAPAginer = $beneficiaireRepository->ClientListAdmin();
         if ($this->container->get('security.authorization_checker')->isGranted('ROLE_CLIENT')) {
             $beneficiaireAPAginer = $beneficiaireRepository->findClientList($this->getUser());
+
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -103,7 +103,7 @@ class BeneficiaireController extends AbstractController
                 // on supprime le fichier
                 $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                 unlink($fichierSupp);
-                $this->addFlash('success', 'la liste a été correctement inserée');
+                $this->addFlash('success', 'La liste bénéficiaires a été inserée avec succès !');
                 return $this->render('beneficiaire/new.html.twig', [
                     'form' => $form->createView(),
                 ]);
@@ -119,7 +119,7 @@ class BeneficiaireController extends AbstractController
      */
     public function show($id, BeneficiaireRepository $beneficiaireRepository)
     {
-        $beneficiaire = $beneficiaireRepository->find($id);
+        $beneficiaire = $beneficiaireRepository->show($id);
 
         return $this->render('beneficiaire/show.html.twig', [
             'beneficiaire' => $beneficiaire

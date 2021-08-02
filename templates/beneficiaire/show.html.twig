@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bénéficiaires{% endblock %}
+
+{% block body %}
+<div class="main">
+
+    {{ include('include/_navigation.html.twig') }}
+
+    <div class="content">
+
+        <div class="container">
+            {% for message in app.flashes('success') %}
+                <div class="alert success-alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('danger') %}
+                <div class="alert danger-alert">{{ message }}</div>
+            {% endfor %}
+            {% for message in app.flashes('success') %}
+                <div class="alert success-alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('danger') %}
+                <div class="alert danger-alert">{{ message }}</div>
+            {% endfor %}
+
+            <h4>Bénéficiaire</h4>
+            {% for b in beneficiaire | slice(0,1) %}
+                <div class="fiche">
+                    <div class="row">
+                        <p class="row-name">Nom du client</p>
+                        <p>{{ b.client.name }}</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Nom du bénéficiaire</p>
+                        <p>{{ b.name }} {{ b.prenom }}</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Nom du contrôleur</p>
+                        <p>Richard</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Spécialités</p>
+                        <div class="speciality-tags">
+                            <p class="tags">Spécialité 1</p>
+                            <p class="tags">Spécialité 2</p>
+                            <p class="tags">Spécialité 3</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Adresse mail du bénéficiaire</p>
+                        <p></p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Téléphone du bénéficiaire</p>
+                        <p></p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Adresse d'intervention</p>
+                        <p>{{ b.adresse }} {{ b.codepostal }} {{ b.ville }}</p>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Date du rendez-vous</p>
+                        {% if b.rdv == null %}
+                            <p>Aucun rendez-vous pour le moment</p>
+                        {% else %}
+                            <p>{{ b.statut }}</p>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <p class="row-name">Résultat</p>
+                        {% if b.statut == 0 %}
+                        <p>En attente du rendez-vous</p>
+                        {% else %}
+                            <p>controlé</p>
+                            {% endif %}
+                    </div>
+                    <br><br>
+                    <button class="buttongreen">Modifier</button>
+
+                </div>
+            {% endfor %}
+        </div>
+
+        {% endblock %}
+        {% block javascripts %}
+
+{% endblock %}

@@ -23,7 +23,6 @@ class BeneficiaireRepository extends ServiceEntityRepository
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
-
     public function findBySearch($user, $value)
     {
         return $this->createQueryBuilder('b')
@@ -35,6 +34,21 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Beneficiaire |null
+     */
+    public function show($id){
+        return $this->createQueryBuilder('b')
+            ->select('b','c','d')
+            ->join('b.client', 'c')
+            ->join('b.departement','d')
+            ->andWhere('b.id =:val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getResult();
+
+
+    }
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
@@ -55,9 +69,10 @@ class BeneficiaireRepository extends ServiceEntityRepository
     public function findClientList($value)
     {
         return $this->createQueryBuilder('b')
+            ->select('b','c')
             ->join('b.client','c')
             ->where('b.client = :value')
-            ->setParameter('value', $value->getID())
+            ->setParameter('value', $value)
             ->orderBy('b.id', 'DESC')
             ->getQuery()
             ->getResult();
@@ -65,7 +80,7 @@ class BeneficiaireRepository extends ServiceEntityRepository
     /**
      * //  * @return Beneficiaire[] Returns an array of Beneficiaire objects
      * //  */
-    public function findClientListAdmin()
+    public function ClientListAdmin()
     {
         return $this->createQueryBuilder('b')
             ->select('b','u','d')

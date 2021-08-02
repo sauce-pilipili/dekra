@@ -27,7 +27,7 @@ class ClientController extends AbstractController
      */
     public function index(Request $request, UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
-//        requete ajax avec dissociation admin et super admin pour l'acces en controle
+//        requête ajax avec dissociation admin et super admin pour l'accès en contrôle
         if ($request->isXmlHttpRequest()) {
             $data = $request->request->get('search');
             if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
@@ -40,7 +40,7 @@ class ClientController extends AbstractController
             ]);
 
         }
-//        premiere requete sur acces page avec dissociation des admin super admin
+//        premiere requête sur accès page avec dissociation des admin super admin
         if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $clientAPAginer = $userRepository->finClientBySuperAdmin();
         } else {
@@ -73,7 +73,7 @@ class ClientController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            $this->addFlash('success', 'le client a été pris en compte');
+            $this->addFlash('success', 'La fiche client a été prise en compte avec succès !');
             return $this->redirectToRoute('client');
         }
 
@@ -99,7 +99,7 @@ class ClientController extends AbstractController
 //                );
 //            }
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'le client a bien été modifié');
+            $this->addFlash('success', 'La fiche client a été modifiée avec succès !');
             return $this->redirectToRoute('client');
 
 

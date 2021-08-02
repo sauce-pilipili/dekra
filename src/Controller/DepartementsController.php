@@ -42,7 +42,7 @@ class DepartementsController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($departement);
             $entityManager->flush();
-            $this->addFlash('success','le départemement a été pris en compte');
+            $this->addFlash('success','La fiche départemement a été prise en compte avec succès !');
             return $this->redirectToRoute('departements_index');
         }
 
@@ -72,7 +72,7 @@ class DepartementsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success','le départemement a été modifié');
+            $this->addFlash('success','La fiche département a été modifiée avec succès !');
             return $this->redirectToRoute('departements_index');
         }
 
@@ -92,7 +92,7 @@ class DepartementsController extends AbstractController
             $entityManager->remove($departement);
             $entityManager->flush();
         }
-        $this->addFlash('success','le départemement a été supprimé');
+        $this->addFlash('success','La fiche département a été supprimée avec succès !');
         return $this->redirectToRoute('departements_index');
     }
 }

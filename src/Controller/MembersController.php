@@ -36,9 +36,9 @@ class MembersController extends AbstractController
      */
     public function members(Request $request, UserRepository $userRepository, PaginatorInterface $paginator): Response
 
-    {   // chargement de tout les membres
+    {   // chargement de tous les membres
         $userAPAginer = $userRepository->findAll();
-        // recherche du membres en ajax
+        // recherche du membre en ajax
         if ($request->isXmlHttpRequest()) {
             $data = $request->request->get('search');
 
@@ -73,7 +73,7 @@ class MembersController extends AbstractController
                 }
             }
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success', 'le membres a bien été modifié');
+            $this->addFlash('success', 'La fiche membres a été modifiée avec succès !');
             return $this->redirectToRoute('members_members');
 
         }

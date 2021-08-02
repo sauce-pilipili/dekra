@@ -52,7 +52,7 @@ class ControleurController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($controleur);
             $entityManager->flush();
-            $this->addFlash('success','le contrôleur a été pris en compte');
+            $this->addFlash('success','La fiche contrôleur a été créée avec succès !');
             return $this->redirectToRoute('controleur_index');
         }
 
@@ -82,7 +82,7 @@ class ControleurController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success','le départemement a été modifié');
+            $this->addFlash('success','La fiche contrôleur a été modifiée avec succès !');
             return $this->redirectToRoute('controleur_index');
         }
 
@@ -102,7 +102,7 @@ class ControleurController extends AbstractController
             $entityManager->remove($controleur);
             $entityManager->flush();
         }
-        $this->addFlash('success','le départemement a été supprimé');
+        $this->addFlash('success','La fiche contrôleur a été supprimée avec succès !');
         return $this->redirectToRoute('controleur_index');
     }
 }

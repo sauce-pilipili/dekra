@@ -40,7 +40,7 @@ class SpecialiteController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($specialite);
             $entityManager->flush();
-            $this->addFlash('success','la specialitée a été prise en compte');
+            $this->addFlash('success','La fiche spécialité a été prise en compte avec succès !');
             return $this->redirectToRoute('specialite_index');
         }
 
@@ -70,7 +70,7 @@ class SpecialiteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-            $this->addFlash('success','la specialitée a été modifiée');
+            $this->addFlash('success','La fiche spécialité a été modifiée avec succès !');
             return $this->redirectToRoute('specialite_index');
         }
 
@@ -90,7 +90,7 @@ class SpecialiteController extends AbstractController
             $entityManager->remove($specialite);
             $entityManager->flush();
         }
-        $this->addFlash('success','la specialitée a été supprimée');
+        $this->addFlash('success','La fiche spécialité a été supprimée avec succès');
         return $this->redirectToRoute('specialite_index');
     }
 }

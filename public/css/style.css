@@ -270,6 +270,20 @@ h5 {
 
 /******************* Style des divisions profil/ajout client ****************************/
 
+.selectbeneficiaire {
+
+    width: 100%;
+    background-color: white;
+    font-weight: 900;
+}
+.selectbeneficiaire select {
+    font-family: "Montserrat", sans-serif;
+    padding: 12px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    border: rgb(185, 185, 185) solid 1px;
+    width: 100%;
+}
 .profil {
     border-radius: 10px;
     width: 100%;

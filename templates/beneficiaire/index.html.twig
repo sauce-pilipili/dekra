@@ -39,7 +39,7 @@
                     {% endif %}
                 </div>
                 {% if is_granted('ROLE_CLIENT') %}
-                    tableau en cours de creation
+                {{ include('include/_clientBeneficiaireView.html.twig') }}
 {#                {{ include('') }}#}
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}

@@ -61,55 +61,44 @@ class BeneficiaireController extends AbstractController
         $form = $this->createForm(DataBeneficiaireType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+
             //recuperation du fichier
             $fichier = $request->files->get('data_beneficiaire');
-            // on oboucle sur le bag
+            // on boucle sur le bag
             foreach ($fichier as $fic) {
                 //je nomme le fichier feuille avec son extension
                 $document = 'feuille.' . $fic->guessExtension();
                 // je l'envoie dans public upload
                 $fic->move($this->getParameter('document_directory'), $document);
-
                 //creation du reader pour lire le fichier
                 $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xls');
                 // autorisaiton de lecture des info
                 $reader->setReadDataOnly(true);
-
                 $directory = $this->getParameter('document_directory');
                 // debut de la lecture du fichier par appel
                 $spreadsheet = $reader->load($directory . '/feuille.xls');
                 // lecture du fichier par la case voulu
-                //dd($spreadsheet->getActiveSheet()->getHighestColumn(), $spreadsheet->getActiveSheet()->getHighestrow());
                 $worksheet = $spreadsheet->getActiveSheet();
                 $rows = $worksheet->toArray();
                 $feuilleLength = $spreadsheet->getActiveSheet()->getHighestRow();
-//                for ($i = 2; $i <= $feuilleLength - 1; $i++) {
-                for ($i = 2; $i <= $feuilleLength - 1; $i++) {
-                    $beneficiaire = new Beneficiaire();
-                    $beneficiaire->setStatut(0);
-                    $beneficiaire->setClient($client);
-                    $beneficiaire->setName($rows[$i][4]);
-                    $beneficiaire->setPrenom($rows[$i][5]);
-                    $beneficiaire->setAdresse($rows[$i][6]);
-                    $codePostal = $rows[$i][7];
-                    $departement = $deprep->findOneBy(['numero' => mb_strimwidth($codePostal, 0, 2)]);
-//                    dd($beneficiaire->getName(),$beneficiaire->getPrenom(),$departement,$deprep->DepartmentClient(mb_strimwidth($codePostal,0,2)));
-                    $beneficiaire->addDepartement($departement);
-                    $beneficiaire->setCodePostal($codePostal);
-                    $beneficiaire->setVille($rows[$i][8]);
-                    $em->persist($beneficiaire);
+                //selection de la feuille personnes physiques ou morales?
+                if ($form->get('select')->getData() == 'physique') {
+                    $this->lecturefichierphysique($feuilleLength, $client, $rows, $deprep, $em);
                 }
-                $em->flush();
-                // on supprime le fichier
-                $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
-                unlink($fichierSupp);
-                $this->addFlash('success', 'La liste bénéficiaires a été inserée avec succès !');
-                return $this->render('beneficiaire/new.html.twig', [
-                    'form' => $form->createView(),
-                ]);
             }
+            $em->flush();
+            // on supprime le fichier
+            $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+            unlink($fichierSupp);
+            $this->addFlash('success', 'La liste bénéficiaires a été inserée avec succès !');
+            return $this->render('beneficiaire/new.html.twig', [
+                'form' => $form->createView(),
+            ]);
+
+
         }
-        return $this->render('beneficiaire/new.html.twig', [
+        return $this->render('beneficiaire/index.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -125,6 +114,7 @@ class BeneficiaireController extends AbstractController
             'beneficiaire' => $beneficiaire
         ]);
     }
+
     /**
      * @Route("/beneficiaire{id}", name="beneficiaire_delete", methods={"POST"})
      */
@@ -136,5 +126,55 @@ class BeneficiaireController extends AbstractController
             $entityManager->flush();
         }
         return $this->redirectToRoute('beneficiaire');
+    }
+
+    /**
+     * @param int $feuilleLength
+     * @param $client
+     * @param array $rows
+     * @param DepartementsRepository $deprep
+     * @param \Doctrine\Persistence\ObjectManager $em
+     */
+    private function lecturefichierphysique(int $feuilleLength, $client, array $rows, DepartementsRepository $deprep, \Doctrine\Persistence\ObjectManager $em): void
+    {
+        for ($i = 8; $i <= $feuilleLength - 1; $i++) {
+            $beneficiaire = new Beneficiaire();
+            $beneficiaire->setStatut(0);
+            $beneficiaire->setClient($client);
+            $beneficiaire->setRaisonSocialeDemandeur($rows[$i][0]);
+            $beneficiaire->setSirenDemandeur($rows[$i][1]);
+            $beneficiaire->setReferenceEmmyDemande($rows[$i][2]);
+            $beneficiaire->setReferenceInterne($rows[$i][3]);
+            $beneficiaire->setName($rows[$i][4]);
+            $beneficiaire->setPrenom($rows[$i][5]);
+            $beneficiaire->setAdresse($rows[$i][6]);
+            $beneficiaire->setCodePostal($rows[$i][7]);
+            $dep = $deprep->findOneBy(['numero' => $rows[$i][8]]);
+            $beneficiaire->addDepartement($dep);
+            $beneficiaire->setVille($rows[$i][9]);
+            $beneficiaire->setEmail($rows[$i][10]);
+            $beneficiaire->setTelephone($rows[$i][11]);
+            $beneficiaire->setVolumeHorsPrecarite($rows[$i][12]);
+            $beneficiaire->setVolumePrecarite($rows[$i][13]);
+            $beneficiaire->setReferenceFicheOperation($rows[$i][14]);
+            $beneficiaire->setDateEngagementOperation($rows[$i][15]);
+            $beneficiaire->setDateFacture($rows[$i][16]);
+            $beneficiaire->setNatureBonification($rows[$i][17]);
+            $beneficiaire->setSirenDuProfesionnel($rows[$i][18]);
+            $beneficiaire->setRaisonSocialDuProfessionnel($rows[$i][19]);
+            $beneficiaire->setSirenSousTraitant($rows[$i][20]);
+            $beneficiaire->setRaisonSocialeSousTraitant($rows[$i][21]);
+            $beneficiaire->setNatureDuRoleActifIncitatif($rows[$i][22]);
+            $beneficiaire->setSirenOrganismeControle($rows[$i][23]);
+            $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][24]);
+            $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][25]);
+            $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][66]);
+            $beneficiaire->setConformiteApresCorrection($rows[$i][67]);
+            $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][68]);
+            $beneficiaire->setCommentaireGeneraux($rows[$i][69]);
+            $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][70]);
+            $beneficiaire->setVersionCoupDePouce($rows[$i][71]);
+            $em->persist($beneficiaire);
+        }
     }
 }

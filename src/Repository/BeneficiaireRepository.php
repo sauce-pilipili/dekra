@@ -49,6 +49,7 @@ class BeneficiaireRepository extends ServiceEntityRepository
 
 
     }
+
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */

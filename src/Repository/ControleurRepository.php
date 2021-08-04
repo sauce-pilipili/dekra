@@ -40,7 +40,6 @@ class ControleurRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-
     /*
     public function findOneBySomeField($value): ?Controleur
     {

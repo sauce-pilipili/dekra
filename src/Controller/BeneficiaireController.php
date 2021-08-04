@@ -3,11 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Beneficiaire;
+use App\Entity\Departements;
+use App\Entity\Specialite;
 use App\Form\DataBeneficiaireType;
 use App\Form\SearchBenType;
 use App\Repository\BeneficiaireRepository;
 use App\Repository\DepartementsRepository;
+use App\Repository\SpecialiteRepository;
+use App\Repository\SpecialitéRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use phpDocumentor\Reflection\Types\Object_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,15 +59,13 @@ class BeneficiaireController extends AbstractController
     /**
      * @Route("/beneficiaire/new", name="beneficiaire_new", methods={"GET","POST"})
      */
-    public function new(Request $request, DepartementsRepository $deprep): Response
+    public function new(Request $request, DepartementsRepository $deprep, SpecialiteRepository $specialiteRepository): Response
     {
         $client = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $form = $this->createForm(DataBeneficiaireType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-
             //recuperation du fichier
             $fichier = $request->files->get('data_beneficiaire');
             // on boucle sur le bag
@@ -84,8 +87,135 @@ class BeneficiaireController extends AbstractController
                 $feuilleLength = $spreadsheet->getActiveSheet()->getHighestRow();
                 //selection de la feuille personnes physiques ou morales?
                 if ($form->get('select')->getData() == 'physique') {
-                    $this->lecturefichierphysique($feuilleLength, $client, $rows, $deprep, $em);
+                    for ($i = 8; $i <= $feuilleLength - 1; $i++) {
+                        $beneficiaire = new Beneficiaire();
+                        $beneficiaire->setPersonneMorale(0);
+                        $beneficiaire->setStatut(0);
+                        $beneficiaire->setClient($client);
+                        $beneficiaire->setRaisonSocialeDemandeur($rows[$i][0]);
+                        $beneficiaire->setSirenDemandeur($rows[$i][1]);
+                        $beneficiaire->setReferenceEmmyDemande($rows[$i][2]);
+                        $beneficiaire->setReferenceInterne($rows[$i][3]);
+                        $beneficiaire->setName($rows[$i][4]);
+                        $beneficiaire->setPrenom($rows[$i][5]);
+                        $beneficiaire->setAdresse($rows[$i][6]);
+                        $beneficiaire->setCodePostal($rows[$i][7]);
+                        $dep = $deprep->findOneBy(['numero' => $rows[$i][8]]);
+                        //gestion erreur sur department
+                        if (!$dep){
+                            $this->addFlash('danger', 'le numero de departement du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
+                            $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                            unlink($fichierSupp);
+                            return $this->render('beneficiaire/new.html.twig', [
+                                'form' => $form->createView(),
+                            ]);
+                        }
+                        $beneficiaire->addDepartement($dep);
+                        $beneficiaire->setVille($rows[$i][9]);
+                        $beneficiaire->setTelephone($rows[$i][10]);
+                        $beneficiaire->setEmail($rows[$i][11]);
+                        $beneficiaire->setVolumeHorsPrecarite($rows[$i][12]);
+                        $beneficiaire->setVolumePrecarite($rows[$i][13]);
+                        $beneficiaire->setReferenceFicheOperation($rows[$i][14]);
+                        $spe = $specialiteRepository->findOneBy(['referenceOperation'=>$rows[$i][14]]);
+                        // gestion erreur sur la specialité
+                        if (!$spe){
+                            $this->addFlash('danger', 'la référence de la fiche d\'operation standardisée du client '. $rows[$i][4] . ' ligne ' . $i . ' colonne O n\'est pas valable' );
+                            $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                            unlink($fichierSupp);
+                            return $this->render('beneficiaire/new.html.twig', [
+                                'form' => $form->createView(),
+                            ]);
+                        }
+                        $beneficiaire->setDateEngagementOperation($rows[$i][15]);
+                        $beneficiaire->setDateFacture($rows[$i][16]);
+                        $beneficiaire->setNatureBonification($rows[$i][17]);
+                        $beneficiaire->setSirenDuProfesionnel($rows[$i][18]);
+                        $beneficiaire->setRaisonSocialDuProfessionnel($rows[$i][19]);
+                        $beneficiaire->setSirenSousTraitant($rows[$i][20]);
+                        $beneficiaire->setRaisonSocialeSousTraitant($rows[$i][21]);
+                        $beneficiaire->setNatureDuRoleActifIncitatif($rows[$i][22]);
+                        $beneficiaire->setSirenOrganismeControle($rows[$i][23]);
+                        $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][24]);
+                        $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][25]);
+                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][66]);
+                        $beneficiaire->setConformiteApresCorrection($rows[$i][67]);
+                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][68]);
+                        $beneficiaire->setCommentaireGeneraux($rows[$i][69]);
+                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][70]);
+                        $beneficiaire->setVersionCoupDePouce($rows[$i][71]);
+                        $em->persist($beneficiaire);
+                    }
+
                 }
+                if ($form->get('select')->getData() == 'morale') {
+
+                    for ($i = 8; $i <= $feuilleLength - 1; $i++) {
+                        $beneficiaire = new Beneficiaire();
+                        $beneficiaire->setPersonneMorale(1);
+                        $beneficiaire->setStatut(0);
+                        $beneficiaire->setClient($client);
+                        $beneficiaire->setRaisonSocialeDemandeur($rows[$i][0]);
+                        $beneficiaire->setSirenDemandeur($rows[$i][1]);
+                        $beneficiaire->setReferenceEmmyDemande($rows[$i][2]);
+                        $beneficiaire->setReferenceInterne($rows[$i][3]);
+                        $beneficiaire->setNomDuSiteBeneficiaireOperation($rows[$i][4]);
+                        $beneficiaire->setAdresse($rows[$i][5]);
+                        $beneficiaire->setCodePostal($rows[$i][6]);
+                        $dep = $deprep->findOneBy(['numero' => $rows[$i][7]]);
+                        //gestion erreur sur department
+                        if (!$dep){
+                            $this->addFlash('danger', 'le numero de departement du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
+                            $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                            unlink($fichierSupp);
+                            return $this->render('beneficiaire/new.html.twig', [
+                                'form' => $form->createView(),
+                            ]);
+                        }
+                        $beneficiaire->addDepartement($dep);
+                        $beneficiaire->setVille($rows[$i][8]);
+                        $beneficiaire->setTelephone($rows[$i][9]);
+                        $beneficiaire->setEmail($rows[$i][10]);
+                        $beneficiaire->setRaisonSocialDuBeneficiaireOperation($rows[$i][11]);
+                        $beneficiaire->setSirenBeneficiaireOperation($rows[$i][12]);
+                        $beneficiaire->setAdresseDuSiegeSocial($rows[$i][13]);
+                        $beneficiaire->setCodepostalSiegeSocial($rows[$i][14]);
+                        $beneficiaire->setVilleSiegeSocial($rows[$i][15]);
+                        $beneficiaire->setVolumeHorsPrecarite($rows[$i][16]);
+                        $beneficiaire->setVolumePrecarite($rows[$i][17]);
+                        $beneficiaire->setReferenceFicheOperation($rows[$i][18]);
+                        $spe = $specialiteRepository->findOneBy(['referenceOperation'=>$rows[$i][18]]);
+                        // gestion erreur sur la specialité
+                        if (!$spe){
+                            $this->addFlash('danger', 'la référence de la fiche d\'operation standardisée du client '. $rows[$i][4] . ' ligne ' . $i . ' colonne O n\'est pas valable' );
+                            $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                            unlink($fichierSupp);
+                            return $this->render('beneficiaire/new.html.twig', [
+                                'form' => $form->createView(),
+                            ]);
+                        }
+                        $beneficiaire->setDateEngagementOperation($rows[$i][19]);
+                        $beneficiaire->setDateAchevementOperation($rows[$i][20]);
+                        $beneficiaire->setNatureBonification($rows[$i][21]);
+                        $beneficiaire->setSirenDuProfesionnel($rows[$i][22]);
+                        $beneficiaire->setRaisonSocialDuProfessionnel($rows[$i][23]);
+                        $beneficiaire->setSirenSousTraitant($rows[$i][24]);
+                        $beneficiaire->setRaisonSocialeSousTraitant($rows[$i][25]);
+                        $beneficiaire->setNatureDuRoleActifIncitatif($rows[$i][26]);
+                        $beneficiaire->setSirenOrganismeControle($rows[$i][27]);
+                        $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][28]);
+                        $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][29]);
+                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][69]);
+                        $beneficiaire->setConformiteApresCorrection($rows[$i][70]);
+                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][71]);
+                        $beneficiaire->setCommentaireGeneraux($rows[$i][72]);
+                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][73]);
+                        $beneficiaire->setVersionCoupDePouce($rows[$i][74]);
+                        $em->persist($beneficiaire);
+                    }
+
+                }
+
             }
             $em->flush();
             // on supprime le fichier
@@ -98,7 +228,7 @@ class BeneficiaireController extends AbstractController
 
 
         }
-        return $this->render('beneficiaire/index.html.twig', [
+        return $this->render('beneficiaire/new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
@@ -128,53 +258,4 @@ class BeneficiaireController extends AbstractController
         return $this->redirectToRoute('beneficiaire');
     }
 
-    /**
-     * @param int $feuilleLength
-     * @param $client
-     * @param array $rows
-     * @param DepartementsRepository $deprep
-     * @param \Doctrine\Persistence\ObjectManager $em
-     */
-    private function lecturefichierphysique(int $feuilleLength, $client, array $rows, DepartementsRepository $deprep, \Doctrine\Persistence\ObjectManager $em): void
-    {
-        for ($i = 8; $i <= $feuilleLength - 1; $i++) {
-            $beneficiaire = new Beneficiaire();
-            $beneficiaire->setStatut(0);
-            $beneficiaire->setClient($client);
-            $beneficiaire->setRaisonSocialeDemandeur($rows[$i][0]);
-            $beneficiaire->setSirenDemandeur($rows[$i][1]);
-            $beneficiaire->setReferenceEmmyDemande($rows[$i][2]);
-            $beneficiaire->setReferenceInterne($rows[$i][3]);
-            $beneficiaire->setName($rows[$i][4]);
-            $beneficiaire->setPrenom($rows[$i][5]);
-            $beneficiaire->setAdresse($rows[$i][6]);
-            $beneficiaire->setCodePostal($rows[$i][7]);
-            $dep = $deprep->findOneBy(['numero' => $rows[$i][8]]);
-            $beneficiaire->addDepartement($dep);
-            $beneficiaire->setVille($rows[$i][9]);
-            $beneficiaire->setEmail($rows[$i][10]);
-            $beneficiaire->setTelephone($rows[$i][11]);
-            $beneficiaire->setVolumeHorsPrecarite($rows[$i][12]);
-            $beneficiaire->setVolumePrecarite($rows[$i][13]);
-            $beneficiaire->setReferenceFicheOperation($rows[$i][14]);
-            $beneficiaire->setDateEngagementOperation($rows[$i][15]);
-            $beneficiaire->setDateFacture($rows[$i][16]);
-            $beneficiaire->setNatureBonification($rows[$i][17]);
-            $beneficiaire->setSirenDuProfesionnel($rows[$i][18]);
-            $beneficiaire->setRaisonSocialDuProfessionnel($rows[$i][19]);
-            $beneficiaire->setSirenSousTraitant($rows[$i][20]);
-            $beneficiaire->setRaisonSocialeSousTraitant($rows[$i][21]);
-            $beneficiaire->setNatureDuRoleActifIncitatif($rows[$i][22]);
-            $beneficiaire->setSirenOrganismeControle($rows[$i][23]);
-            $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][24]);
-            $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][25]);
-            $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][66]);
-            $beneficiaire->setConformiteApresCorrection($rows[$i][67]);
-            $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][68]);
-            $beneficiaire->setCommentaireGeneraux($rows[$i][69]);
-            $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][70]);
-            $beneficiaire->setVersionCoupDePouce($rows[$i][71]);
-            $em->persist($beneficiaire);
-        }
-    }
 }

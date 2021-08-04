@@ -195,6 +195,46 @@ class Beneficiaire
      */
     private $telephone;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $nomDuSiteBeneficiaireOperation;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $raisonSocialDuBeneficiaireOperation;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $sirenBeneficiaireOperation;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $adresseDuSiegeSocial;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codepostalSiegeSocial;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $villeSiegeSocial;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $dateAchevementOperation;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $personneMorale;
+
     public function __construct()
     {
         $this->departement = new ArrayCollection();
@@ -633,6 +673,102 @@ class Beneficiaire
     public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getNomDuSiteBeneficiaireOperation(): ?string
+    {
+        return $this->nomDuSiteBeneficiaireOperation;
+    }
+
+    public function setNomDuSiteBeneficiaireOperation(?string $nomDuSiteBeneficiaireOperation): self
+    {
+        $this->nomDuSiteBeneficiaireOperation = $nomDuSiteBeneficiaireOperation;
+
+        return $this;
+    }
+
+    public function getRaisonSocialDuBeneficiaireOperation(): ?string
+    {
+        return $this->raisonSocialDuBeneficiaireOperation;
+    }
+
+    public function setRaisonSocialDuBeneficiaireOperation(?string $raisonSocialDuBeneficiaireOperation): self
+    {
+        $this->raisonSocialDuBeneficiaireOperation = $raisonSocialDuBeneficiaireOperation;
+
+        return $this;
+    }
+
+    public function getSirenBeneficiaireOperation(): ?string
+    {
+        return $this->sirenBeneficiaireOperation;
+    }
+
+    public function setSirenBeneficiaireOperation(?string $sirenBeneficiaireOperation): self
+    {
+        $this->sirenBeneficiaireOperation = $sirenBeneficiaireOperation;
+
+        return $this;
+    }
+
+    public function getAdresseDuSiegeSocial(): ?string
+    {
+        return $this->adresseDuSiegeSocial;
+    }
+
+    public function setAdresseDuSiegeSocial(?string $adresseDuSiegeSocial): self
+    {
+        $this->adresseDuSiegeSocial = $adresseDuSiegeSocial;
+
+        return $this;
+    }
+
+    public function getCodepostalSiegeSocial(): ?string
+    {
+        return $this->codepostalSiegeSocial;
+    }
+
+    public function setCodepostalSiegeSocial(?string $codepostalSiegeSocial): self
+    {
+        $this->codepostalSiegeSocial = $codepostalSiegeSocial;
+
+        return $this;
+    }
+
+    public function getVilleSiegeSocial(): ?string
+    {
+        return $this->villeSiegeSocial;
+    }
+
+    public function setVilleSiegeSocial(?string $villeSiegeSocial): self
+    {
+        $this->villeSiegeSocial = $villeSiegeSocial;
+
+        return $this;
+    }
+
+    public function getDateAchevementOperation(): ?string
+    {
+        return $this->dateAchevementOperation;
+    }
+
+    public function setDateAchevementOperation(?string $dateAchevementOperation): self
+    {
+        $this->dateAchevementOperation = $dateAchevementOperation;
+
+        return $this;
+    }
+
+    public function getPersonneMorale(): ?bool
+    {
+        return $this->personneMorale;
+    }
+
+    public function setPersonneMorale(?bool $personneMorale): self
+    {
+        $this->personneMorale = $personneMorale;
 
         return $this;
     }

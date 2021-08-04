@@ -7,15 +7,17 @@
     {{ include('include/_navigation.html.twig') }}
     <div class="content">
         <div class="container">
-            <h4>Ajout un lot de bénéficiaire</h4>
+            <div class="titlereturn">
+                <h4>Ajout un lot de bénéficiaire</h4>
+                <a href="{{ path('beneficiaire') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+            </div>
+
             <div class="lot-controleur">
                 <h3>Ajout d'un lot</h3>
                 {{ form_start(form) }}
                 <div class="selectbeneficiaire">
                     {{ form_row(form.select) }}
                 </div>
-
-
 
                 {{ form_row(form.fichier) }}
                     <label for="file">Format fichier excel seulement</label>

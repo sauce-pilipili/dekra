@@ -1,20 +1,94 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CallCenterController!{% endblock %}
+{% block title %}Bénéficiaires{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="main">
+        {{ include('include/_navigation.html.twig') }}
+        <div class="content">
+            <div class="container">
+                <h4>Les bénéficiaires</h4>
+                <div class="search-container">
+                    <div class="search-controleurs">
+{#                        {{ form_start(form) }}#}
+{#                        {{ form_row(form.name, {'attr': {'class': 'search-container-select'}}) }}#}
+{#                        <button class="btn-submit" type="submit"><i class="fa fa-search" aria-hidden="true"></i>#}
+{#                        </button>#}
+{#                        {{ form_end(form) }}#}
+                    </div> {% if is_granted('ROLE_CLIENT') %}
+                        <div class="addanddelete">
+                            <div class="addicon">
+                                <a href="{{ path('beneficiaire_new') }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 19 19">
+                                        <defs>
+                                            <style>
+                                                .a {
+                                                    fill: #0d0d0d;
+                                                }
+                                            </style>
+                                        </defs>
+                                        <path
+                                                d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
+                                                transform="translate(-4 -4)"/>
+                                    </svg>
+                                </a>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+                            </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'D:/wamp64/www/dekra/src/Controller/CallCenterController.php'|file_link(0) }}">src/Controller/CallCenterController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'D:/wamp64/www/dekra/templates/call_center/index.html.twig'|file_link(0) }}">templates/call_center/index.html.twig</a></code></li>
-    </ul>
-</div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="table">
+                    <table>
+                        <tr class="table-title">
+                            <th class="table-title-name paddingleft20px">Bénéficiaires</th>
+                            <th class="table-title-date">adresse email</th>
+                            <th class="table-title-date">Numéro de téléphone</th>
+                            <th class="table-title-date paddingright20px">Supprimer</th>
+                        </tr>
+                        {% for b in beneficiaires %}
+                            <tr>
+                                <td class="table-name paddingleft20px"><a href="{{ path('call_center_Rdv',{'id': b.id}) }}">{{ b.name }} {{ b.prenom }}</a></td>
+                                <td class="table-date">{{ b.email }}</td>
+                                <td class="table-date">{{ b.telephone }}</td>
+                                <td class="paddingright20px">
+                                    <form method="post" action="{{ path('beneficiaire_delete', {'id': b.id}) }}"
+                                          onsubmit="return confirm('Confirmer la suppression du bénéficiaire?')">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ b.id) }}">
+                                        <button class="btn">
+                                            <div class="delicon">
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                     viewBox="0 0 20 20">
+                                                    <defs>
+                                                        <style>
+                                                            .a {
+                                                                fill: #0d0d0d;
+                                                            }
+                                                        </style>
+                                                    </defs>
+                                                    <path
+                                                            d="M7,4A2,2,0,0,1,9,2h6a2,2,0,0,1,2,2V6h4a1,1,0,0,1,0,2H19.931l-.867,12.142A2,2,0,0,1,17.069,22H6.931a2,2,0,0,1-1.995-1.858L4.069,8H3A1,1,0,0,1,3,6H7ZM9,6h6V4H9ZM6.074,8l.857,12H17.069l.857-12ZM10,10a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,10,10Zm4,0a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,14,10Z"
+                                                            transform="translate(-2 -2)"/>
+                                                </svg>
+                                            </div>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="pagination">
+                    <div class="navigation-knp">
+{#                        {{ knp_pagination_render(beneficiaires) }}#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+
 {% endblock %}

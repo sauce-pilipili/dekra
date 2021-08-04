@@ -16,6 +16,9 @@ class SpecialiteType extends AbstractType
             ->add('name',TextType::class,[
                 'label'=>false
             ])
+            ->add('referenceOperation',TextType::class,[
+                'label'=>false
+            ])
         ;
     }
     public function configureOptions(OptionsResolver $resolver)

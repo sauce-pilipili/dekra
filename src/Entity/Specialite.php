@@ -29,6 +29,11 @@ class Specialite
      */
     private $controleurs;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $referenceOperation;
+
     public function __toString() {
         return $this->name;
     }
@@ -77,6 +82,18 @@ class Specialite
         if ($this->controleurs->removeElement($controleur)) {
             $controleur->removeSpecialite($this);
         }
+
+        return $this;
+    }
+
+    public function getReferenceOperation(): ?string
+    {
+        return $this->referenceOperation;
+    }
+
+    public function setReferenceOperation(string $referenceOperation): self
+    {
+        $this->referenceOperation = $referenceOperation;
 
         return $this;
     }

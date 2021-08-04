@@ -45,7 +45,8 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->andWhere('b.id =:val')
             ->setParameter('val', $id)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
+
 
 
     }

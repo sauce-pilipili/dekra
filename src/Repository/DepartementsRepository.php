@@ -19,22 +19,11 @@ class DepartementsRepository extends ServiceEntityRepository
         parent::__construct($registry, Departements::class);
     }
 
-    // /**
-    //  * @return Departements[] Returns an array of Departements objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+//    public function beneficiaireToContoleur($value): ?Departements
+//    {
+//     return $this->createQueryBuilder('d')
+//     ->andWhere('')
+//    }
 
 
     public function DepartmentClient($value): ?Departements

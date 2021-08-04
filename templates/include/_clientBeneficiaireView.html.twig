@@ -8,9 +8,9 @@
         </tr>
         {% for b in beneficiaires %}
             <tr>
-                <td class="table-name paddingleft20px"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{{ b.name }} {{ b.prenom }}</a></td>
+                <td class="table-name paddingleft20px"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a></td>
                 <td class="table-date">{{ b.email }}</td>
-                <td class="table-date">{{ b.referenceficheoperation }}</td>
+                <td class="table-date">{{ b.telephone }}</td>
                 <td class="paddingright20px">
                     <form method="post" action="{{ path('beneficiaire_delete', {'id': b.id}) }}"
                           onsubmit="return confirm('Confirmer la suppression du bénéficiaire?')">

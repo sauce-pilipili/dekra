@@ -8,14 +8,15 @@
         <div class="content">
             <div class="container">
                 <h4>Les bénéficiaires</h4>
-                <div class="search-container">
+                <div class="search-container">{{ form_start(form) }}
                     <div class="search-controleurs">
-                        {{ form_start(form) }}
+
                         {{ form_row(form.name, {'attr': {'class': 'search-container-select'}}) }}
-                        <button class="btn-submit" type="submit"><i class="fa fa-search" aria-hidden="true"></i>
+                        <button class="btn-submit" type="submit"><i class="fa fa-search fa-lg" aria-hidden="true"></i>
                         </button>
-                        {{ form_end(form) }}
-                    </div> {% if is_granted('ROLE_CLIENT') %}
+
+                    </div>
+                    {{ form_end(form) }}{% if is_granted('ROLE_CLIENT') %}
                         <div class="addanddelete">
                             <div class="addicon">
                                 <a href="{{ path('beneficiaire_new') }}">

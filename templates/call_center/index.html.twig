@@ -49,7 +49,7 @@
                         </tr>
                         {% for b in beneficiaires %}
                             <tr>
-                                <td class="table-name paddingleft20px"><a href="{{ path('call_center_Rdv',{'id': b.id}) }}">{{ b.name }} {{ b.prenom }}</a></td>
+                                <td class="table-name paddingleft20px"><a href="{{ path('call_center_Rdv',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a></td>
                                 <td class="table-date">{{ b.email }}</td>
                                 <td class="table-date">{{ b.telephone }}</td>
                                 <td class="paddingright20px">

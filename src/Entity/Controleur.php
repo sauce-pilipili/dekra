@@ -39,6 +39,16 @@ class Controleur
      */
     private $specialite;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $telnumber;
+
 
 
     public function __tostring(){
@@ -124,6 +134,30 @@ class Controleur
     public function removeSpecialite(Specialite $specialite): self
     {
         $this->specialite->removeElement($specialite);
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getTelnumber(): ?string
+    {
+        return $this->telnumber;
+    }
+
+    public function setTelnumber(string $telnumber): self
+    {
+        $this->telnumber = $telnumber;
 
         return $this;
     }

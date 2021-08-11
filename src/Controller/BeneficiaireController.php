@@ -65,26 +65,28 @@ class BeneficiaireController extends AbstractController
             //recuperation du fichier
             $fichier = $request->files->get('data_beneficiaire');
             // on boucle sur le bag
+
             foreach ($fichier as $fic) {
                 //je nomme le fichier feuille avec son extension
                 $document = 'feuille.' . $fic->guessExtension();
                 // je l'envoie dans public upload
                 $fic->move($this->getParameter('document_directory'), $document);
                 //creation du reader pour lire le fichier
-                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xls');
+                $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
                 // autorisaiton de lecture des info
                 $reader->setReadDataOnly(true);
                 $directory = $this->getParameter('document_directory');
                 // debut de la lecture du fichier par appel
-                $spreadsheet = $reader->load($directory . '/feuille.xls');
+                $spreadsheet = $reader->load($directory . '/feuille.xlsx');
                 // lecture du fichier par la case voulu
                 $worksheet = $spreadsheet->getActiveSheet();
                 $rows = $worksheet->toArray();
                 $feuilleLength = $spreadsheet->getActiveSheet()->getHighestRow();
                 //selection de la feuille personnes physiques ou morales?
+
                 if ($form->get('select')->getData() == 'physique') {
 
-                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'BT') {
+                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AF') {
                         $this->addFlash('danger', 'La feuille que vous essayer d\'inserer contient une liste de personnes morales');
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
@@ -92,7 +94,7 @@ class BeneficiaireController extends AbstractController
                             'form' => $form->createView(),
                         ]);
                     }
-                    for ($i = 8; $i <= $feuilleLength - 1; $i++) {
+                    for ($i = 1; $i <= $feuilleLength - 1; $i++) {
                         $beneficiaire = new Beneficiaire();
                         $beneficiaire->setPersonneMorale(0);
                         $beneficiaire->setStatut(0);
@@ -143,17 +145,17 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setSirenOrganismeControle($rows[$i][23]);
                         $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][24]);
                         $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][25]);
-                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][66]);
-                        $beneficiaire->setConformiteApresCorrection($rows[$i][67]);
-                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][68]);
-                        $beneficiaire->setCommentaireGeneraux($rows[$i][69]);
-                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][70]);
-                        $beneficiaire->setVersionCoupDePouce($rows[$i][71]);
+                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][26]);
+                        $beneficiaire->setConformiteApresCorrection($rows[$i][27]);
+                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][28]);
+                        $beneficiaire->setCommentaireGeneraux($rows[$i][29]);
+                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][30]);
+                        $beneficiaire->setVersionCoupDePouce($rows[$i][31]);
                         $em->persist($beneficiaire);
                     }
                 }
                 if ($form->get('select')->getData() == 'morale') {
-                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'BW') {
+                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AJ') {
                         $this->addFlash('danger', 'La feuille que vous essayer d\'inserer contient une liste de personnes physiques');
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
@@ -161,7 +163,7 @@ class BeneficiaireController extends AbstractController
                             'form' => $form->createView(),
                         ]);
                     }
-                    for ($i = 8; $i <= $feuilleLength - 1; $i++) {
+                    for ($i = 1; $i <= $feuilleLength - 1; $i++) {
 
                         $beneficiaire = new Beneficiaire();
                         $beneficiaire->setPersonneMorale(1);
@@ -217,12 +219,12 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setSirenOrganismeControle($rows[$i][27]);
                         $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][28]);
                         $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][29]);
-                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][69]);
-                        $beneficiaire->setConformiteApresCorrection($rows[$i][70]);
-                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][71]);
-                        $beneficiaire->setCommentaireGeneraux($rows[$i][72]);
-                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][73]);
-                        $beneficiaire->setVersionCoupDePouce($rows[$i][74]);
+                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][30]);
+                        $beneficiaire->setConformiteApresCorrection($rows[$i][31]);
+                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][32]);
+                        $beneficiaire->setCommentaireGeneraux($rows[$i][33]);
+                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][34]);
+                        $beneficiaire->setVersionCoupDePouce($rows[$i][35]);
                         $em->persist($beneficiaire);
                     }
                 }

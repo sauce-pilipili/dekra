@@ -18,7 +18,7 @@
                             <div class="list-controleur">
                                 {% for cont in controlleurs %}
                                     <div class="controleur">
-                                        <div class="checkbox"><input type="checkbox"></div>
+                                        <div class="checkbox"><input id="checkbox" type="checkbox" value="{{ cont.id }}"></div>
                                         <div class="controleur-profil">
                                             <p class="controleur-name">{{ cont.nom }} {{ cont.prenom }}</p> <br>
                                             <div class="department">
@@ -39,10 +39,30 @@
                                                     {% endfor %}
                                                 </div>
                                             </div>
+                                            <br>
+
                                         </div>
                                     </div> <br>
                                     <hr> <br>
                                 {% endfor %}
+                                <button class="buttongreen" id="myBtn" disabled="true">Prendre Rdv</button>
+                                <div id="myModal" class="modal">
+
+                                    <!-- Modal content -->
+                                    <div class="modal-content ">
+                                        <span class="close">&times;</span>
+                                        {{ form_start(form) }}
+                                        <div class="input-modal">
+                                        {{ form_row(form.RdvDate,) }}
+                                        </div>
+{#                                        <input type="hidden" value="bonjour" id="valuehiddenmail">#}
+                                        <button class="buttongreen" type="submit">
+                                            Valider le RDV
+                                        </button>
+                                        {{ form_end(form) }}
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -102,13 +122,45 @@
                             <br>
                             <hr>
                             <br>
-
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
+{% endblock %}
 
+
+{% block javascripts %}
+    <script>
+        var modal = document.getElementById("myModal");
+        var check = document.querySelectorAll("#checkbox");
+        var btn = document.querySelectorAll("#myBtn");
+        var span = document.getElementsByClassName("close")[0];
+        check.forEach(function (ck){
+            ck.addEventListener('click', function () {
+                btn = document.getElementById("myBtn");
+                btn.disabled = false;
+
+                let value = document.getElementById('rendez_vous_hidden').value = this.valueOf().value;
+                console.log(value ,btn);
+            })
+        })
+        console.log(check.valueOf())
+        // listener ouverture modal
+        btn.forEach(function (bt){
+            bt.addEventListener('click',function (){
+                modal.style.display = "block";
+            })
+        })
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        // When the user clicks anywhere outside of the modal, close it
+        // window.onclick = function(event) {
+        //     if (event.target == modal) {
+        //         modal.style.display = "none";
+        //     }
+        // }
+    </script>
 {% endblock %}

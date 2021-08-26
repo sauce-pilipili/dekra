@@ -18,7 +18,7 @@
                             <div class="list-controleur">
                                 {% for cont in controlleurs %}
                                     <div class="controleur">
-                                        <div class="checkbox"><input id="checkbox" type="checkbox" value="{{ cont.id }}"></div>
+                                        <div class="checkbox"><input name="rdvSelect" id="checkbox" type="radio" value="{{ cont.id }}"></div>
                                         <div class="controleur-profil">
                                             <p class="controleur-name">{{ cont.nom }} {{ cont.prenom }}</p> <br>
                                             <div class="department">

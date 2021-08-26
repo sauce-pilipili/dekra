@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:v="urn:schemas-microsoft-com:vml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+    <title>Information rendez-vous</title>
+    <style type="text/css">
+        .info tr td:first-of-type {
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .info tr td:last-of-type {
+            text-align: right;
+        }
+
+        .info h2 {
+            text-align: left;
+            color: #007F3D;
+        }
+
+        h2 {
+            margin: 30px 0;
+        }
+
+        h1 {
+            margin: 80px 0 50px 0;
+        }
+
+        .info td:not(.last) {
+            border-bottom: 1px solid #BCBCBC;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body bgcolor="#F5F5F5" style="margin:0;" align="center">
+
+<table border="0" width="100%" cellpadding="0" cellspacing="0">
+    <tr bgcolor="#FFF">
+        <td height="70" style="text-align:center;padding: 20px 0;box-shadow: 5px 5px 30px #00000005;">
+            <img src="{{ absolute_url(asset('img/logo-dekra.jpg')) }}" width="auto" height="70" border="0"
+                 alt="logo dekra">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h1>Bonjour {{ beneficiaire.prenom }} {{ beneficiaire.name }}
+            </h1>
+        </td>
+    </tr>
+</table>
+
+<table border="0" width="80%" cellpadding="0" cellspacing="0"
+       style="margin: auto;background: #FFFFFF;box-shadow: 5px 5px 30px #00000005;border-radius: 10px;padding:30px 50px;max-width:850px;">
+    <tr>
+        <td>
+            <p style="margin: 0 0 25px 0;">Nous vous informons qu’un rendez-vous pour le contrôle de vos travaux a été pris le :</p>
+            <p><b>{{ date |date('d-m-Y') }}</b> à <b>{{ date |date('H:i') }}</b></p>
+            <p>chez <b>{{ beneficiaire.name }} {{ beneficiaire.prenom }}</b></p>
+            <p>à l'adresse <b>{{ beneficiaire.adresse }} {{ beneficiaire.codePostal }} {{ beneficiaire.ville }}.</b></p>
+            <p> Identité du contrôleur: {{ controleur.prenom }}  {{ controleur.nom }}</p>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

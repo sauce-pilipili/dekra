@@ -7,6 +7,8 @@ use App\Entity\Controleur;
 use App\Entity\Departements;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,8 +25,18 @@ class ControleurType extends AbstractType
             ->add('prenom',TextType::class,[
                 'label'=>false
             ])
-            ->add('departement')
-            ->add('specialite')
+            ->add('email',EmailType::class,[
+                'label'=>false
+            ])
+            ->add('telnumber', TelType::class,[
+                'label'=>false
+            ])
+            ->add('departement',null,[
+                'label'=>false
+            ])
+            ->add('specialite',null,[
+        'label'=>false
+    ])
         ;
     }
 

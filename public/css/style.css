@@ -698,7 +698,7 @@ table tr:last-child {
     font-family: "Montserrat", sans-serif;
     font-weight: 900;
 }
-
+.table-statut-en-cours,
 .table-client,
 .table-rdv,
 .table-statut-wait,
@@ -711,7 +711,7 @@ table tr:last-child {
 .table-date {
     font-size: 1.3rem;
 }
-
+.table-statut-en-cours,
 .table-statut-ok,
 .table-statut-wait {
     color: white;
@@ -721,6 +721,11 @@ table tr:last-child {
 
 .table-statut-ok p {
     background-color: #007f3d;
+    padding: 8px;
+    width: 80%;
+}
+.table-statut-en-cours p {
+    background-color: #DBBE1F;
     padding: 8px;
     width: 80%;
 }

@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bénéficiaires{% endblock %}
+
+{% block body %}
+    <div class="main">
+        {{ include('include/_navigation.html.twig') }}
+        <div class="content">
+            <div class="container">
+                {% if beneficiaires == null %}
+                    <div class="titlereturn">
+                        <h4>Les bénéficiaires</h4>
+                        <a href="{{ path('call_center_client',{id: clientid}) }}" class="buttonreturn"><i
+                                    class="fas fa-undo"></i> Retour</a>
+                    </div>
+
+                {% else %}
+                    {% for b in beneficiaires| slice(0,1) %}
+                        <div class="titlereturn">
+                            <h4>Les bénéficiaires</h4>
+                            <a href="{{ path('call_center_client',  {id: clientid}) }}" class="buttonreturn"><i
+                                        class="fas fa-undo"></i> Retour</a>
+                        </div>
+                        <p class="">{{ b.client.name }}, lot {{ b.numeroLot }}
+                            , {% if b.personneMorale == 1 %}personne morale{% else %}personne physique{% endif %},
+                            précarité :{{ b.grandPrecairePrecaireClassique }}</p>
+
+                    {% endfor %}
+                {% endif %}
+
+
+                    {% if  beneficiaires |length == 0 %}
+                        {% set pourcentage = 0 %}
+                    {% else %}
+                        {% set pourcentage = ((100*rdv) / beneficiaires |length) | number_format(2) %}
+                    {% endif %}
+                    <td class="table-name paddingright20px">
+                        <progress id="file" value="{{ pourcentage }}" max="100"></progress>{{ pourcentage }}%
+                    </td>
+
+
+                <div class="search-container">
+                    <div class="search-controleurs">
+                    </div>
+                </div>
+
+                <div class="table">
+                    <table>
+                        <tr class="table-title">
+                            <th class="table-title-name paddingleft20px">Bénéficiaires</th>
+                            <th class="table-title-date">adresse email</th>
+                            <th class="table-title-date">Téléphone</th>
+                            <th class="table-title-date">Date RDV</th>
+                            <th class="table-title-date">Statut</th>
+                            {% if is_granted('ROLE_CLIENT') %}
+                                <th class="table-title-date paddingright20px">Supprimer</th>
+                            {% endif %}
+                        </tr>
+                        {% if beneficiaires == null %}
+                            <p class="table-title">Aucun resultat</p>
+                        {% endif %}
+                        {% for b in beneficiaires %}
+                            <tr>
+                                <td class="table-name paddingleft20px">{{ b.id }}<a
+                                            href="{{ path('call_center_Rdv',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a>
+                                </td>
+                                <td class="table-date">{{ b.email }}</td>
+                                <td class="table-date">{{ b.telephone }}</td>
+                                {% if (b.rdv == null) %}
+                                    <td class="table-date">
+
+                                    </td>
+                                {% else %}
+                                    <td class="table-date">
+                                        <p>{{ b.rdv |format_datetime ( locale= 'fr', pattern="dd MMMM YYYY HH:mm") }}</p>
+                                    </td>
+                                {% endif %}
+
+                                {% if (b.statut== 0) %}
+                                    <td class="table-statut-wait">
+                                        <p>En attente</p>
+                                    </td>
+                                {% else %}
+                                    {% if date('now')> date(b.rdv) %}
+                                        <td class="table-statut-ok">
+                                            <p>Contrôlé</p>
+                                        </td>
+                                    {% else %}
+                                        <td class="table-statut-en-cours">
+                                            <p>En cours</p>
+                                        </td>
+                                    {% endif %}
+                                {% endif %}
+                                {% if is_granted('ROLE_CLIENT') %}
+                                    <td class="paddingright20px">
+                                        <form method="post" action="{{ path('beneficiaire_delete', {'id': b.id}) }}"
+                                              onsubmit="return confirm('Confirmer la suppression du bénéficiaire?')">
+                                            <input type="hidden" name="_token"
+                                                   value="{{ csrf_token('delete' ~ b.id) }}">
+                                            <button class="btn">
+                                                <div class="delicon">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                         viewBox="0 0 20 20">
+                                                        <defs>
+                                                            <style>
+                                                                .a {
+                                                                    fill: #0d0d0d;
+                                                                }
+                                                            </style>
+                                                        </defs>
+                                                        <path
+                                                                d="M7,4A2,2,0,0,1,9,2h6a2,2,0,0,1,2,2V6h4a1,1,0,0,1,0,2H19.931l-.867,12.142A2,2,0,0,1,17.069,22H6.931a2,2,0,0,1-1.995-1.858L4.069,8H3A1,1,0,0,1,3,6H7ZM9,6h6V4H9ZM6.074,8l.857,12H17.069l.857-12ZM10,10a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,10,10Zm4,0a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,14,10Z"
+                                                                transform="translate(-2 -2)"/>
+                                                    </svg>
+                                                </div>
+                                            </button>
+                                        </form>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="pagination">
+                    <div class="navigation-knp">
+                        {# {{ knp_pagination_render(beneficiaires) }} #}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+
+{% endblock %}

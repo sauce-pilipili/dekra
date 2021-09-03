@@ -6,9 +6,10 @@ use App\Form\RendezVousType;
 use App\Repository\BeneficiaireRepository;
 use App\Repository\ControleurRepository;
 use App\Repository\SpecialiteRepository;
-use Doctrine\ORM\EntityManager;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -18,16 +19,61 @@ use Symfony\Component\Routing\Annotation\Route;
 class CallCenterController extends AbstractController
 {
     /**
-     * @Route("/call/center", name="call_center")
+     * @Route("/call/center/", name="call_center")
      */
-    public function index(BeneficiaireRepository $beneficiaireRepository): Response
+    public function index(UserRepository $userRepository): Response
     {
-        $beneficiaires = $beneficiaireRepository->findAll();
+        $client = $userRepository->findClientForCallCenter();
         return $this->render('call_center/index.html.twig', [
             'controller_name' => 'CallCenterController',
-            'beneficiaires' => $beneficiaires,
+            'client' => $client,
         ]);
     }
+
+    /**
+     * @Route("call/client{id}", name="call_center_client")
+     */
+    public function CallCenterClient(Request $request,$id,BeneficiaireRepository $beneficiaireRepository, UserRepository $userRepository): Response
+    {
+
+        if ($request->isXmlHttpRequest()){
+            $lot = $request->get('lot');
+            $category =$request->get('category');
+            $statut = $request->get('statut');
+            $id = $request->get('idClient');
+            $beneficiaire = $beneficiaireRepository->findForRdvOrdercount($lot,$category,$statut,$id);
+            $rdv = $beneficiaireRepository->findwhereRDV($lot,$category,$statut,$id);
+            return new Jsonresponse(['rdv'=>$rdv,'bene'=>$beneficiaire]);
+        }
+        $client = $userRepository->find($id);
+        $beneficiaire = $beneficiaireRepository->findClientID($id);
+        return $this->render('call_center/client.html.twig', [
+            'beneficiaire' => $beneficiaire,
+            'client'=> $client,
+        ]);
+    }
+
+    /**
+     * @Route("/call/center/{lot}list{category}/{id}filter{statut}", name="call_center_list_filter")
+     *
+     */
+    public function CLientLotFiltered(Request $request,$lot,$category,$statut,$id, BeneficiaireRepository $beneficiaireRepository): Response
+    {
+
+        $beneficiaires = $beneficiaireRepository->findForRdvOrder($lot,$category,$statut,$id);
+        $rdv = $beneficiaireRepository->findwhereRDV($lot,$category,$statut,$id);
+
+        return $this->render('call_center/list.html.twig', [
+            'controller_name' => 'CallCenterController',
+            'beneficiaires' => $beneficiaires,
+            'clientid'=> $id,
+            'rdv'=>$rdv
+        ]);
+    }
+
+
+
+
 
     /**
      * @Route("/call/center/rdv/{id}", name="call_center_Rdv", methods={"GET","POST"})
@@ -43,7 +89,7 @@ class CallCenterController extends AbstractController
         $form = $this->createForm(RendezVousType::class);
         $form->handleRequest($request);
 
-        // hydratation des elemnts
+        // hydratation des elements
         $beneficiaires = $beneficiaireRepository->show($id);
 
         $referenceControle = $beneficiaires->getReferenceFicheOperation();

@@ -33,6 +33,66 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    /**
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     */
+    public function findForRdvOrder($lot, $precarite,$statut,$id)
+    {
+
+        return $this->createQueryBuilder('b')
+
+            ->where('b.numeroLot = :lot')
+            ->setParameter('lot', $lot)
+            ->andWhere('b.grandPrecairePrecaireClassique LIKE :val')
+            ->setParameter('val', $precarite )
+            ->andWhere('b.personneMorale = :statut')
+            ->setParameter('statut', $statut)
+            ->andWhere('b.client = :id')
+            ->setParameter('id',$id)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     */
+    public function findForRdvOrdercount($lot, $precarite,$statut,$id)
+    {
+
+        return $this->createQueryBuilder('b')
+            ->select('count(b.id)')
+            ->where('b.numeroLot = :lot')
+            ->setParameter('lot', $lot)
+            ->andWhere('b.grandPrecairePrecaireClassique LIKE :val')
+            ->setParameter('val', $precarite )
+            ->andWhere('b.personneMorale = :statut')
+            ->setParameter('statut', $statut)
+            ->andWhere('b.client = :id')
+            ->setParameter('id',$id)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+    /**
+     * @return integer Returns an array of Beneficiaire objects
+     */
+    public function findwhereRDV($lot, $precarite,$statut,$id)
+    {
+
+        return $this->createQueryBuilder('b')
+            ->select('count(b.id)')
+            ->where('b.numeroLot = :lot')
+            ->setParameter('lot', $lot)
+            ->andWhere('b.grandPrecairePrecaireClassique LIKE :val')
+            ->setParameter('val', $precarite )
+            ->andWhere('b.personneMorale = :statut')
+            ->setParameter('statut', $statut)
+            ->andWhere('b.client = :id')
+            ->setParameter('id',$id)
+            ->andWhere('b.rdv IS NOT null')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
     /**
      * @return Beneficiaire |null
@@ -64,6 +124,18 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     */
+
+    public function findClientID($value)
+    {
+        return $this->createQueryBuilder('b')
+            ->Where('b.client =  :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult();
+    }
 
     /**
      * //  * @return Beneficiaire[] Returns an array of Beneficiaire objects

@@ -235,6 +235,12 @@ class Beneficiaire
      */
     private $personneMorale;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $numeroLot;
+
+
     public function __construct()
     {
         $this->departement = new ArrayCollection();
@@ -772,4 +778,18 @@ class Beneficiaire
 
         return $this;
     }
+
+    public function getNumeroLot(): ?string
+    {
+        return $this->numeroLot;
+    }
+
+    public function setNumeroLot(?string $numeroLot): self
+    {
+        $this->numeroLot = $numeroLot;
+
+        return $this;
+    }
+
+
 }

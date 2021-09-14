@@ -52,6 +52,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
         ;
     }
+
+    /**
+    //  * @return User[] Returns an array of User objects
+    //  */
+    public function findClientForCallCenter()
+    {
+        return $this->createQueryBuilder('u')
+            ->Where('u.roles like :val')
+            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
     /**
     //  * @return User[] Returns an array of User objects
     //  */

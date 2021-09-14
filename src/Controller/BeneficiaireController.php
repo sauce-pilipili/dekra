@@ -8,6 +8,7 @@ use App\Form\SearchBenType;
 use App\Repository\BeneficiaireRepository;
 use App\Repository\DepartementsRepository;
 use App\Repository\SpecialiteRepository;
+use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -55,10 +56,20 @@ class BeneficiaireController extends AbstractController
     /**
      * @Route("/beneficiaire/new", name="beneficiaire_new", methods={"GET","POST"})
      */
-    public function new(Request $request, DepartementsRepository $deprep, SpecialiteRepository $specialiteRepository): Response
-    {
+    public function new(Request $request, UserRepository $userRepository, DepartementsRepository $deprep, SpecialiteRepository $specialiteRepository): Response
+        {$em = $this->getDoctrine()->getManager();
         $client = $this->getUser();
-        $em = $this->getDoctrine()->getManager();
+        // recuperation du numero de lot et verif non nullitée
+
+        $clientPourNumeroLot = $userRepository->find($client);
+        $numerolot = $clientPourNumeroLot->getNumeroLot();
+        if ($numerolot == null){
+            $clientPourNumeroLot->setNumeroLot(1);
+            $em->persist($clientPourNumeroLot);
+            $em->flush();
+            $numerolot = $clientPourNumeroLot->getNumeroLot();
+        }
+
         $form = $this->createForm(DataBeneficiaireType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -96,6 +107,7 @@ class BeneficiaireController extends AbstractController
                     }
                     for ($i = 1; $i <= $feuilleLength - 1; $i++) {
                         $beneficiaire = new Beneficiaire();
+                        $beneficiaire->setNumeroLot($numerolot);
                         $beneficiaire->setPersonneMorale(0);
                         $beneficiaire->setStatut(0);
                         $beneficiaire->setClient($client);
@@ -108,7 +120,7 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setAdresse($rows[$i][6]);
                         $beneficiaire->setCodePostal($rows[$i][7]);
                         $dep = $deprep->findOneBy(['numero' => $rows[$i][8]]);
-                        //gestion erreur sur department
+                        //gestion erreur sur departement
                         if (!$dep) {
                             $this->addFlash('danger', 'le numero de departement du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
                             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
@@ -167,6 +179,7 @@ class BeneficiaireController extends AbstractController
 
                         $beneficiaire = new Beneficiaire();
                         $beneficiaire->setPersonneMorale(1);
+                        $beneficiaire->setNumeroLot($numerolot);
                         $beneficiaire->setStatut(0);
                         $beneficiaire->setClient($client);
                         $beneficiaire->setRaisonSocialeDemandeur($rows[$i][0]);
@@ -228,7 +241,10 @@ class BeneficiaireController extends AbstractController
                         $em->persist($beneficiaire);
                     }
                 }
+                $clientPourNumeroLot->setNumeroLot($numerolot+1);
+                $em->persist($clientPourNumeroLot);
             }
+
             $em->flush();
             // on supprime le fichier
             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);

@@ -44,20 +44,20 @@
                         <tr class="table-title">
                             <th class="table-title-name paddingleft20px">Numéro Lot</th>
                             <th class="table-title-name">Statut</th>
-                            <th class="table-title-date">Précarité</th>
+                            <th class="table-title-date" style="padding-left: 15px;padding-right: 15px">Précarité</th>
                             <th class="table-title-date paddingright20px">Pourcentage contrôlé</th>
                         </tr>
                         {% set numero = client.numeroLot %}
-                        {% set grandprecaire = "Grand precaire" %}
-                        {% set Precaire = "Precaire" %}
-                        {% set classique = "Classique" %}
+                        {% set grandprecaire = "GPE" %}
+                        {% set Precaire = "PRE" %}
+                        {% set classique = "CL" %}
                         {% set morale = 1 %}
                         {% set physique = 0 %}
                         <script>
                             function stat(lot, category, statut, idClient, idProgressBar) {
                                 $.ajax(
                                     {
-                                        url: "client25",
+                                        url: "client"+ idClient,
                                         type: "GET",
                                         data: {
                                             'lot': lot,
@@ -66,14 +66,13 @@
                                             'idClient': idClient,
                                         },
                                         success: function (data) {
-                                            console.log(data)
+
                                             if (data.bene == 0) {
                                                 result = 0;
-                                                console.log(data.bene + 'est null')
                                             } else {
                                                 result = (data.rdv * 100) / data.bene
                                             }
-                                            console.log(result)
+
                                             if (result == 100) {
                                                 $("#value" + idProgressBar).html(result + '%');
                                             } else {
@@ -84,7 +83,7 @@
                                         }
                                     }
                                 )
-                            };
+                            }
                         </script>
 
                         {% for i in numero..1 %}
@@ -92,9 +91,13 @@
                             <tr>
                                 <td rowspan="6" class="table-name paddingleft20px">{{ i }}</td>
                                 <td rowspan="3" class="table-date">morale</td>
-                                <td class="table-date">
-                                    <a href="{{ path('call_center_list_filter',{lot: i, category: grandprecaire, statut: morale, id: client.id  }) }}">Grand
-                                        précaire</a></td>
+
+                                    <td class="table-date">
+
+                                        <a href="{{ path('call_center_list_filter',{lot: i, category: grandprecaire, statut: morale, id: client.id  }) }}">Grand
+                                            précaire</a></td>
+
+
 
                                 <td class="table-name paddingright20px">
                                     <progress id="file1{{ i }}" value="" max="100"></progress>
@@ -143,12 +146,12 @@
                                     <span id="value6{{ i }}"></span></td>
                             </tr>
                             <script>
-                                stat({{ i }}, 'Grand precaire',{{ morale }},{{ client.id }}, '1' +{{ i }});
-                                stat({{ i }}, 'Precaire',{{ morale }},{{ client.id }}, '2' +{{ i }});
-                                stat({{ i }}, 'classique',{{ morale }},{{ client.id }}, '3' +{{ i }});
-                                stat({{ i }}, 'Grand precaire',{{ physique }},{{ client.id }}, '4' +{{ i }});
-                                stat({{ i }}, 'Precaire',{{ physique }},{{ client.id }}, '5' +{{ i }});
-                                stat({{ i }}, 'classique',{{ physique }},{{ client.id }}, '6' +{{ i }});
+                                stat({{ i }}, 'GPE',{{ morale }},{{ client.id }}, '1' +{{ i }});
+                                stat({{ i }}, 'PRE',{{ morale }},{{ client.id }}, '2' +{{ i }});
+                                stat({{ i }}, 'CL',{{ morale }},{{ client.id }}, '3' +{{ i }});
+                                stat({{ i }}, 'GPE',{{ physique }},{{ client.id }}, '4' +{{ i }});
+                                stat({{ i }}, 'PRE',{{ physique }},{{ client.id }}, '5' +{{ i }});
+                                stat({{ i }}, 'CL',{{ physique }},{{ client.id }}, '6' +{{ i }});
                             </script>
                         {% endfor %}
                     </table>

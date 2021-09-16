@@ -11,7 +11,7 @@
             <tr>
                 <td class="table-name paddingleft20px"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{{ b.name }} {{ b.prenom }}</a></td>
                 <td class="table-date">{{ b.client.name }}</td>
-                <td class="table-date">{{ b.rdv }}</td>
+                <td class="table-date">{{ b.rdv |format_datetime ( locale= 'fr', pattern="dd MMMM YYYY HH:mm") }}</td>
 
                     {% if (b.statut== 0) %}
                         <td class="table-statut-wait">

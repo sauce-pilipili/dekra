@@ -586,6 +586,7 @@ h5 {
 
 .speciality-tags {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .speciality-tags p {
@@ -711,6 +712,21 @@ table tr:last-child {
 .table-date {
     font-size: 1.3rem;
 }
+.table-statut-en-cours,
+.table-client,
+.table-rdv,
+.table-statut-wait,
+.table-statut-ok,
+.table-benef,
+.table-department,
+.table-speciality,
+.table-mail,
+.table-level,
+.table-date a:hover {
+    font-weight: bold;
+    color: var(--green-bg);
+}
+
 .table-statut-en-cours,
 .table-statut-ok,
 .table-statut-wait {

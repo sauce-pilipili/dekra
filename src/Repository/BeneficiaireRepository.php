@@ -23,6 +23,34 @@ class BeneficiaireRepository extends ServiceEntityRepository
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
+    public function findRef()
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b.ReferenceEmmyDemande')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return integer Returns an array of Beneficiaire objects
+     */
+    public function pourcentageEmmyTotal($ref)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('count(b.ReferenceEmmyDemande)')
+            ->where('b.ReferenceEmmyDemande = :ref')
+            ->setParameter('ref', $ref)
+//            ->andWhere('b.rdv IS NOT null')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+
+
+    /**
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     */
     public function findBySearch($user, $value)
     {
         return $this->createQueryBuilder('b')

@@ -21,12 +21,19 @@ class CallCenterController extends AbstractController
     /**
      * @Route("/call/center/", name="call_center")
      */
-    public function index(UserRepository $userRepository): Response
+    public function index(Request $request,BeneficiaireRepository $beneficiaireRepository): Response
     {
-        $client = $userRepository->findClientForCallCenter();
+//        trouver les references Emmy
+        $refEmmy = $beneficiaireRepository->findRef();
+//            requete ajax pour affichage du pourcentage total de rdv pris
+        if ($request->isXmlHttpRequest()){
+            $emmy = $request->get('emmy');
+            $pourcentage = $beneficiaireRepository->pourcentageEmmyTotal($emmy);
+            return new Jsonresponse(['pourcentage'=>$pourcentage]);
+        }
         return $this->render('call_center/index.html.twig', [
             'controller_name' => 'CallCenterController',
-            'client' => $client,
+            'reference' => $refEmmy,
         ]);
     }
 

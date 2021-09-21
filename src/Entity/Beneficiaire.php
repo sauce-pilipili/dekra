@@ -240,6 +240,21 @@ class Beneficiaire
      */
     private $numeroLot;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $SurfaceDeclareeDansAHFacture;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $typeIsolantDeclare;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $marqueEtReferenceIsolantDeclare;
+
 
     public function __construct()
     {
@@ -412,7 +427,7 @@ class Beneficiaire
         return $this->referenceInterne;
     }
 
-    public function setReferenceInterne(string $referenceInterne): self
+    public function setReferenceInterne(?string $referenceInterne): self
     {
         $this->referenceInterne = $referenceInterne;
 
@@ -787,6 +802,42 @@ class Beneficiaire
     public function setNumeroLot(?string $numeroLot): self
     {
         $this->numeroLot = $numeroLot;
+
+        return $this;
+    }
+
+    public function getSurfaceDeclareeDansAHFacture(): ?string
+    {
+        return $this->SurfaceDeclareeDansAHFacture;
+    }
+
+    public function setSurfaceDeclareeDansAHFacture(?string $SurfaceDeclareeDansAHFacture): self
+    {
+        $this->SurfaceDeclareeDansAHFacture = $SurfaceDeclareeDansAHFacture;
+
+        return $this;
+    }
+
+    public function getTypeIsolantDeclare(): ?string
+    {
+        return $this->typeIsolantDeclare;
+    }
+
+    public function setTypeIsolantDeclare(?string $typeIsolantDeclare): self
+    {
+        $this->typeIsolantDeclare = $typeIsolantDeclare;
+
+        return $this;
+    }
+
+    public function getMarqueEtReferenceIsolantDeclare(): ?string
+    {
+        return $this->marqueEtReferenceIsolantDeclare;
+    }
+
+    public function setMarqueEtReferenceIsolantDeclare(?string $marqueEtReferenceIsolantDeclare): self
+    {
+        $this->marqueEtReferenceIsolantDeclare = $marqueEtReferenceIsolantDeclare;
 
         return $this;
     }

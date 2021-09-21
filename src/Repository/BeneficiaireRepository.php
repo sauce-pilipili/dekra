@@ -33,15 +33,68 @@ class BeneficiaireRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return integer Returns an array of Beneficiaire objects
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
-    public function pourcentageEmmyTotal($ref)
+    public function findRefficheOp($emmy = null)
+    {
+
+        $query =  $this->createQueryBuilder('b')
+            ->select('b.referenceFicheOperation');
+
+            if($emmy != null){
+
+              $query  ->where('b.ReferenceEmmyDemande = :val')
+                  ->setParameter('val',$emmy);
+            }
+
+            $query->distinct();
+            return $query->getQuery()->getResult();
+    }
+    /**
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     */
+    public function findPrecarite($emmy = null)
     {
         return $this->createQueryBuilder('b')
-            ->select('count(b.ReferenceEmmyDemande)')
+            ->select('b.grandPrecairePrecaireClassique')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
+    /**
+     * @return integer
+     */
+    public function nombreBeneficiaireDetail($ref,$fiche, $precarite)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('count(b)')
             ->where('b.ReferenceEmmyDemande = :ref')
             ->setParameter('ref', $ref)
-//            ->andWhere('b.rdv IS NOT null')
+            ->andwhere('b.referenceFicheOperation = :fiche')
+            ->setParameter('fiche', $fiche)
+            ->andwhere('b.grandPrecairePrecaireClassique = :precarite')
+            ->setParameter('precarite', $precarite)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return integer
+     */
+    public function nombreBeneficiaireDetailrdv($ref,$fiche, $precarite)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('count(b)')
+            ->where('b.ReferenceEmmyDemande = :ref')
+            ->setParameter('ref', $ref)
+            ->andwhere('b.referenceFicheOperation = :fiche')
+            ->setParameter('fiche', $fiche)
+            ->andwhere('b.grandPrecairePrecaireClassique = :precarite')
+            ->setParameter('precarite', $precarite)
+            ->andWhere('b.rdv IS NOT NULL')
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -61,22 +114,21 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
-    public function findForRdvOrder($lot, $precarite,$statut,$id)
+    public function findListOfBeneficiaireToCall($emmy, $precarite, $refoperation)
     {
 
         return $this->createQueryBuilder('b')
 
-            ->where('b.numeroLot = :lot')
-            ->setParameter('lot', $lot)
+            ->where('b.ReferenceEmmyDemande = :emmy')
+            ->setParameter('emmy', $emmy)
             ->andWhere('b.grandPrecairePrecaireClassique LIKE :val')
             ->setParameter('val', $precarite )
-            ->andWhere('b.personneMorale = :statut')
-            ->setParameter('statut', $statut)
-            ->andWhere('b.client = :id')
-            ->setParameter('id',$id)
+            ->andWhere('b.referenceFicheOperation = :ref')
+            ->setParameter('ref', $refoperation)
             ->getQuery()
             ->getResult();
     }
@@ -85,41 +137,38 @@ class BeneficiaireRepository extends ServiceEntityRepository
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
-    public function findForRdvOrdercount($lot, $precarite,$statut,$id)
+    public function findForRdvOrdercount($emmy, $refOperation,$precarite)
     {
 
         return $this->createQueryBuilder('b')
             ->select('count(b.id)')
-            ->where('b.numeroLot = :lot')
-            ->setParameter('lot', $lot)
-            ->andWhere('b.grandPrecairePrecaireClassique LIKE :val')
-            ->setParameter('val', $precarite )
-            ->andWhere('b.personneMorale = :statut')
-            ->setParameter('statut', $statut)
-            ->andWhere('b.client = :id')
-            ->setParameter('id',$id)
+            ->where('b.ReferenceEmmyDemande = :lot')
+            ->setParameter('lot', $emmy)
+            ->andWhere('b.grandPrecairePrecaireClassique LIKE :precarite')
+            ->setParameter('precarite', $precarite )
+            ->andWhere('b.referenceFicheOperation = :ope')
+            ->setParameter('ope', $refOperation)
             ->getQuery()
             ->getSingleScalarResult();
     }
     /**
      * @return integer Returns an array of Beneficiaire objects
      */
-    public function findwhereRDV($lot, $precarite,$statut,$id)
+    public function findwhereRDV($emmy, $refOperation,$precarite)
     {
 
         return $this->createQueryBuilder('b')
             ->select('count(b.id)')
-            ->where('b.numeroLot = :lot')
-            ->setParameter('lot', $lot)
+            ->where('b.ReferenceEmmyDemande = :emmy')
+            ->setParameter('emmy', $emmy)
             ->andWhere('b.grandPrecairePrecaireClassique LIKE :val')
             ->setParameter('val', $precarite )
-            ->andWhere('b.personneMorale = :statut')
-            ->setParameter('statut', $statut)
-            ->andWhere('b.client = :id')
-            ->setParameter('id',$id)
+            ->andWhere('b.referenceFicheOperation = :ope')
+            ->setParameter('ope', $refOperation)
             ->andWhere('b.rdv IS NOT null')
             ->getQuery()
             ->getSingleScalarResult();
+
     }
 
     /**

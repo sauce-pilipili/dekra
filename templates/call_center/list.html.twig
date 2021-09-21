@@ -10,16 +10,10 @@
 
                 <div class="titlereturn">
                     <h4>Les bénéficiaires</h4>
-                    <a href="{{ path('call_center_client',{id: clientid}) }}" class="buttonreturn"><i
+                    <a href="{{ path('call_center_emmy',{id: emmy}) }}" class="buttonreturn"><i
                                 class="fas fa-undo"></i> Retour</a>
                 </div>
-
-
-                {% if  beneficiaires |length == 0 %}
-                    {% set pourcentage = 0 %}
-                {% else %}
                     {% set pourcentage = ((100*rdv) / beneficiaires |length) | number_format(2) %}
-                {% endif %}
                 <table>
                     <tr>
                         <th class="table-title-name paddingleft20px">Nomenclature de la recherche</th>
@@ -31,10 +25,9 @@
                                 Aucun résultat
                             {% else %}
                                 {% for b in beneficiaires| slice(0,1) %}
-                                    {{ b.client.name }}, ref EMMY {{ b.referenceEmmyDemande }}
-                                    , {% if b.personneMorale == 1 %}personne morale{% else %}personne physique{% endif %},
-                                    précarité: {{ b.grandPrecairePrecaireClassique }}
-
+                                    ref EMMY <span class="colorgreen">{{ emmy }}</span>, ref fiche opération
+                                    <span class="colorgreen">{{ refOperation }}</span> precarité
+                                    <span class="colorgreen">{{ precarite }}</span>
                                 {% endfor %}
                             {% endif %}
                         </td>
@@ -54,21 +47,20 @@
                     <table>
                         <tr class="table-title">
                             <th class="table-title-name paddingleft20px">Bénéficiaires</th>
-                            <th class="table-title-date">adresse email</th>
+                            <th class="table-title-date">adresse postale</th>
                             <th class="table-title-date">Téléphone</th>
                             <th class="table-title-date">Date RDV</th>
                             <th class="table-title-date">Statut</th>
                         </tr>
                         {% for b in beneficiaires %}
-                            <tr>
+                            <tr onclick="window.location='{{ path('call_center_Rdv',{'id': b.id}) }}'">
                                 <td class="table-name paddingleft20px"><a
                                             href="{{ path('call_center_Rdv',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a>
                                 </td>
-                                <td class="table-date">{{ b.email }}</td>
+                                <td class="table-date">{{ b.codePostal }} {{ b.ville }}</td>
                                 <td class="table-date">{{ b.telephone }}</td>
                                 {% if (b.rdv == null) %}
                                     <td class="table-date">
-
                                     </td>
                                 {% else %}
                                     <td class="table-date">

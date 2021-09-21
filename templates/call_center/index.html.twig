@@ -7,42 +7,80 @@
     {{ include('include/_navigation.html.twig') }}
     <div class="content">
         <div class="container">
-            <h4>Références Emmy</h4>
+                <h4>Références Emmy</h4>
             <div class="search-container">
                 <div class="search-controleurs">
                 </div>
             </div>
-                <div class="table">
-                    <table>
-                        <tr class="table-title">
-                            <th class="table-title-name paddingleft20px">Référence Emmy</th>
-                            <th class="table-title-date">Pourcentage total complété</th>
-                            <th class="table-title-date">Validation</th>
-                        </tr>
-                        {% for r in reference %}
-                            {% for ref in r  %}
-                                <tr>
-                                <td class="table-name paddingleft20px">{{ ref }}</td>
+            <script>
+                function stat(emmy) {
+                    $.ajax(
+                        {
+                            url: "",
+                            type: "GET",
+                            data: {
+                                'emmy': emmy,
+                            },
+                            success: function (data) {
+                                console.log(data.dump)
+                                if (data.pourcentage == 0 || data.pourcentage == null) {
+                                    result = 0;
+                                } else {
+                                    result = data.pourcentage
+                                }
+                                // if (result == 0){
+                                //     $("#"+emmy).remove();
+                                // }
+                                if (result == 100) {
+                                    $("#value" + emmy).html(result + '%');
+                                } else {
+                                    $("#value" + emmy).html(result.toPrecision(2) + '%');
+                                }
+                                $('#file' + emmy).val(result.toPrecision(2))
+                            }
+                        }
+                    )
+                }
+
+            </script>
+            <div class="table">
+                <table>
+                    <tr class="table-title">
+                        <th class="table-title-name paddingleft20px">Référence Emmy</th>
+                        <th class="table-title-date">Pourcentage total complété</th>
+                        <th class="table-title-date">Validation</th>
+                    </tr>
+                    {% for r in reference %}
+                        {% for ref in r %}
+                            <tr onclick="window.location='{{ path('call_center_emmy',{'id': ref}) }}'" id="{{ ref }}">
+                                <td class="table-name paddingleft20px"><a href="{{ path('call_center_emmy',{'id': ref}) }}">{{ ref }}</a></td>
+                                <td class="table-date">
+                                    <progress id="file{{ ref }}" value="" max="100"></progress>
+                                    <span id="value{{ ref }}"></span></td>
+                                </td>
                                 <td class="table-date"></td>
-                                <td class="table-date"></td>
 
-                                </tr>
-                            {% endfor %}
-
-
-
-{#                                    <a href="#" >{{ r }}</a>#}
-{#                                     <a href="{{ path('call_center_client',{'id': c.id}) }}">{{ c.name }}</a>#}
-
-
-
+                            </tr>
+                            <script>
+                                stat({{ ref }})
+                            </script>
                         {% endfor %}
-                    </table>
-                </div>   </div>
-                <div class="pagination">
-                    <div class="navigation-knp">
-                    </div>
-                </div>
+
+
+
+                        {# <a href="#" >{{ r }}</a> #}
+                        {# <a href="{{ path('call_center_client',{'id': c.id}) }}">{{ c.name }}</a> #}
+
+
+
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <div class="pagination">
+            <div class="navigation-knp">
+            </div>
+        </div>
     </div>
     {% endblock %}
     {% block javascripts %}

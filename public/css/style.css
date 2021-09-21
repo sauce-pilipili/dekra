@@ -211,6 +211,17 @@ body {
     border: none;
     cursor: pointer;
 }
+.buttongreenform {
+    background-color: var(--green-bg);
+    margin: 0 auto;
+    padding: 4px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    font-family: var(--main-font);
+    border: none;
+    cursor: pointer;
+}
 
 /******************** Style des boutons return  avec div return***********************/
 .titlereturn {
@@ -236,7 +247,7 @@ body {
     cursor: pointer;
 }
 
-/******************** Style des liens deconexion ( vert )  ***********************/
+/******************** Style des liens deconnexion ( vert )  ***********************/
 
 .deconnexion {
     color: var(--green-bg);
@@ -693,6 +704,14 @@ table tr:last-child {
     font-family: "Montserrat", sans-serif;
     font-size: 1.5rem;
 }
+tr:hover td {
+    cursor: pointer;
+    background-color: hsla(50, 33%, 9%, .20);
+    opacity: 0.8;
+}
+
+
+
 
 .table-name {
     font-size: 1.3rem;
@@ -855,6 +874,10 @@ table tr:last-child {
     margin: auto 0;
     border-radius: 10px;
     background-color: white;
+}
+
+.editmailbenef{
+    cursor: pointer;
 }
 
 /******************************** Style de la pagination *********************************/

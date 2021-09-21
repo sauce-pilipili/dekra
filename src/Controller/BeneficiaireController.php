@@ -59,16 +59,7 @@ class BeneficiaireController extends AbstractController
     public function new(Request $request, UserRepository $userRepository, DepartementsRepository $deprep, SpecialiteRepository $specialiteRepository): Response
         {$em = $this->getDoctrine()->getManager();
         $client = $this->getUser();
-        // recuperation du numero de lot et verif non nullitée
 
-        $clientPourNumeroLot = $userRepository->find($client);
-        $numerolot = $clientPourNumeroLot->getNumeroLot();
-        if ($numerolot == null){
-            $clientPourNumeroLot->setNumeroLot(1);
-            $em->persist($clientPourNumeroLot);
-            $em->flush();
-            $numerolot = $clientPourNumeroLot->getNumeroLot();
-        }
 
         $form = $this->createForm(DataBeneficiaireType::class);
         $form->handleRequest($request);
@@ -92,12 +83,34 @@ class BeneficiaireController extends AbstractController
                 // lecture du fichier par la case voulu
                 $worksheet = $spreadsheet->getActiveSheet();
                 $rows = $worksheet->toArray();
-                $feuilleLength = $spreadsheet->getActiveSheet()->getHighestRow();
+                $feuilleLength = $spreadsheet->getActiveSheet()->getHighestDataRow();
                 //selection de la feuille personnes physiques ou morales?
+
+                for ($i = 1; $i <= $feuilleLength - 1; $i++){
+                    if (empty($rows[$i][0])
+                        &&empty($rows[$i][1])
+                        &&empty($rows[$i][3])
+                        &&empty($rows[$i][4])
+                        &&empty($rows[$i][5])
+                        &&empty($rows[$i][6])
+                        &&empty($rows[$i][7])
+                        &&empty($rows[$i][8])
+                        &&empty($rows[$i][9])
+                        &&empty($rows[$i][10])
+                        &&empty($rows[$i][11])
+                        &&empty($rows[$i][12])
+                        &&empty($rows[$i][13])
+                        &&empty($rows[$i][14])
+                        &&empty($rows[$i][15])
+                        &&empty($rows[$i][16])){
+                        $feuilleLength = $i;
+
+                    }
+                }
 
                 if ($form->get('select')->getData() == 'physique') {
 
-                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AF') {
+                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AI') {
                         $this->addFlash('danger', 'La feuille que vous essayer d\'inserer contient une liste de personnes morales');
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
@@ -105,9 +118,9 @@ class BeneficiaireController extends AbstractController
                             'form' => $form->createView(),
                         ]);
                     }
+
                     for ($i = 1; $i <= $feuilleLength - 1; $i++) {
                         $beneficiaire = new Beneficiaire();
-                        $beneficiaire->setNumeroLot($numerolot);
                         $beneficiaire->setPersonneMorale(0);
                         $beneficiaire->setStatut(0);
                         $beneficiaire->setClient($client);
@@ -119,6 +132,9 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setPrenom($rows[$i][5]);
                         $beneficiaire->setAdresse($rows[$i][6]);
                         $beneficiaire->setCodePostal($rows[$i][7]);
+                        if ($i == 632){
+//                            dd($rows[$i][4]."ok", $rows[$i][8]."coucou", $feuilleLength);
+                        }
                         $dep = $deprep->findOneBy(['numero' => $rows[$i][8]]);
                         //gestion erreur sur departement
                         if (!$dep) {
@@ -157,17 +173,20 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setSirenOrganismeControle($rows[$i][23]);
                         $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][24]);
                         $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][25]);
-                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][26]);
-                        $beneficiaire->setConformiteApresCorrection($rows[$i][27]);
-                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][28]);
-                        $beneficiaire->setCommentaireGeneraux($rows[$i][29]);
-                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][30]);
-                        $beneficiaire->setVersionCoupDePouce($rows[$i][31]);
+                        $beneficiaire->setSurfaceDeclareeDansAHFacture($rows[$i][26]);
+                        $beneficiaire->setTypeIsolantDeclare($rows[$i][27]);
+                        $beneficiaire->setMarqueEtReferenceIsolantDeclare($rows[$i][28]);
+                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][29]);
+                        $beneficiaire->setConformiteApresCorrection($rows[$i][30]);
+                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][31]);
+                        $beneficiaire->setCommentaireGeneraux($rows[$i][32]);
+                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][33]);
+                        $beneficiaire->setVersionCoupDePouce($rows[$i][34]);
                         $em->persist($beneficiaire);
                     }
                 }
                 if ($form->get('select')->getData() == 'morale') {
-                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AJ') {
+                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AM') {
                         $this->addFlash('danger', 'La feuille que vous essayer d\'inserer contient une liste de personnes physiques');
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
@@ -179,7 +198,6 @@ class BeneficiaireController extends AbstractController
 
                         $beneficiaire = new Beneficiaire();
                         $beneficiaire->setPersonneMorale(1);
-                        $beneficiaire->setNumeroLot($numerolot);
                         $beneficiaire->setStatut(0);
                         $beneficiaire->setClient($client);
                         $beneficiaire->setRaisonSocialeDemandeur($rows[$i][0]);
@@ -189,10 +207,11 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setNomDuSiteBeneficiaireOperation($rows[$i][4]);
                         $beneficiaire->setAdresse($rows[$i][5]);
                         $beneficiaire->setCodePostal($rows[$i][6]);
+
                         $dep = $deprep->findOneBy(['numero' => $rows[$i][7]]);
                         //gestion erreur sur department
                         if (!$dep) {
-                            $this->addFlash('danger', 'le numero de departement du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
+                            $this->addFlash('danger', 'le numero de departement '. $rows[$i][7] . ' du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
                             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                             unlink($fichierSupp);
                             return $this->render('beneficiaire/new.html.twig', [
@@ -232,17 +251,19 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setSirenOrganismeControle($rows[$i][27]);
                         $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][28]);
                         $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][29]);
-                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][30]);
-                        $beneficiaire->setConformiteApresCorrection($rows[$i][31]);
-                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][32]);
-                        $beneficiaire->setCommentaireGeneraux($rows[$i][33]);
-                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][34]);
-                        $beneficiaire->setVersionCoupDePouce($rows[$i][35]);
+                        $beneficiaire->setSurfaceDeclareeDansAHFacture($rows[$i][26]);
+                        $beneficiaire->setTypeIsolantDeclare($rows[$i][27]);
+                        $beneficiaire->setMarqueEtReferenceIsolantDeclare($rows[$i][28]);
+                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][29]);
+                        $beneficiaire->setConformiteApresCorrection($rows[$i][30]);
+                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][31]);
+                        $beneficiaire->setCommentaireGeneraux($rows[$i][32]);
+                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][33]);
+                        $beneficiaire->setVersionCoupDePouce($rows[$i][34]);
+
                         $em->persist($beneficiaire);
                     }
                 }
-                $clientPourNumeroLot->setNumeroLot($numerolot+1);
-                $em->persist($clientPourNumeroLot);
             }
 
             $em->flush();

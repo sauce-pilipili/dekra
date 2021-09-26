@@ -43,7 +43,6 @@
                                             } else {
                                                 result = (data.rdv * 100) / data.bene
                                             }
-                                            console.log(data.bene, data.rdv, result)
                                             if (result == 100) {
                                                 $("#value" + ProgressBarSpan).html(result + '%');
                                             } else {
@@ -70,7 +69,7 @@
                                                         href="{{ path('call_center_list_filter',{emmy : refemmy, precarite : p, refoperation : r }) }}">{{ p }}</a>
                                             </td>
                                             <td class="table-name paddingright20px">
-                                                <progress id="file{{ i }}" value="" max="100"></progress>
+                                                <progress id="file{{ i }}" value="" max="40"></progress>
                                                 <span id="value{{ i }}"></span></td>
                                         </tr>
                                         <script>

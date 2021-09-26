@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\RendezVousType;
 use App\Repository\BeneficiaireRepository;
 use App\Repository\ControleurRepository;
+use App\Repository\ReferenceRepository;
 use App\Repository\SpecialiteRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -23,23 +24,23 @@ class CallCenterController extends AbstractController
     /**
      * @Route("/call/center/", name="call_center")
      */
-    public function index(Request $request, BeneficiaireRepository $beneficiaireRepository): Response
+    public function index(Request $request, ReferenceRepository $referenceRepository, BeneficiaireRepository $beneficiaireRepository): Response
     {
 //        trouver les references Emmy
-        $refEmmy = $beneficiaireRepository->findRef();
+        $refEmmy = $referenceRepository->findRef();
+
 //            requete ajax pour affichage du pourcentage total de rdv pris
         if ($request->isXmlHttpRequest()) {
 //            recup info refEmmy par ajax
             $emmy = $request->get('emmy');
+            $referenceAValider = $referenceRepository->findOneByReference($emmy)->getId();
             //recup des fiches disponible sur beneficiaires
             $reffiche = $beneficiaireRepository->findRefficheOp($emmy);
             // recup des precarité
-
             $precarite = $beneficiaireRepository->findPrecarite($emmy);
-
 //        init du tableau de calcul final
             $total = array();
-//        requet de calcul pour chaque ref emmy/refope/precarite
+//        requete de calcul pour chaque ref emmy/refope/precarite
             foreach ($reffiche as $r) {
                 foreach ($precarite as $pre) {
                     $nbBenef = $beneficiaireRepository->nombreBeneficiaireDetail($emmy, $r["referenceFicheOperation"], $pre["grandPrecairePrecaireClassique"]);
@@ -47,19 +48,17 @@ class CallCenterController extends AbstractController
                     if ($nbBenef == 0) {
                         $pourcentage = 0;
                     } else {
-                        if (($nbBenefAvecRdv * 100) / $nbBenef < 40){
+                        if (($nbBenefAvecRdv * 100) / $nbBenef < 40) {
 
                             $pourcentage = ($nbBenefAvecRdv * 100) / $nbBenef;
-                        }else{
-                            $pourcentage= 40;
+                        } else {
+                            $pourcentage = 40;
                         }
                     }
                     if ($nbBenefAvecRdv != 0 || $nbBenef != 0) {
                         array_push($total, $pourcentage);
 
                     }
-
-
                 }
             }
 //        regroupement de la somme
@@ -69,9 +68,9 @@ class CallCenterController extends AbstractController
             }
 //        calcul final de la somme par ref
             $pourcentageFinal = $pourcentageFinal / count($total);
-            $dump = $total;
 
-            return new Jsonresponse(['pourcentage' => $pourcentageFinal, 'dump' => $dump]);
+
+            return new Jsonresponse(['pourcentage' => $pourcentageFinal, 'ref' => $referenceAValider]);
         }
         return $this->render('call_center/index.html.twig', [
             'controller_name' => 'CallCenterController',
@@ -144,7 +143,7 @@ class CallCenterController extends AbstractController
             $beneficiaire->setEmail($email);
             $em->flush();
             $newMail = $beneficiaireRepository->find($id);
-            return new Jsonresponse(['email' => $newMail->getEmail(), ]);
+            return new Jsonresponse(['email' => $newMail->getEmail(),]);
         }
 //formulaire de contact
         $form = $this->createForm(RendezVousType::class);
@@ -184,7 +183,7 @@ class CallCenterController extends AbstractController
                 } catch (ExceptionInterface $exception) {
                     $this->addFlash('danger', 'l\'adresse du bénéficiaire n\'est pas valable ou le nom de domaine n\'existe pas');
                     return $this->redirectToRoute('call_center_Rdv', [
-                        'id'=>$beneficiaires->getId(),
+                        'id' => $beneficiaires->getId(),
                         'form' => $form->createView(),
                         'controlleurs' => $controlleurs,
                         'beneficiaire' => $beneficiaires,
@@ -207,8 +206,6 @@ class CallCenterController extends AbstractController
             }
 
 
-
-
             $beneficiaires->setStatut(1);
             $beneficiaires->setRdv($date);
             $this->getDoctrine()->getManager()->flush();
@@ -229,4 +226,6 @@ class CallCenterController extends AbstractController
             'beneficiaire' => $beneficiaires,
         ]);
     }
+
+
 }

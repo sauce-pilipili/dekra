@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Beneficiaire;
+use App\Entity\Reference;
 use App\Form\DataBeneficiaireType;
 use App\Form\SearchBenType;
 use App\Repository\BeneficiaireRepository;
@@ -86,6 +87,12 @@ class BeneficiaireController extends AbstractController
                 $feuilleLength = $spreadsheet->getActiveSheet()->getHighestDataRow();
                 //selection de la feuille personnes physiques ou morales?
 
+                $referenceEmmy = new Reference();
+                $referenceEmmy->setReference($rows[1][2]);
+                $referenceEmmy->setComplet(0);
+                $em->persist($referenceEmmy);
+                $em->flush();
+
                 for ($i = 1; $i <= $feuilleLength - 1; $i++){
                     if (empty($rows[$i][0])
                         &&empty($rows[$i][1])
@@ -132,12 +139,10 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setPrenom($rows[$i][5]);
                         $beneficiaire->setAdresse($rows[$i][6]);
                         $beneficiaire->setCodePostal($rows[$i][7]);
-                        if ($i == 632){
-//                            dd($rows[$i][4]."ok", $rows[$i][8]."coucou", $feuilleLength);
-                        }
                         $dep = $deprep->findOneBy(['numero' => $rows[$i][8]]);
                         //gestion erreur sur departement
                         if (!$dep) {
+                            dd($rows[$i][8]);
                             $this->addFlash('danger', 'le numero de departement du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
                             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                             unlink($fichierSupp);

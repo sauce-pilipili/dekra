@@ -26,7 +26,7 @@ class BeneficiaireRepository extends ServiceEntityRepository
     public function findRef()
     {
         return $this->createQueryBuilder('b')
-            ->select('b.ReferenceEmmyDemande')
+            ->select('b.ReferenceEmmyDemande','r')
             ->distinct()
             ->getQuery()
             ->getResult();

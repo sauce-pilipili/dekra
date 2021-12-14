@@ -46,45 +46,24 @@
                 <div class="table">
                     <table>
                         <tr class="table-title">
-                            <th class="table-title-name paddingleft20px">Bénéficiaires</th>
-                            <th class="table-title-date">adresse postale</th>
+                            <th class="table-title-name paddingleft20px">Bénéficiaires
+                                <span id="ordername" onclick="orderBy('name','DESC')" >
+                                    <i id="chevronname" class="fa fa-chevron-down fa-1x"></i>
+                                </span>
+                            </th>
+                            <th class="table-title-date">code postal <span id="orderpostal" onclick="orderBy('postal','DESC')" >
+                                    <i id="chevronpostal" class="fa fa-chevron-down fa-1x"></i>
+                                </span></th>
+                            <th class="table-title-date">ville<span id="orderville" onclick="orderBy('ville','DESC')" >
+                                    <i id="chevronville" class="fa fa-chevron-down fa-1x"></i>
+                                </span></th>
                             <th class="table-title-date">Téléphone</th>
                             <th class="table-title-date">Date RDV</th>
                             <th class="table-title-date">Statut</th>
                         </tr>
-                        {% for b in beneficiaires %}
-                            <tr onclick="window.location='{{ path('call_center_Rdv',{'id': b.id}) }}'">
-                                <td class="table-name paddingleft20px"><a
-                                            href="{{ path('call_center_Rdv',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a>
-                                </td>
-                                <td class="table-date">{{ b.codePostal }} {{ b.ville }}</td>
-                                <td class="table-date">{{ b.telephone }}</td>
-                                {% if (b.rdv == null) %}
-                                    <td class="table-date">
-                                    </td>
-                                {% else %}
-                                    <td class="table-date">
-                                        <p>{{ b.rdv |format_datetime ( locale= 'fr', pattern="dd MMMM YYYY HH:mm") }}</p>
-                                    </td>
-                                {% endif %}
-
-                                {% if (b.statut== 0) %}
-                                    <td class="table-statut-wait">
-                                        <p>En attente</p>
-                                    </td>
-                                {% else %}
-                                    {% if date('now')> date(b.rdv) %}
-                                        <td class="table-statut-ok">
-                                            <p>Contrôlé</p>
-                                        </td>
-                                    {% else %}
-                                        <td class="table-statut-en-cours">
-                                            <p>En cours</p>
-                                        </td>
-                                    {% endif %}
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
+                        <tbody id="bodylist">
+                        {{ include('call_center/_beneficiaireContent.html.twig') }}
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -92,5 +71,5 @@
     </div>
 {% endblock %}
 {% block javascripts %}
-
+<script src="{{ asset('js/orderAjax.js') }}"></script>
 {% endblock %}

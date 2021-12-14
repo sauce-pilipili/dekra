@@ -15,13 +15,13 @@
 
                         {{ form_row(form.name, {'attr': {'class': 'search-container-select'}}) }}
                         {{ form_row(form.specialite, {'attr': {'class': 'search-container-select'}}) }}
-                        <button class="btn-submit submitcontroleur" type="submit"><i class="fa fa-search fa-2x"
+                        <button class="btn-submit submitcontroleur" type="submit"><i class="fa fa-search"
                                                                                      aria-hidden="true"
                                                                                      style="cursor: pointer"></i>
                         </button>
-                        <div class="addicon">
-                            <a href="{{ path('controleur_index') }}" class="buttonreturn"><i class="fas fa-undo"></i></a>
-                        </div>
+                        <button class="btn-submit submitcontroleur refresh-search">
+                            <a href="{{ path('controleur_index') }}"><i class="fas fa-undo"></i></a>
+                        </button>
                     </div>
                     {{ form_end(form) }}
                     <div class="addanddelete">

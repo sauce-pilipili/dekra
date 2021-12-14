@@ -113,6 +113,18 @@ class CallCenterController extends AbstractController
      */
     public function CLientLotFiltered(Request $request, $emmy, $precarite, $refoperation, BeneficiaireRepository $beneficiaireRepository): Response
     {
+        if ($request->isXmlHttpRequest()){
+
+            $order= $request->get('order');
+            $direction = $request->get('direction');
+            $beneficiaires = $beneficiaireRepository->findListOfBeneficiaireToCall($emmy, $precarite, $refoperation,$order,$direction);
+            return new JsonResponse([
+                'order'=>$order,
+            'direction'=>$direction,
+                'content' => $this->renderView('call_center/_beneficiaireContent.html.twig', compact('beneficiaires'))
+            ]);
+        }
+
         $beneficiaires = $beneficiaireRepository->findListOfBeneficiaireToCall($emmy, $precarite, $refoperation);
         $rdv = $beneficiaireRepository->nombreBeneficiaireDetailrdv($emmy, $refoperation, $precarite);
 

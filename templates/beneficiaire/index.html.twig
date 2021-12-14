@@ -46,6 +46,7 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     {{ include('include/_adminBeneficiaireView.html.twig') }}
                 {% endif %}
+
                 <div class="pagination">
                     <div class="navigation-knp">
                         {{ knp_pagination_render(beneficiaires) }}

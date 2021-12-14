@@ -8,6 +8,7 @@ use App\Form\DataBeneficiaireType;
 use App\Form\SearchBenType;
 use App\Repository\BeneficiaireRepository;
 use App\Repository\DepartementsRepository;
+use App\Repository\ReferenceRepository;
 use App\Repository\SpecialiteRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
@@ -57,7 +58,7 @@ class BeneficiaireController extends AbstractController
     /**
      * @Route("/beneficiaire/new", name="beneficiaire_new", methods={"GET","POST"})
      */
-    public function new(Request $request, UserRepository $userRepository, DepartementsRepository $deprep, SpecialiteRepository $specialiteRepository): Response
+    public function new(Request $request, UserRepository $userRepository, DepartementsRepository $deprep, SpecialiteRepository $specialiteRepository, ReferenceRepository $referenceRepository): Response
         {$em = $this->getDoctrine()->getManager();
         $client = $this->getUser();
 
@@ -87,12 +88,8 @@ class BeneficiaireController extends AbstractController
                 $feuilleLength = $spreadsheet->getActiveSheet()->getHighestDataRow();
                 //selection de la feuille personnes physiques ou morales?
 
-                $referenceEmmy = new Reference();
-                $referenceEmmy->setReference($rows[1][2]);
-                $referenceEmmy->setComplet(0);
-                $em->persist($referenceEmmy);
-                $em->flush();
 
+//calucul longueur du fichier
                 for ($i = 1; $i <= $feuilleLength - 1; $i++){
                     if (empty($rows[$i][0])
                         &&empty($rows[$i][1])
@@ -114,11 +111,45 @@ class BeneficiaireController extends AbstractController
 
                     }
                 }
-
+// gestion erreur colonne ref Emmy
+                for ($o = 1; $o <= $feuilleLength - 1; $o++){
+                    if (empty($rows[$o][2])){
+                        $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient une erreur de référence Emmy à la ligne: '.$o);
+                        $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                        unlink($fichierSupp);
+                        return $this->render('beneficiaire/new.html.twig', [
+                            'form' => $form->createView(),
+                        ]);
+                    }
+                }
+// gestion erreur reference emmy differente sur la meme feuille
+                for ($p = 1; $p <= $feuilleLength - 1; $p++){
+                    if ($p>2 && $rows[$p][2]!= $rows[$p-1][2] ){
+                        $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient deux références Emmy différentes: '.$o);
+                        $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                        unlink($fichierSupp);
+                        return $this->render('beneficiaire/new.html.twig', [
+                            'form' => $form->createView(),
+                        ]);
+                    }
+                }
+//               gestion erreur reference Emmy deja insérée
+                if($referenceRepository->findOneBy(['reference'=> $rows[1][2]]) != null ){
+                    $this->addFlash('danger', 'La feuille que vous essayez d\'insérer a déjà été insérée');
+                    $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                    unlink($fichierSupp);
+                    return $this->render('beneficiaire/new.html.twig', [
+                        'form' => $form->createView(),
+                    ]);
+                };
+                $referenceEmmy = new Reference();
+                $referenceEmmy->setReference($rows[1][2]);
+                $referenceEmmy->setComplet(0);
+                $em->persist($referenceEmmy);
                 if ($form->get('select')->getData() == 'physique') {
 
                     if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AI') {
-                        $this->addFlash('danger', 'La feuille que vous essayer d\'inserer contient une liste de personnes morales');
+                        $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient une liste de personnes morales');
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
                         return $this->render('beneficiaire/new.html.twig', [
@@ -142,8 +173,7 @@ class BeneficiaireController extends AbstractController
                         $dep = $deprep->findOneBy(['numero' => $rows[$i][8]]);
                         //gestion erreur sur departement
                         if (!$dep) {
-                            dd($rows[$i][8]);
-                            $this->addFlash('danger', 'le numero de departement du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
+                            $this->addFlash('danger', 'le numéro de département du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
                             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                             unlink($fichierSupp);
                             return $this->render('beneficiaire/new.html.twig', [
@@ -160,7 +190,7 @@ class BeneficiaireController extends AbstractController
                         $spe = $specialiteRepository->findOneBy(['referenceOperation' => $rows[$i][14]]);
                         // gestion erreur sur la specialité
                         if (!$spe) {
-                            $this->addFlash('danger', 'la référence de la fiche d\'operation standardisée du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne O n\'est pas valable');
+                            $this->addFlash('danger', 'la référence de la fiche d\'opération standardisée du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne O n\'est pas valable');
                             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                             unlink($fichierSupp);
                             return $this->render('beneficiaire/new.html.twig', [
@@ -192,7 +222,7 @@ class BeneficiaireController extends AbstractController
                 }
                 if ($form->get('select')->getData() == 'morale') {
                     if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AM') {
-                        $this->addFlash('danger', 'La feuille que vous essayer d\'inserer contient une liste de personnes physiques');
+                        $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient une liste de personnes physiques');
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
                         return $this->render('beneficiaire/new.html.twig', [
@@ -212,11 +242,10 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setNomDuSiteBeneficiaireOperation($rows[$i][4]);
                         $beneficiaire->setAdresse($rows[$i][5]);
                         $beneficiaire->setCodePostal($rows[$i][6]);
-
                         $dep = $deprep->findOneBy(['numero' => $rows[$i][7]]);
                         //gestion erreur sur department
                         if (!$dep) {
-                            $this->addFlash('danger', 'le numero de departement '. $rows[$i][7] . ' du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
+                            $this->addFlash('danger', 'le numéro de département '. $rows[$i][7] . ' du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
                             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                             unlink($fichierSupp);
                             return $this->render('beneficiaire/new.html.twig', [
@@ -238,7 +267,7 @@ class BeneficiaireController extends AbstractController
                         $spe = $specialiteRepository->findOneBy(['referenceOperation' => $rows[$i][18]]);
                         // gestion erreur sur la specialité
                         if (!$spe) {
-                            $this->addFlash('danger', 'la référence de la fiche d\'operation standardisée du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne O n\'est pas valable');
+                            $this->addFlash('danger', 'la référence de la fiche d\'opération standardisée du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne O n\'est pas valable');
                             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                             unlink($fichierSupp);
                             return $this->render('beneficiaire/new.html.twig', [
@@ -275,7 +304,7 @@ class BeneficiaireController extends AbstractController
             // on supprime le fichier
             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
             unlink($fichierSupp);
-            $this->addFlash('success', 'La liste bénéficiaires a été inserée avec succès !');
+            $this->addFlash('success', 'La liste de bénéficiaires a été inserée avec succès !');
             return $this->render('beneficiaire/new.html.twig', [
                 'form' => $form->createView(),
             ]);

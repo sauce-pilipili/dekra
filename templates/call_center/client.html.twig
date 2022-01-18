@@ -22,7 +22,6 @@
                         </tr>
                         <script>
                             function stat(emmy, refOperation, precarite, ProgressBarSpan) {
-
                                 $.ajax(
                                     {
                                         url: "emmy" + emmy,
@@ -32,11 +31,8 @@
                                             'refOperation': refOperation,
                                             'precarite': precarite
 
-
                                         },
                                         success: function (data) {
-                                            console.log()
-
                                             if (data.bene == 0) {
                                                  $("#ligne"+ProgressBarSpan).remove();
                                                 result = 0;
@@ -73,7 +69,7 @@
                                                 <span id="value{{ i }}"></span></td>
                                         </tr>
                                         <script>
-                                            stat({{ refemmy }}, "{{ r }}", "{{ p }}",{{ i }})
+                                            stat("{{ refemmy }}", "{{ r }}", "{{ p }}",{{ i }})
                                         </script>
                                         {% set i = i + 1 %}
                                     {% endfor %}

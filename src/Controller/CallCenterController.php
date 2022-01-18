@@ -28,7 +28,6 @@ class CallCenterController extends AbstractController
     {
 //        trouver les references Emmy
         $refEmmy = $referenceRepository->findRef();
-
 //            requete ajax pour affichage du pourcentage total de rdv pris
         if ($request->isXmlHttpRequest()) {
 //            recup info refEmmy par ajax
@@ -49,7 +48,6 @@ class CallCenterController extends AbstractController
                         $pourcentage = 0;
                     } else {
                         if (($nbBenefAvecRdv * 100) / $nbBenef < 40) {
-
                             $pourcentage = ($nbBenefAvecRdv * 100) / $nbBenef;
                         } else {
                             $pourcentage = 40;
@@ -69,11 +67,9 @@ class CallCenterController extends AbstractController
 //        calcul final de la somme par ref
             $pourcentageFinal = $pourcentageFinal / count($total);
 
-
             return new Jsonresponse(['pourcentage' => $pourcentageFinal, 'ref' => $referenceAValider]);
         }
         return $this->render('call_center/index.html.twig', [
-            'controller_name' => 'CallCenterController',
             'reference' => $refEmmy,
         ]);
     }
@@ -96,7 +92,6 @@ class CallCenterController extends AbstractController
             $beneficiaire = $beneficiaireRepository->findForRdvOrdercount($emmy, $refOperation, $precarite);
             $rdv = $beneficiaireRepository->findwhereRDV($emmy, $refOperation, $precarite);
             return new Jsonresponse(['rdv' => $rdv, 'bene' => $beneficiaire]);
-//            return new Jsonresponse(['emmy'=>$emmy,'refOperation'=>$refOperation, 'precarite'=>$precarite]);
         }
         $client = $userRepository->find($id);
         $beneficiaire = $beneficiaireRepository->findClientID($id);
@@ -114,7 +109,6 @@ class CallCenterController extends AbstractController
     public function CLientLotFiltered(Request $request, $emmy, $precarite, $refoperation, BeneficiaireRepository $beneficiaireRepository): Response
     {
         if ($request->isXmlHttpRequest()){
-
             $order= $request->get('order');
             $direction = $request->get('direction');
             $beneficiaires = $beneficiaireRepository->findListOfBeneficiaireToCall($emmy, $precarite, $refoperation,$order,$direction);
@@ -201,7 +195,6 @@ class CallCenterController extends AbstractController
                         'beneficiaire' => $beneficiaires,
                     ]);
                 }
-
             } else {
                 $infoClientNonAverti = "Votre message a bien été envoyé mais uniquement le controleur a recu un mail";
                 $emailControleur = (new Email())
@@ -216,7 +209,6 @@ class CallCenterController extends AbstractController
                     ]));
                 $mailer->send($emailControleur);
             }
-
 
             $beneficiaires->setStatut(1);
             $beneficiaires->setRdv($date);

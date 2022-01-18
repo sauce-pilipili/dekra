@@ -22,7 +22,6 @@
                                 'emmy': emmy,
                             },
                             success: function (data) {
-                                console.log(data.ref)
                                 if (data.pourcentage == 0 || data.pourcentage == null) {
                                     result = 0;
                                 } else {
@@ -62,7 +61,7 @@
                                 </td>
                             </tr>
                             <script>
-                                stat({{ ref.reference }})
+                                stat("{{ ref.reference }}")
                             </script>
                     {% endfor %}
                 </table>

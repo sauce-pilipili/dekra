@@ -62,6 +62,7 @@ class ClientController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $role = [];
             $role[0] = "ROLE_CLIENT";
             $user->setRoles($role);

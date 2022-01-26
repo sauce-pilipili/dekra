@@ -454,6 +454,7 @@ class Beneficiaire
     public function setVolumePrecarite(?string $volumePrecarite): self
     {
         $this->volumePrecarite = $volumePrecarite;
+
         return $this;
     }
 

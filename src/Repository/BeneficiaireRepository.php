@@ -198,6 +198,8 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->setParameter('val', $id)
             ->getQuery()
             ->getOneOrNullResult();
+
+
     }
 
     /**

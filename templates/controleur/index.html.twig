@@ -46,12 +46,11 @@
                             <th class="table-title-speciality table-edit">Editer</th>
                             <th class="table-title-speciality table-delete paddingright20px">Supprimer</th>
                         </tr>
-
                         {% for controleur in controleurs %}
                             <tr>
-                                <td class="table-name paddingleft20px">{{ controleur.nom }} {{ controleur.prenom }}</td>
+                                <td class="table-name paddingleft20px"><a href="{{ path('controleur_edit', {'id': controleur.id}) }}">{{ controleur.nom }} {{ controleur.prenom }}</a></td>
                                 <td class="table-department">
-                                    <div class="tags-spe">
+                                    <div class="tags-spe padding25">
                                         {% for dep in controleur.departement %}
                                             <p>{{ dep.numero }}</p>
                                         {% endfor %}

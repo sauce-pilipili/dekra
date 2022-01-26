@@ -28,7 +28,6 @@ class CallCenterController extends AbstractController
     {
 //        trouver les references Emmy
         $refEmmy = $referenceRepository->findRef();
-
 //            requete ajax pour affichage du pourcentage total de rdv pris
         if ($request->isXmlHttpRequest()) {
 //            recup info refEmmy par ajax
@@ -57,7 +56,6 @@ class CallCenterController extends AbstractController
                     }
                     if ($nbBenefAvecRdv != 0 || $nbBenef != 0) {
                         array_push($total, $pourcentage);
-
                     }
                 }
             }
@@ -77,7 +75,6 @@ class CallCenterController extends AbstractController
             'reference' => $refEmmy,
         ]);
     }
-
     /**
      * @Route("call/center/emmy{id}", name="call_center_emmy")
      */

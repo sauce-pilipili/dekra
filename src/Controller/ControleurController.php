@@ -8,12 +8,15 @@ use App\Form\ControleurType;
 use App\Form\DataType;
 use App\Repository\ControleurRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-
+/**
+ * @Security("is_granted('ROLE_SUPER_ADMIN')")
+ */
 class ControleurController extends AbstractController
 {
     /**

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
 /**
@@ -66,38 +67,28 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="user_show", methods={"GET"})
-     */
-    public function show(User $user): Response
-    {
-        return $this->render('user/show.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function edit($id,Request $request, User $user,UserRepository $userRepository,UserPasswordEncoderInterface $passwordEncoder): Response
     {
+        $user = $userRepository->find($id);
+        if ($user != $this->getUser()){
+            $this->addFlash('danger', 'La ressource que vous essayez d\'atteindre ne vous est pas autorisée');
+            return $this->render('dashboard_controler/index.html.twig');
+        }
         $form = $this->createForm(UserEditType::class, $user);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user->setPassword(
                 $passwordEncoder->encodePassword(
                     $user,
                     $form->get('password')->getData()
                 )
             );
-
             $this->getDoctrine()->getManager()->flush();
-
+            $this->addFlash('success', 'Votre profil a été modifié avec succès');
             return $this->redirectToRoute('dashboard_controler');
-
         }
-
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
@@ -109,12 +100,12 @@ class UserController extends AbstractController
      */
     public function delete(Request $request, User $user): Response
     {
+
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($user);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('members_members');
     }
 
@@ -128,7 +119,6 @@ class UserController extends AbstractController
             $entityManager->remove($user);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('client');
     }
 }

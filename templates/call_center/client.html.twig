@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}référence {{ refemmy }}{% endblock %}
-
 {% block body %}
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
@@ -12,7 +10,6 @@
                     <a href="{{ path('call_center') }}" class="buttonreturn"><i
                                 class="fas fa-undo"></i> Retour</a>
                 </div>
-
                 <div class="table">
                     <table>
                         <tr class="table-title">
@@ -34,7 +31,7 @@
                                         },
                                         success: function (data) {
                                             if (data.bene == 0) {
-                                                 $("#ligne"+ProgressBarSpan).remove();
+                                                $("#ligne" + ProgressBarSpan).remove();
                                                 result = 0;
                                             } else {
                                                 result = (data.rdv * 100) / data.bene
@@ -54,12 +51,11 @@
                         {% set i = 0 %}
                         {% for ref in refOperation %}
                             {% for r in ref %}
-
-
                                 {% for preca in refPrecarite %}
                                     {% for p in preca %}
                                         {% set refope = r %}
-                                        <tr onclick="window.location='{{ path('call_center_list_filter',{emmy : refemmy, precarite : p, refoperation : r }) }}' " id="ligne{{ i }}">
+                                        <tr onclick="window.location='{{ path('call_center_list_filter',{emmy : refemmy, precarite : p, refoperation : r }) }}' "
+                                            id="ligne{{ i }}">
                                             <td class="table-name">{{ r }}</td>
                                             <td class="table-date"><a
                                                         href="{{ path('call_center_list_filter',{emmy : refemmy, precarite : p, refoperation : r }) }}">{{ p }}</a>

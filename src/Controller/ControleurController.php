@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ControleurController extends AbstractController
 {
+//    valide pour v2
     /**
      * @Route("/controleur/index", name="controleur_index", methods={"GET","POST"})
      */
@@ -42,6 +43,7 @@ class ControleurController extends AbstractController
         ]);
     }
 
+//    valide pour v2
     /**
      * @Route("/controleur/new", name="controleur_new", methods={"GET","POST"})
      */
@@ -64,17 +66,7 @@ class ControleurController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-    /**
-     * @Route("/controleur/{id}", name="controleur_show", methods={"GET"})
-     */
-    public function show(Controleur $controleur): Response
-    {
-        return $this->render('controleur/show.html.twig', [
-            'controleur' => $controleur,
-        ]);
-    }
-
+    //    valide pour v2
     /**
      * @Route("/controleur/{id}/edit", name="controleur_edit", methods={"GET","POST"})
      */
@@ -94,7 +86,7 @@ class ControleurController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
+//    valide pour v2
     /**
      * @Route("/controleur/{id}", name="controleur_delete", methods={"POST"})
      */

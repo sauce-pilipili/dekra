@@ -1,8 +1,5 @@
 {% extends 'base.html.twig' %}
-
-
     {% block title %}Specialitées{% endblock %}
-
     {% block body %}
         <div class="main">
             {{ include('include/_navigation.html.twig') }}
@@ -22,15 +19,12 @@
                             <p>Référence opération</p>
                             {{ form_row(form.referenceOperation) }}
                         </div>
-
                         <button type="submit" class="buttongreen">Ajouter</button>
                         {{ form_end(form) }}
                     </div>
                 </div>
             </div>
-
         </div>
-
     {% endblock %}
 
 

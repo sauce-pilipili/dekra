@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RegionController extends AbstractController
 {
+//    valide pour v2
     /**
      * @Route("/", name="region_index", methods={"GET"})
      */
@@ -26,7 +27,7 @@ class RegionController extends AbstractController
             'regions' => $regionRepository->findAll(),
         ]);
     }
-
+//    valide pour v2
     /**
      * @Route("/new", name="region_new", methods={"GET","POST"})
      */
@@ -49,17 +50,7 @@ class RegionController extends AbstractController
             'form' => $form,
         ]);
     }
-
-    /**
-     * @Route("/{id}", name="region_show", methods={"GET"})
-     */
-    public function show(Region $region): Response
-    {
-        return $this->render('region/show.html.twig', [
-            'region' => $region,
-        ]);
-    }
-
+//    valide pour v2
     /**
      * @Route("/{id}/edit", name="region_edit", methods={"GET","POST"})
      */
@@ -73,13 +64,12 @@ class RegionController extends AbstractController
             $this->addFlash('success', 'La fiche région a été modifiée avec succès !');
             return $this->redirectToRoute('region_index', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->renderForm('region/edit.html.twig', [
             'region' => $region,
             'form' => $form,
         ]);
     }
-
+//    valide pour v2
     /**
      * @Route("/{id}", name="region_delete", methods={"POST"})
      */
@@ -90,7 +80,6 @@ class RegionController extends AbstractController
             $entityManager->remove($region);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('region_index', [], Response::HTTP_SEE_OTHER);
     }
 }

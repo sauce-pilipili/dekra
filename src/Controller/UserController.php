@@ -23,16 +23,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/", name="user_index", methods={"GET"})
-     */
-    public function index(UserRepository $userRepository): Response
-    {
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
-        ]);
-    }
 
+//    valide pour v2
     /**
      * @Route("/new", name="user_new", methods={"GET","POST"})
      */
@@ -66,6 +58,7 @@ class UserController extends AbstractController
         ]);
     }
 
+    //    valide pou v2
     /**
      * @Route("/{id}/edit", name="user_edit", methods={"GET","POST"})
      */
@@ -95,6 +88,7 @@ class UserController extends AbstractController
         ]);
     }
 
+    //    valide pou v2
     /**
      * @Route("/{id}/delete/user", name="user_delete", methods={"POST"})
      */
@@ -109,6 +103,7 @@ class UserController extends AbstractController
         return $this->redirectToRoute('members_members');
     }
 
+    //    valide pou v2
     /**
      * @Route("/{id}/delete/client", name="client_delete", methods={"POST"})
      */

@@ -1,9 +1,9 @@
 <h1>Bonjour</h1>
-
-<p>Pour reinitialiser votre mot de passe veuillez suivre le lien</p>
-
-<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
-
+<br>
+<a style="background-color: #007F3DFF;margin: 0 auto;padding: 20px 37px;border-radius: 10px;color: white;font-size: 1.2rem;font-weight: bold;font-family: var(--main-font);border: none;
+    cursor: pointer;" href="{{ url('app_reset_password', {token: resetToken.token}) }}">CLiquez pour reinitialiser votre mot de passe</a>
+<br>
+<br>
 <p>Ce liens expire dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
-
+<br>
 <p>Bonne journée!</p>

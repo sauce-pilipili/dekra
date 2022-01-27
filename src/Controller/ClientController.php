@@ -40,7 +40,7 @@ class ClientController extends AbstractController
             ]);
 
         }
-//        premiere requête sur accès page avec dissociation des admin super admin
+//        premiere requête sur accès page avec dissociation des admin super admin.. un admin nen peux voir que le client qu'il a ajouté
         if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
             $clientAPAginer = $userRepository->finClientBySuperAdmin();
         } else {
@@ -55,14 +55,13 @@ class ClientController extends AbstractController
     /**
      * @Route("/client/new", name="client_new", methods={"GET","POST"})
      */
-    public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function new(Request $request, UserRepository $userRepository,UserPasswordEncoderInterface $passwordEncoder): Response
     {
+
         $user = new User();
         $form = $this->createForm(AdminToClientType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-
             $role = [];
             $role[0] = "ROLE_CLIENT";
             $user->setRoles($role);
@@ -90,21 +89,10 @@ class ClientController extends AbstractController
         $form = $this->createForm(AdminToClientType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-//            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-//                $user->setPassword(
-//                    $passwordEncoder->encodePassword(
-//                        $user,
-//                        $form->get('password')->getData()
-//                    )
-//                );
-//            }
             $this->getDoctrine()->getManager()->flush();
             $this->addFlash('success', 'La fiche client a été modifiée avec succès !');
             return $this->redirectToRoute('client');
-
-
         }
-
         return $this->render('client/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),

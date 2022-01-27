@@ -1,27 +1,1 @@
-$(document).ready(function () {
-    $('#members-search').keyup(function () {
-        search = $('#members-search').val();
-            $('#members-search')
-            searchAjax(search);
-    });
-
-    function searchAjax(data) {
-        $.ajax({
-            method: "POST",
-            url: "/members/members",
-            data: {
-                search: data
-            },
-            dataType: "html",
-            success: function (response) {
-                remplacement = $.parseJSON(response)
-                $('#response-content').html(remplacement.content);
-
-
-            },
-
-        })
-    }
-});
-
-
+$(document).ready(function () {    let data = $('#members-search')    data.keyup(function () {         let search = $('#members-search').val();            searchAjax(search);    });    function searchAjax(data) {        $.ajax({            method: "POST",            url: "/members/members",            data: {                search: data            },            dataType: "html",            success: function (response) {               let remplacement = $.parseJSON(response)                $('#response-content').html(remplacement.content);            },        })    }});

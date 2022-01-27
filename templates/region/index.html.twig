@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Region{% endblock %}
-
 {% block body %}
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
@@ -26,7 +24,6 @@
                         </tr>
                         {% for reg in regions %}
                             <tr>
-
                                 <td class="table-name paddingleft20px">{{ reg.name }} </td>
                                 <td class="table-name">
                                     <div class="addicon">
@@ -39,7 +36,7 @@
                                 </td>
                                 <td class="paddingright20px">
                                     <form method="post" action="{{ path('region_delete', {'id': reg.id}) }}"
-                                          onsubmit="return confirm('êtes vous sûr de vouloir supprimer cette région');">
+                                          onsubmit="return confirm('Voulez-vous supprimer cette région?');">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reg.id) }}">
                                         <button class="btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">

@@ -3,7 +3,7 @@
         <td class="table-name paddingleft20px"><a
                     href="{{ path('call_center_Rdv',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a>
         </td>
-        <td class="table-date">{{ b.codePostal }}</td>
+        <td class="table-date">{% if b.codePostal|length <=4 %}0{% endif %}{{ b.codePostal }}</td>
         <td class="table-date paddingleft20px">{{ b.ville }}</td>
         <td class="table-date">{{ b.telephone }}</td>
         {% if (b.rdv == null) %}

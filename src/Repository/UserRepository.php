@@ -30,64 +30,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         if (!$user instanceof User) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
-
         $user->setPassword($newHashedPassword);
         $this->_em->persist($user);
         $this->_em->flush();
     }
 
-    /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    public function findClient($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->join('u.AdminID', 'admin')
-            ->where('admin.id = :value')
-            ->setParameter('value', $value->getID())
-            ->andWhere('u.roles like :val')
-            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
-            ->orderBy('u.id', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
 
+    //    VALIDE POUR V2**********************************************************
     /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    public function findClientForCallCenter()
-    {
-        return $this->createQueryBuilder('u')
-            ->Where('u.roles like :val')
-            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
-            ->orderBy('u.id', 'ASC')
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-
-
-    /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    public function findClientInAJax($value,$data)
-    {
-        return $this->createQueryBuilder('u')
-            ->join('u.AdminID', 'admin')
-            ->where('admin.id = :value')
-            ->setParameter('value', $value->getID())
-            ->andWhere('u.roles like :val')
-            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
-            ->andWhere('u.name LIKE :data')
-            ->setParameter('data','%'.$data.'%')
-            ->orderBy('u.id', 'DESC')
-            ->getQuery()
-            ->getResult()
-            ;
-    }
-    /**
-    //  * @return User[] Returns an array of User objects
+    //  * @return User[] Returns un tableau des client de toute la plateforme
     //  */
     public function findClientSuperAdmin($data)
     {
@@ -104,7 +55,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
 
     /**
-    //  * @return User[] Returns an array of User objects
+    //  * @return User[] Returns un tableau des client de l'admin uniquement avec recherche
+    //  */
+    public function findClientInAJax($value,$data)
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.AdminID', 'admin')
+            ->where('admin.id = :value')
+            ->setParameter('value', $value->getID())
+            ->andWhere('u.roles like :val')
+            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
+            ->andWhere('u.name LIKE :data')
+            ->setParameter('data','%'.$data.'%')
+            ->orderBy('u.id', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+    //  * @return User[] Returns un tableau des user client pour le super admin
     //  */
     public function finClientBySuperAdmin()
     {
@@ -116,6 +86,48 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult()
             ;
     }
+
+    /**
+    //  * @return User[] Returns tabelau des client seulement pour l'admin
+    //  */
+    public function findClient($value)
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.AdminID', 'admin')
+            ->where('admin.id = :value')
+            ->setParameter('value', $value->getID())
+            ->andWhere('u.roles like :val')
+            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+//    Non defini ou non trouvé*************************************************************
+
+    /**
+    //  * @return User[] Returns an array of User objects
+    //  */
+    public function findClientForCallCenter()
+    {
+        return $this->createQueryBuilder('u')
+            ->Where('u.roles like :val')
+            ->setParameter('val', '%"'.'ROLE_CLIENT'.'"%')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+
+
+
+
+
+
 
     /**
       * @return User[] Returns an array of User objects

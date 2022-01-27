@@ -1,53 +1,37 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Edit User{% endblock %}
-
+{% block title %}Mon profil{% endblock %}
 {% block body %}
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
         <div class="content">
             <div class="container">
-
-                <h4>Votre profil</h4>
+                <div class="titlereturn">
+                    <h4>Votre profil</h4>
+                    <a href="{{ path('dashboard_controler') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+                </div>
                 {{ form_start(form) }}
                 <div class="profil">
                     <div class="name">
                         <p>Nom</p>
                         {{ form_row(form.name) }}
-{#                        <input type="text" placeholder="Manon">#}
                     </div>
                     <div class="mdp">
                         <p>Mot de passe</p>
                         {{ form_row(form.password.first) }}
-{#                        <input type="password">#}
                     </div>
                     <div class="mail">
                         <p>Email</p>
-                         {{ form_row(form.email) }}
-{#                        <input type="email" placeholder="manon@entreprise.com">#}
+                        {{ form_row(form.email) }}
+
                     </div>
                     <div class="mdp-confirm">
                         <p>Confirmation du mot de passe</p>
                         {{ form_row(form.password.second) }}
-{#                        <input type="password">#}
                     </div>
-{#                    <div class="level">#}
-{#                        <p>Niveau</p>#}
-{#                        <select>#}
-{#                            <option value="" selected>Administrateur</option>#}
-{#                            <option value="">Administrateur région</option>#}
-{#                            <option value="">Client</option>#}
-{#                            <option value="">Call-center</option>#}
-{#                        </select>#}
-                        <button type="submit" class="buttongreen">Enregistrer</button>
-{#                    </div>#}
+                    <button type="submit" class="buttongreen">Enregistrer</button>
                     {{ form_end(form) }}
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
 {% endblock %}

@@ -21,16 +21,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class MembersController extends AbstractController
 {
-    /**
-     * @Route("/members", name="members")
-     */
-    public function index(): Response
-    {
-        return $this->render('members/index.html.twig', [
-            'controller_name' => 'MembersController',
-        ]);
-    }
-
+//    valide pour v2
     /**
      * @Route("/members/members", name="members_members", methods={"GET","POST"})
      */
@@ -41,19 +32,17 @@ class MembersController extends AbstractController
         // recherche du membre en ajax
         if ($request->isXmlHttpRequest()) {
             $data = $request->request->get('search');
-
             $users = $userRepository->findBySearch($data);
             return new JsonResponse([
                 'content' => $this->renderView('include/_membersContent.html.twig', compact('users')),
             ]);
-
         }
         $user = $paginator->paginate($userAPAginer, $request->query->getInt('page', 1), 6);
         return $this->render('members/members.html.twig', [
             'users' => $user,
         ]);
     }
-
+//    valide pour v2
     /**
      * @Route("members/{id}/edit", name="members_edit", methods={"GET","POST"})
      */
@@ -61,7 +50,6 @@ class MembersController extends AbstractController
     {
         $rolesSiPasDeChangement = $user->getRoles();
         $form = $this->createForm(SuperAdminToMembersType::class, $user);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
@@ -77,7 +65,6 @@ class MembersController extends AbstractController
             return $this->redirectToRoute('members_members');
 
         }
-
         return $this->render('members/edit.html.twig', [
             'user' => $user,
             'form' => $form->createView(),

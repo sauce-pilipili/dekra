@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Bénéficiaires{% endblock %}
-
+{% block title %}Ajout bénéficiaires{% endblock %}
 {% block body %}
 <div class="main">
     {{ include('include/_navigation.html.twig') }}
@@ -11,14 +9,12 @@
                 <h4>Ajout d'un lot de bénéficiaire</h4>
                 <a href="{{ path('beneficiaire') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
             </div>
-
             <div class="lot-controleur">
                 <h3>Ajout d'un lot</h3>
                 {{ form_start(form) }}
                 <div class="selectbeneficiaire">
                     {{ form_row(form.select) }}
                 </div>
-
                 {{ form_row(form.fichier) }}
                     <label for="file">Format fichier excel seulement</label>
                 <button class="buttongreen">Ajouter le lot</button>
@@ -32,7 +28,6 @@
                 <a class="selectbeneficiaire" href="{{ asset('uploads/BENEFICIAIRE_PERSONNE_PHYSIQUE.xlsx') }}" download="feuille_beneficiaire_physique.xlsx">Téléchargement feuille vierge pour personne physique <i class="fas fa-upload"></i></a>
             </div>
         </div>
-
     </div>
 
 </div>

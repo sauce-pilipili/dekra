@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SpecialiteController extends AbstractController
 {
+//    valide pour v2
     /**
      * @Route("/", name="specialite_index", methods={"GET"})
      */
@@ -26,7 +27,7 @@ class SpecialiteController extends AbstractController
             'specialites' => $specialiteRepository->findAll(),
         ]);
     }
-
+//    valide pour v2
     /**
      * @Route("/new", name="specialite_new", methods={"GET","POST"})
      */
@@ -50,16 +51,7 @@ class SpecialiteController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/{id}", name="specialite_show", methods={"GET"})
-     */
-    public function show(Specialite $specialite): Response
-    {
-        return $this->render('specialite/show.html.twig', [
-            'specialite' => $specialite,
-        ]);
-    }
-
+    //    valide pour v2
     /**
      * @Route("/{id}/edit", name="specialite_edit", methods={"GET","POST"})
      */
@@ -79,7 +71,7 @@ class SpecialiteController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
+//    valide pour v2
     /**
      * @Route("/{id}", name="specialite_delete", methods={"POST"})
      */

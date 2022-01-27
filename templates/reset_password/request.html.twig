@@ -1,21 +1,33 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Reinitialisation du mot de passe{% endblock %}
-
 {% block body %}
-    {% for flashError in app.flashes('reset_password_error') %}
-        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-    {% endfor %}
-    <h1>Reinitialisation du mot de passe </h1>
+    <div class="container-login" id="container-login">
+        <div class="logo">
+            <img src="{{ asset('/img/MEDIUMLOGO.png') }}" alt="LogoDekra">
+        </div>
+        <h1>Reinitialisation du mot de passe </h1>
+        {% for flashError in app.flashes('reset_password_error') %}
+            <div class="alert alert-danger" role="alert">{{ flashError }}</div>
+        {% endfor %}
 
-    {{ form_start(requestForm) }}
+        {{ form_start(requestForm) }}
+        <small>
+            Entrez votre mail et nous vous enverrons un lien pour reinitaialiser votre mot de passe!
+        </small>
         {{ form_row(requestForm.email) }}
         <div>
-            <small>
-                Entrez votre mail et nous vous enverrons un lien pour reinitaialiser votre mot de passe!
-            </small>
+
         </div>
 
-        <button class="btn btn-primary">recevoir un email de réinitialisation de mot de passe</button>
-    {{ form_end(requestForm) }}
+        <button class="buttongreen">recevoir un email de réinitialisation de mot de passe</button>
+        {{ form_end(requestForm) }}
+
+    </div>
 {% endblock %}
+
+
+
+
+
+
+

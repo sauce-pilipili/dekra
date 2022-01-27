@@ -1,25 +1,18 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Log in!{% endblock %}
-
+{% block title %}Se connecter{% endblock %}
 {% block body %}
-
     <div class="container-login" id="container-login">
         {{ include('include/_screenWidthaccept.html.twig') }}
     </div>
-
 {% endblock %}
 {% block javascripts %}
     <script>
         const screen = $(window).width();
-
         $(document).ready(function () {
-            const div = $('#container-login')
-
+            // const div = $('#container-login')
             if (screen <= 1000) {
                 alert("Cette application ne peut pas être utilisée depuis un appareil mobile.")
             }
         })
     </script>
-
 {% endblock %}

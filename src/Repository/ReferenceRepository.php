@@ -18,11 +18,7 @@ class ReferenceRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Reference::class);
     }
-
-    // /**
-    //  * @return Reference[] Returns an array of Reference objects
-    //  */
-
+//    ********************valide pour v2*************************
     public function findRef()
     {
         return $this->createQueryBuilder('r')
@@ -33,8 +29,6 @@ class ReferenceRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-
 
     public function findOneByReference($value): ?Reference
     {

@@ -19,14 +19,14 @@ class ControleurRepository extends ServiceEntityRepository
         parent::__construct($registry, Controleur::class);
     }
 
+
+//    ****************************validé pour v2*************************************
     /**
      * @return Controleur[] retourne le resultat de la recherche page controleur acces par admin national
      */
-
     public function findControleurByData($dep, $spe)
     {
         $qb = $this->createQueryBuilder('c');
-
         if ($dep != null && $dep != '') {
             $qb->join('c.departement', 'd')
                 ->andWhere('d.id = :val1')
@@ -39,16 +39,4 @@ class ControleurRepository extends ServiceEntityRepository
         }
         return $qb->getQuery()->getResult();
     }
-
-    /*
-    public function findOneBySomeField($value): ?Controleur
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

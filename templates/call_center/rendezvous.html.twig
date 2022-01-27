@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}RDV bénéficiaire{% endblock %}
-
 {% block body %}
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
@@ -18,8 +16,8 @@
                             <div class="list-controleur">
                                 {% for cont in controlleurs %}
                                     <div class="controleur">
-                                        <div class="checkbox"><input name="rdvSelect" id="checkbox" type="radio"
-                                                                     value="{{ cont.id }}"></div>
+                                        <div class="checkbox"><label for="checkbox"></label><input name="rdvSelect" id="checkbox" type="radio"
+                                                                                                   value="{{ cont.id }}"></div>
                                         <div class="controleur-profil">
                                             <p class="controleur-name">{{ cont.nom }} {{ cont.prenom }}</p> <br>
                                             <div class="department">
@@ -46,7 +44,7 @@
                                     </div> <br>
                                     <hr> <br>
                                 {% endfor %}
-                                <button class="buttongreen" id="myBtn" disabled="true">Prendre Rdv</button>
+                                <button class="buttongreen" id="myBtn" >Prendre Rdv</button>
                                 <div id="myModal" class="modal">
 
                                     <!-- Modal content -->

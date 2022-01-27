@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Membres{% endblock %}
-
+{% block title %}Modifier un membre{% endblock %}
 {% block body %}
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
@@ -11,8 +9,6 @@
                     <h4>Modifier un membre</h4>
                     <a href="{{ path('members_members') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
                 </div>
-
-
                 {{ form_start(form) }}
                 <div class="profil">
                     <div class="name">
@@ -31,7 +27,6 @@
                     <div class="mdp-confirm">
                         <p>niveau d'accès</p>
 
-
                     {{ form_widget (form.roles) }}
                     </div>
                     <button type="submit" class="buttongreen">Enregistrer</button>
@@ -39,9 +34,5 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
 {% endblock %}

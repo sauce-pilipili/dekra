@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}CLients{% endblock %}
-
 {% block body %}
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
@@ -11,8 +9,8 @@
                 <div class="search-container">
                     <div class="search-input">
                         <form id="filters">
-                            <input class="members-search" id="members-search" type="text"
-                                   placeholder="Rechercher un client">
+                            <label for="members-search"></label><input class="members-search" id="members-search" type="text"
+                                                                       placeholder="Rechercher un client">
                         </form>
                     </div>
                     <div class="addanddelete">

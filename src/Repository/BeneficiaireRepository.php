@@ -20,14 +20,78 @@ class BeneficiaireRepository extends ServiceEntityRepository
         parent::__construct($registry, Beneficiaire::class);
     }
 
+//    ******************************valide pour v2******************************************
     /**
-     * @return Beneficiaire[] Returns an array of Beneficiaire objects
+     * @return Beneficiaire |null
      */
-    public function findRef()
+    public function show($id)
     {
         return $this->createQueryBuilder('b')
-            ->select('b.ReferenceEmmyDemande')
-            ->distinct()
+            ->select('b', 'c', 'd')
+            ->join('b.client', 'c')
+            ->join('b.departement', 'd')
+            ->andWhere('b.id =:val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+
+    }
+
+    /**
+     * //  * @return Beneficiaire[] Returns un tableau liste des beneficiaire
+     * si un admin regional consulte les benef de ses client
+     * //  */
+    public function ClientListAdmin()
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b', 'u', 'd')
+            ->join('b.client', 'u')
+            ->join('b.departement', 'd')
+            ->orderBy('b.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * //  * @return Beneficiaire[] Returns un tableau avec la liste de ses client actuel
+     * //  */
+    public function findClientList($value)
+    {
+        return $this->createQueryBuilder('b')
+            ->select('b', 'c')
+            ->join('b.client', 'c')
+            ->where('b.client = :value')
+            ->setParameter('value', $value)
+            ->orderBy('b.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Beneficiaire[] Returns un tableau pour le call center avec les client de la recherche
+     * utilisable en ajax
+     */
+
+    public function findByName($value)
+    {
+        return $this->createQueryBuilder('b')
+            ->Where('b.name LIKE :val')
+            ->setParameter('val', '%' . $value . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Beneficiaire[] Returns un tableau avec la recherhce trié par id client
+     */
+    public function findBySearch($user, $value)
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.client = :user')
+            ->setParameter('user', $user->getId())
+            ->andWhere('b.name LIKE :val')
+            ->setParameter('val', '%' . $value . '%')
             ->getQuery()
             ->getResult();
     }
@@ -39,16 +103,13 @@ class BeneficiaireRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('b')
             ->select('b.referenceFicheOperation');
-
         if ($emmy != null) {
             $query->where('b.ReferenceEmmyDemande = :val')
                 ->setParameter('val', $emmy);
         }
-
         $query->distinct();
         return $query->getQuery()->getResult();
     }
-
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
@@ -60,7 +121,6 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
 
     /**
      * @return integer
@@ -96,56 +156,6 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
-
-
-    /**
-     * @return Beneficiaire[] Returns an array of Beneficiaire objects
-     */
-    public function findBySearch($user, $value)
-    {
-        return $this->createQueryBuilder('b')
-            ->where('b.client = :user')
-            ->setParameter('user', $user->getId())
-            ->andWhere('b.name LIKE :val')
-            ->setParameter('val', '%' . $value . '%')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @return Beneficiaire[] Returns an array of Beneficiaire objects
-     */
-    public function findListOfBeneficiaireToCall($emmy, $precarite, $refoperation, $order = null, $orderDirection = null)
-    {
-
-        $qb = $this->createQueryBuilder('b')
-            ->where('b.ReferenceEmmyDemande = :emmy')
-            ->setParameter('emmy', $emmy)
-            ->andWhere('b.grandPrecairePrecaireClassique LIKE :val')
-            ->setParameter('val', $precarite)
-            ->andWhere('b.referenceFicheOperation = :ref')
-            ->setParameter('ref', $refoperation);
-        if ($order != null && $orderDirection != null) {
-            switch ($order) {
-                case 'name':
-                    $order = 'b.name';
-                    break;
-                case 'postal':
-                    $order = 'b.codePostal';
-                    break;
-                case 'ville':
-                    $order = 'b.ville';
-                    break;
-
-            }
-            $qb->orderBy($order,$orderDirection);
-        }
-
-        return $qb
-            ->getQuery()
-            ->getResult();
-    }
-
 
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
@@ -186,31 +196,50 @@ class BeneficiaireRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Beneficiaire |null
+     * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
-    public function show($id)
+    public function findListOfBeneficiaireToCall($emmy, $precarite, $refoperation, $order = null, $orderDirection = null)
     {
-        return $this->createQueryBuilder('b')
-            ->select('b', 'c', 'd')
-            ->join('b.client', 'c')
-            ->join('b.departement', 'd')
-            ->andWhere('b.id =:val')
-            ->setParameter('val', $id)
+
+        $qb = $this->createQueryBuilder('b')
+            ->where('b.ReferenceEmmyDemande = :emmy')
+            ->setParameter('emmy', $emmy)
+            ->andWhere('b.grandPrecairePrecaireClassique LIKE :val')
+            ->setParameter('val', $precarite)
+            ->andWhere('b.referenceFicheOperation = :ref')
+            ->setParameter('ref', $refoperation);
+        if ($order != null && $orderDirection != null) {
+            switch ($order) {
+                case 'name':
+                    $order = 'b.name';
+                    break;
+                case 'postal':
+                    $order = 'b.codePostal';
+                    break;
+                case 'ville':
+                    $order = 'b.ville';
+                    break;
+
+            }
+            $qb->orderBy($order,$orderDirection);
+        }
+
+        return $qb
             ->getQuery()
-            ->getOneOrNullResult();
-
-
+            ->getResult();
     }
 
+
+
+//***************************************non defini*********************************************
     /**
      * @return Beneficiaire[] Returns an array of Beneficiaire objects
      */
-
-    public function findByName($value)
+    public function findRef()
     {
         return $this->createQueryBuilder('b')
-            ->Where('b.name LIKE :val')
-            ->setParameter('val', '%' . $value . '%')
+            ->select('b.ReferenceEmmyDemande')
+            ->distinct()
             ->getQuery()
             ->getResult();
     }
@@ -228,32 +257,4 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * //  * @return Beneficiaire[] Returns an array of Beneficiaire objects
-     * //  */
-    public function findClientList($value)
-    {
-        return $this->createQueryBuilder('b')
-            ->select('b', 'c')
-            ->join('b.client', 'c')
-            ->where('b.client = :value')
-            ->setParameter('value', $value)
-            ->orderBy('b.id', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * //  * @return Beneficiaire[] Returns an array of Beneficiaire objects
-     * //  */
-    public function ClientListAdmin()
-    {
-        return $this->createQueryBuilder('b')
-            ->select('b', 'u', 'd')
-            ->join('b.client', 'u')
-            ->join('b.departement', 'd')
-            ->orderBy('b.id', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
 }

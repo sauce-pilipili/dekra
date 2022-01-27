@@ -30,7 +30,6 @@ class BeneficiaireController extends AbstractController
      */
     public function index(Request $request, BeneficiaireRepository $beneficiaireRepository, PaginatorInterface $paginator): Response
     {
-
         $form = $this->createForm(SearchBenType::class);
         $form->handleRequest($request);
         $beneficiaireAPAginer = $beneficiaireRepository->ClientListAdmin();
@@ -38,7 +37,6 @@ class BeneficiaireController extends AbstractController
             $beneficiaireAPAginer = $beneficiaireRepository->findClientList($this->getUser());
 
         }
-
         if ($form->isSubmitted() && $form->isValid()) {
             $ben = $request->get('search_ben')['name'];
             if ($this->container->get('security.authorization_checker')->isGranted('ROLE_CALL_CENTER')) {
@@ -52,7 +50,6 @@ class BeneficiaireController extends AbstractController
                 'form' => $form->createView()
             ]);
         }
-
         $beneficiaire = $paginator->paginate($beneficiaireAPAginer, $request->query->getInt('page', 1), 6);
         return $this->render('beneficiaire/index.html.twig', [
             'beneficiaires' => $beneficiaire,
@@ -161,7 +158,6 @@ class BeneficiaireController extends AbstractController
                             'form' => $form->createView(),
                         ]);
                     }
-
                     for ($i = 1; $i <= $feuilleLength - 1; $i++) {
                         $beneficiaire = new Beneficiaire();
                         $beneficiaire->setPersonneMorale(0);

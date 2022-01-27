@@ -9,6 +9,7 @@ use App\Repository\ReferenceRepository;
 use App\Repository\SpecialiteRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +19,9 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
-
+/**
+ * @Security("is_granted('ROLE_CALL_CENTER')")
+ */
 class CallCenterController extends AbstractController
 {
     /**
@@ -48,7 +51,6 @@ class CallCenterController extends AbstractController
                         $pourcentage = 0;
                     } else {
                         if (($nbBenefAvecRdv * 100) / $nbBenef < 40) {
-
                             $pourcentage = ($nbBenefAvecRdv * 100) / $nbBenef;
                         } else {
                             $pourcentage = 40;
@@ -66,15 +68,13 @@ class CallCenterController extends AbstractController
             }
 //        calcul final de la somme par ref
             $pourcentageFinal = $pourcentageFinal / count($total);
-
-
             return new Jsonresponse(['pourcentage' => $pourcentageFinal, 'ref' => $referenceAValider]);
         }
         return $this->render('call_center/index.html.twig', [
-            'controller_name' => 'CallCenterController',
             'reference' => $refEmmy,
         ]);
     }
+
     /**
      * @Route("call/center/emmy{id}", name="call_center_emmy")
      */
@@ -84,7 +84,6 @@ class CallCenterController extends AbstractController
         $refFicheOp = $beneficiaireRepository->findRefficheOp($id);
 //        trouve les ref precarite presente dans le fichier avec la ref emmy
         $refPrecarite = $beneficiaireRepository->findPrecarite($id);
-
         if ($request->isXmlHttpRequest()) {
             $emmy = $request->get('emmy');
             $refOperation = $request->get('refOperation');
@@ -93,10 +92,7 @@ class CallCenterController extends AbstractController
             $beneficiaire = $beneficiaireRepository->findForRdvOrdercount($emmy, $refOperation, $precarite);
             $rdv = $beneficiaireRepository->findwhereRDV($emmy, $refOperation, $precarite);
             return new Jsonresponse(['rdv' => $rdv, 'bene' => $beneficiaire]);
-//            return new Jsonresponse(['emmy'=>$emmy,'refOperation'=>$refOperation, 'precarite'=>$precarite]);
         }
-        $client = $userRepository->find($id);
-        $beneficiaire = $beneficiaireRepository->findClientID($id);
         return $this->render('call_center/client.html.twig', [
             'refOperation' => $refFicheOp,
             'refPrecarite' => $refPrecarite,
@@ -157,14 +153,11 @@ class CallCenterController extends AbstractController
 //formulaire de contact
         $form = $this->createForm(RendezVousType::class);
         $form->handleRequest($request);
-
         // hydratation des elements
         $beneficiaires = $beneficiaireRepository->show($id);
-
         $referenceControle = $beneficiaires->getReferenceFicheOperation();
         $specialite = $specialiteRepository->findOneBy(['referenceOperation' => $referenceControle]);
         $controlleurs = $controleurRepository->findControleurByData($beneficiaires->getDepartement(), $specialite);
-
         //fomulaire de prise de rendez vous
         if ($form->isSubmitted() && $form->isValid()) {
             $infoClientNonAverti = null;
@@ -176,7 +169,6 @@ class CallCenterController extends AbstractController
             $date->format('d-m-Y H:i');
             $adresse = 'no-reply-Rdv@dekra-cee.fr';
             if (preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $beneficiaires->getEmail()) || $beneficiaires->getEmail() != 0) {
-
                 $emailBeneficiaire = (new Email())
                     ->from($adresse)
                     ->to($beneficiaires->getEmail())
@@ -213,8 +205,6 @@ class CallCenterController extends AbstractController
                     ]));
                 $mailer->send($emailControleur);
             }
-
-
             $beneficiaires->setStatut(1);
             $beneficiaires->setRdv($date);
             $this->getDoctrine()->getManager()->flush();
@@ -226,15 +216,11 @@ class CallCenterController extends AbstractController
             }
             return $this->redirectToRoute('call_center', [
             ]);
-
         }
-
         return $this->render('call_center/rendezvous.html.twig', [
             'form' => $form->createView(),
             'controlleurs' => $controlleurs,
             'beneficiaire' => $beneficiaires,
         ]);
     }
-
-
 }

@@ -18,14 +18,15 @@ class DepartementsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Departements::class);
     }
+//    **********************valide pour v2 ********************************
+    public function findBySearch($data){
+        $qb = $this->createQueryBuilder('d')
+            ->andWhere('d.name LIKE :val')
+            ->setParameter('val','%'.$data.'%');
+        return $qb->getQuery()->getResult();
+    }
 
-//    public function beneficiaireToContoleur($value): ?Departements
-//    {
-//     return $this->createQueryBuilder('d')
-//     ->andWhere('')
-//    }
-
-
+//    ***************non defini***************************************
     public function DepartmentClient($value): ?Departements
     {
         return $this->createQueryBuilder('d')

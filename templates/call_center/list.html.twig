@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Bénéficiaires{% endblock %}
-
 {% block body %}
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
@@ -36,8 +34,6 @@
                         </td>
                     </tr>
                 </table>
-
-
                 <div class="search-container">
                     <div class="search-controleurs">
                     </div>
@@ -51,7 +47,7 @@
                                     <i id="chevronname" class="fa fa-chevron-down fa-1x"></i>
                                 </span>
                             </th>
-                            <th class="table-title-date">code postal <span id="orderpostal" onclick="orderBy('postal','DESC')" >
+                            <th class="table-title-date min-width-200" >code postal <span id="orderpostal" onclick="orderBy('postal','DESC')" >
                                     <i id="chevronpostal" class="fa fa-chevron-down fa-1x"></i>
                                 </span></th>
                             <th class="table-title-date paddingleft20px">ville<span id="orderville" onclick="orderBy('ville','DESC')" >

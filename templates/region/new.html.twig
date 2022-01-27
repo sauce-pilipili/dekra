@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}New Region{% endblock %}
-
+{% block title %}Nouvelle région{% endblock %}
 {% block body %}
     <div class="main">
         {{ include('include/_navigation.html.twig') }}
@@ -13,17 +11,14 @@
                 </div>
                 {{ form_start(form) }}
                 <div class="profil">
-
                     <div class="name">
                         <p>Nom</p>
                         {{ form_row(form.name) }}
                     </div>
-
                     <button type="submit" class="buttongreen">Ajouter</button>
                     {{ form_end(form) }}
                 </div>
             </div>
         </div>
-
     </div>
 {% endblock %}

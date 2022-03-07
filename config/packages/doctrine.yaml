@@ -19,3 +19,4 @@ doctrine:
         dql:
             string_functions:
                 MATCH_AGAINST: App\Extensions\Doctrine\Match_Against
+                JSON_CONTAINS: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains

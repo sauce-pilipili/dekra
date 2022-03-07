@@ -1,9 +1,54 @@
-:root {
-  /********* Connexion *********/
-  --green-bg: #007f3d;
-  /* --grey-border: #0000005d; */
-  --grey-border: #a7a7a7c0;
-  --grey-font: #4a4a49;
-  --main-bg: #f5f5f5;
-  --main-font: "Montserrat", sans-serif;
-}
+:root {
+  --green-bg: #007f3d;
+  --grey-border: #a7a7a7c0;
+  --grey-font: #4a4a49;
+  --main-bg: #f5f5f5;
+  --color-white: #ffffff;
+  --main-font: "Montserrat", sans-serif;
+}
+
+* {    
+  margin: 0;    
+  padding: 0;    
+  box-sizing: border-box;
+}
+
+a {    
+  text-decoration: none;    
+  color: var(--grey-font);
+  font-family: var(--main-font);  
+  font-size: 1rem;
+}
+  
+body {    
+  background-color: var(--main-bg);
+}
+
+h2 {    
+  color: var(--green-bg);    
+  font-family: var(--main-font);    
+  font-weight: 900;    
+  margin-bottom: 30px;    
+  font-size: 2.5rem;
+}
+  
+h4 {
+  color: var(--green-bg);    
+  font-family: var(--main-font); 
+  font-weight: 900;    
+  font-size: 2rem;
+}
+  
+h5 {    
+  color: var(--green-bg);    
+  font-family: var(--main-font);  
+  font-weight: 900;   
+  margin-bottom: 30px;    
+  font-size: 1.5rem;
+}
+
+p, input {
+  font-family: var(--main-font);
+}
+
+

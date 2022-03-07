@@ -23,20 +23,19 @@ class ControleurController extends AbstractController
     /**
      * @Route("/controleur/index", name="controleur_index", methods={"GET","POST"})
      */
-    public function index(Request $request,ControleurRepository $controleurRepository, PaginatorInterface $paginator): Response
+    public function index(Request $request,ControleurRepository $controleurRepository): Response
     {   //formulaire recherche
         $data = new Data();
         $form = $this->createForm(DataType::class,$data);
         $form->handleRequest($request);
         //pagination page
-        $controleursAPaginer = $controleurRepository->findAll();
+        $controleur = $controleurRepository->findAll();
         if ($form->isSubmitted() && $form->isValid()) {
             $dep = $request->get('data')['name'];
             $spe = $request->get('data')['specialite'];
             //pagination page avec recherche
             $controleursAPaginer = $controleurRepository->findControleurByData($dep,$spe);
         }
-        $controleur = $paginator->paginate($controleursAPaginer,$request->query->getInt('page',1),6);
         return $this->render('controleur/index.html.twig', [
             'controleurs' => $controleur,
             'form'=> $form->createView(),

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Références{% endblock %}
+{% block body %}
+    <div class="main">
+        {{ include('include/_navigation.html.twig') }}
+        <div class="content">
+            <div class="container">
+                <div class="titlereturn">
+                    <h4>{{ ref }} {{ cdp }}</h4>
+                        <a href="{{ path('navigation_emmy',{id:idRef}) }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+                </div>
+
+                <div class="table">
+                    <table>
+                        <tr class="tr-table-title">
+                            <th class="table-title">Rérence opération</th>
+                            <th class="table-title">Nombre de dossier déposés</th>
+                            <th class="table-title">Nombre de dossier satisfaisants</th>
+                            <th class="table-title">Pourcentage terminé</th>
+                        </tr>
+                        <script src="{{ asset('js/stat.js') }}"></script>
+                        {% for res in result %}
+                            {% for r in res %}
+                            <script>statCdp("{{ cdp }}","{{ r }}")</script>
+                                <tr>
+                                    <td class="table-name"><a href="{{ path('navigation_precarite',{ref:idRef,cdp:cdp,ope: r}) }}" >{{ r }}</a></td>
+                                    <td class="table-name" id="version{{ r }}"></td>
+                                    <td class="table-name" id="satisfait{{ r }}"></td>
+                                    <td class="table-name" >
+                                        <progress id="pourcent{{ r }}" value="" max="100"></progress>
+                                        <span id="value{{ r }}"></span>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

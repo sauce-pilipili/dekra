@@ -6,16 +6,16 @@
         <div class="content">
             <div class="container">
                 <div class="titlereturn">
-                    <h4>Référence Emmy {{ refemmy }}</h4>
+                    <h4>Référence Emmy {{ ref }}</h4>
                     <a href="{{ path('call_center') }}" class="buttonreturn"><i
                                 class="fas fa-undo"></i> Retour</a>
                 </div>
                 <div class="table">
                     <table>
                         <tr class="table-title">
-                            <th class="table-title-name">Ref fiche opération</th>
-                            <th class="table-title-date" style="padding-left: 15px;padding-right: 15px">Précarité</th>
-                            <th class="table-title-date paddingright20px">Pourcentage contrôlé</th>
+                            <th class="table-title">Ref fiche opération</th>
+                            <th class="table-title" style="padding-left: 15px;padding-right: 15px">Précarité</th>
+                            <th class="table-title">Pourcentage contrôlé</th>
                         </tr>
                         <script>
                             function stat(emmy, refOperation, precarite, ProgressBarSpan) {
@@ -57,10 +57,10 @@
                                         <tr onclick="window.location='{{ path('call_center_list_filter',{emmy : refemmy, precarite : p, refoperation : r }) }}' "
                                             id="ligne{{ i }}">
                                             <td class="table-name">{{ r }}</td>
-                                            <td class="table-date"><a
+                                            <td class="table-name"><a
                                                         href="{{ path('call_center_list_filter',{emmy : refemmy, precarite : p, refoperation : r }) }}">{{ p }}</a>
                                             </td>
-                                            <td class="table-name paddingright20px">
+                                            <td class="table-name">
                                                 <progress id="file{{ i }}" value="" max="40"></progress>
                                                 <span id="value{{ i }}"></span></td>
                                         </tr>

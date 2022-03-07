@@ -60,8 +60,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $createdAt;
 
-
-
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="users")
      */
@@ -87,6 +85,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $numeroLot;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reference::class, mappedBy="client")
+     */
+    private $referenceFiche;
+
 
 
     public function __construct()
@@ -94,6 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->AdminID = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->beneficiaires = new ArrayCollection();
+        $this->referenceFiche = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -337,6 +341,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->numeroLot = $numeroLot;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Reference[]
+     */
+    public function getReferenceFiche(): Collection
+    {
+        return $this->referenceFiche;
+    }
+
+    public function addReferenceFiche(Reference $referenceFiche): self
+    {
+        if (!$this->referenceFiche->contains($referenceFiche)) {
+            $this->referenceFiche[] = $referenceFiche;
+            $referenceFiche->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferenceFiche(Reference $referenceFiche): self
+    {
+        if ($this->referenceFiche->removeElement($referenceFiche)) {
+            // set the owning side to null (unless already changed)
+            if ($referenceFiche->getClient() === $this) {
+                $referenceFiche->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(){
+        return $this->getName();
     }
 
 

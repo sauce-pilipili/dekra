@@ -13,12 +13,12 @@
                 </div>
                     {% set pourcentage = ((100*rdv) / beneficiaires |length) | number_format(2) %}
                 <table>
-                    <tr>
-                        <th class="table-title-name paddingleft20px">Nomenclature de la recherche</th>
-                        <th class="table-title-name paddingright20px">pourcentage controlé</th>
+                    <tr class="tr-table-title">
+                        <th class="table-title">Nomenclature de la recherche</th>
+                        <th class="table-title">pourcentage controlé</th>
                     </tr>
                     <tr>
-                        <td class="table-name paddingleft20px">
+                        <td class="table-name">
                             {% if beneficiaires == null %}
                                 Aucun résultat
                             {% else %}
@@ -29,7 +29,7 @@
                                 {% endfor %}
                             {% endif %}
                         </td>
-                        <td class="table-name paddingright20px">
+                        <td class="table-name">
                             <progress id="file" value="{{ pourcentage }}" max="100"></progress>{{ pourcentage }}%
                         </td>
                     </tr>
@@ -41,21 +41,21 @@
 
                 <div class="table">
                     <table>
-                        <tr class="table-title">
-                            <th class="table-title-name paddingleft20px">Bénéficiaires
+                        <tr class="tr table-title">
+                            <th class="table-title">Bénéficiaires
                                 <span id="ordername" onclick="orderBy('name','DESC')" >
                                     <i id="chevronname" class="fa fa-chevron-down fa-1x"></i>
                                 </span>
                             </th>
-                            <th class="table-title-date min-width-200" >code postal <span id="orderpostal" onclick="orderBy('postal','DESC')" >
+                            <th class="table-title" >code postal <span id="orderpostal" onclick="orderBy('postal','DESC')" >
                                     <i id="chevronpostal" class="fa fa-chevron-down fa-1x"></i>
                                 </span></th>
-                            <th class="table-title-date paddingleft20px">ville<span id="orderville" onclick="orderBy('ville','DESC')" >
+                            <th class="table-title">ville<span id="orderville" onclick="orderBy('ville','DESC')" >
                                     <i id="chevronville" class="fa fa-chevron-down fa-1x"></i>
                                 </span></th>
-                            <th class="table-title-date">Téléphone</th>
-                            <th class="table-title-date">Date RDV</th>
-                            <th class="table-title-date">Statut</th>
+                            <th class="table-title">Téléphone</th>
+                            <th class="table-title">Date RDV</th>
+                            <th class="table-title">Statut</th>
                         </tr>
                         <tbody id="bodylist">
                         {{ include('call_center/_beneficiaireContent.html.twig') }}

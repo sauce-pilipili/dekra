@@ -31,6 +31,9 @@ class ControleurType extends AbstractType
             ->add('telnumber', TelType::class,[
                 'label'=>false
             ])
+            ->add('kizeoId', TextType::class,[
+                'label'=>false
+            ])
             ->add('departement',null,[
                 'label'=>false
             ])

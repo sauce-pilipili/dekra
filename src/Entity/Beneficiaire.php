@@ -255,6 +255,107 @@ class Beneficiaire
      */
     private $marqueEtReferenceIsolantDeclare;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $ValeurRouLambdadeclare;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $EpaisseurMinTheorique;
+
+
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $kizeoID;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $dekraID;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $satisfaisant101;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $satisfaisant102;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $satisfaisant103;
+
+    /**
+     * @return mixed
+     */
+    public function getSatisfaisant101()
+    {
+        return $this->satisfaisant101;
+    }
+
+    /**
+     * @param mixed $satisfaisant101
+     */
+    public function setSatisfaisant101($satisfaisant101): void
+    {
+        $this->satisfaisant101 = $satisfaisant101;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSatisfaisant102()
+    {
+        return $this->satisfaisant102;
+    }
+
+    /**
+     * @param mixed $satisfaisant102
+     */
+    public function setSatisfaisant102($satisfaisant102): void
+    {
+        $this->satisfaisant102 = $satisfaisant102;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSatisfaisant103()
+    {
+        return $this->satisfaisant103;
+    }
+
+    /**
+     * @param mixed $satisfaisant103
+     */
+    public function setSatisfaisant103($satisfaisant103): void
+    {
+        $this->satisfaisant103 = $satisfaisant103;
+    }
+
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getDekraID()
+    {
+        return $this->dekraID;
+    }
+
+    /**
+     * @param mixed $dekraID
+     */
+    public function setDekraID($dekraID): void
+    {
+        $this->dekraID = $dekraID;
+    }
 
     public function __construct()
     {
@@ -840,6 +941,50 @@ class Beneficiaire
         $this->marqueEtReferenceIsolantDeclare = $marqueEtReferenceIsolantDeclare;
 
         return $this;
+    }
+
+    public function getKizeoID(): ?int
+    {
+        return $this->kizeoID;
+    }
+
+    public function setKizeoID(?int $kizeoID): self
+    {
+        $this->kizeoID = $kizeoID;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValeurRouLambdadeclare()
+    {
+        return $this->ValeurRouLambdadeclare;
+    }
+
+    /**
+     * @param mixed $ValeurRouLambdadeclare
+     */
+    public function setValeurRouLambdadeclare($ValeurRouLambdadeclare): void
+    {
+        $this->ValeurRouLambdadeclare = $ValeurRouLambdadeclare;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEpaisseurMinTheorique()
+    {
+        return $this->EpaisseurMinTheorique;
+    }
+
+    /**
+     * @param mixed $EpaisseurMinTheorique
+     */
+    public function setEpaisseurMinTheorique($EpaisseurMinTheorique): void
+    {
+        $this->EpaisseurMinTheorique = $EpaisseurMinTheorique;
     }
 
 

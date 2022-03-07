@@ -1,29 +1,29 @@
 <div class="table">
     <table>
-        <tr class="table-title">
-            <th class="table-title-name paddingleft20px">Bénéficiaires</th>
-            <th class="table-title-date">Client</th>
-            <th class="table-title-date">Rendez-Vous</th>
-            <th class="table-title-date">Statut</th>
-            <th class="table-title-date paddingright20px">Supprimer</th>
+        <tr class="tr-table-title">
+            <th class="table-title">Bénéficiaires</th>
+            <th class="table-title">Client</th>
+            <th class="table-title">Rendez-Vous</th>
+            <th class="table-title">Statut</th>
+            <th class="table-title">Supprimer</th>
         </tr>
         {% for b in beneficiaires %}
             <tr>
-                <td class="table-name paddingleft20px"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{{ b.name }} {{ b.prenom }}</a></td>
-                <td class="table-date">{{ b.client.name }}</td>
-                <td class="table-date">{{ b.rdv |format_datetime ( locale= 'fr', pattern="dd MMMM YYYY HH:mm") }}</td>
+                <td class="table-name"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{{ b.name }} {{ b.prenom }}</a></td>
+                <td class="table-name">{{ b.client.name }}</td>
+                <td class="table-name">{{ b.rdv |format_datetime ( locale= 'fr', pattern="dd MMMM YYYY HH:mm") }}</td>
 
                     {% if (b.statut== 0) %}
-                        <td class="table-statut-wait">
+                        <td class="table-name">
                             <p>En attente</p>
                         </td>
                         {% else %}
-                <td class="table-statut-ok">
+                <td class="table-name">
                     <p>Contrôlé</p>
                 </td>
                     {% endif %}
 
-                <td class="paddingright20px">
+                <td class="table-name">
                     <form method="post" action="{{ path('beneficiaire_delete', {'id': b.id}) }}"
                           onsubmit="return confirm('Confirmer la suppression du bénéficiaire?')">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ b.id) }}">

@@ -19,4 +19,16 @@ class SpecialiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Specialite::class);
     }
 
+    public function findBySearch($value)
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s')
+            ->andWhere('s.name LIKE :val')
+            ->setParameter('val', '%'.$value.'%')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
 }

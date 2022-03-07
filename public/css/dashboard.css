@@ -1,56 +1,43 @@
-.welcome-container {
-  text-align: center;
-  padding: 100px;
-  margin: 90px;
-  background-color: white;
-}
-
-.welcome-container p {
-  font-family: "Montserrat", sans-serif;
-  font-size: 1.3rem;
-  width: 100%;
-  margin-bottom: 35px;
-  text-align: center;
-
-
-
-}
-
-.welcome-container h4 {
-  font-size: 4.2rem;
-}
-
-.icones {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 90%;
-  margin: 0 auto;
-}
-
-.icones a {
-  font-family: "Montserrat", sans-serif;
-  color: black;
-  width: 100%;
-  text-align: center;
-  font-weight: 900;
-  font-size: 1.4rem;
-}
-
-.clients,
-.prestations,
-.beneficiaires,
-.membres {
-  display: flex;
-  flex-direction: column;
-  width: 30%;
-}
-
-.center-icone {
-  margin: 0 auto;
-  margin-bottom: 20px;
-}
-
-.deconnexion {
-  color: var(--green-bg);
-}
+.welcome-container {
+  text-align: center;
+  padding: 100px;
+  margin: 90px;
+  background-color: white;
+}
+
+.welcome-container p {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.icones {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.icones a {
+  color: black;
+  width: 100%;
+  text-align: center;
+}
+
+.clients,
+.prestations,
+.beneficiaires,
+.membres {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+}
+
+.center-icone {
+  margin: 0 auto;
+  width: 50px;
+}
+
+.deconnexion {
+  color: var(--green-bg);
+}

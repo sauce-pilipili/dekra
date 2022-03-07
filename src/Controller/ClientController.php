@@ -30,7 +30,7 @@ class ClientController extends AbstractController
 //        requête ajax avec dissociation admin et super admin pour l'accès en contrôle
         if ($request->isXmlHttpRequest()) {
             $data = $request->request->get('search');
-            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')||$this->container->get('security.authorization_checker')->isGranted('ROLE_CONTROLLER')) {
                 $clients = $userRepository->findClientSuperAdmin($data);
             } else {
                 $clients = $userRepository->findClientInAJax($this->getUser(), $data);
@@ -41,12 +41,12 @@ class ClientController extends AbstractController
 
         }
 //        premiere requête sur accès page avec dissociation des admin super admin.. un admin nen peux voir que le client qu'il a ajouté
-        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-            $clientAPAginer = $userRepository->finClientBySuperAdmin();
+        if ($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')||$this->container->get('security.authorization_checker')->isGranted('ROLE_CONTROLLER')) {
+            $client = $userRepository->finClientBySuperAdmin();
         } else {
-            $clientAPAginer = $userRepository->findClient($this->getUser());
+            $client = $userRepository->findClient($this->getUser());
         }
-        $client = $paginator->paginate($clientAPAginer, $request->query->getInt('page', 1), 6);
+
         return $this->render('client/index.html.twig', [
             'clients' => $client,
         ]);

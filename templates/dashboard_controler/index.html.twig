@@ -8,6 +8,9 @@
                   {% if is_granted('ROLE_SUPER_ADMIN') %}
                 {{ include('include/_superAdminAccueilView.html.twig') }}
                  {% endif %}
+                {% if is_granted('ROLE_CONTROLLER') %}
+                    {{ include('include/_controllerAccueilView.html.twig') }}
+                {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     {{ include('include/_adminAcceuilView.html.twig') }}
                 {% endif %}

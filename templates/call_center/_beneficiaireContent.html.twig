@@ -1,34 +1,74 @@
-{% for b in beneficiaires %}
-    <tr onclick="window.location='{{ path('call_center_Rdv',{'id': b.id}) }}'">
-        <td class="table-name paddingleft20px"><a
-                    href="{{ path('call_center_Rdv',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a>
-        </td>
-        <td class="table-date">{% if b.codePostal|length <=4 %}0{% endif %}{{ b.codePostal }}</td>
-        <td class="table-date paddingleft20px">{{ b.ville }}</td>
-        <td class="table-date">{{ b.telephone }}</td>
-        {% if (b.rdv == null) %}
-            <td class="table-date">
-            </td>
+{% for r in result %}
+    <tr>
+        <td class="table-name">
+        {% if is_granted('ROLE_CALL_CENTER') %}
+            <a href="{{ path('call_center_Rdv',{ref:idRef,id:r.id}) }}">
+                {% if r.personneMorale == 1 %}
+                    {{ r.nomDuSiteBeneficiaireOperation }}
+                {% else %}
+                    {{ r.name }} {{ r.prenom }}
+                {% endif %}</a>
         {% else %}
-            <td class="table-date">
-                <p>{{ b.rdv |format_datetime ( locale= 'fr', pattern="dd MMMM YYYY HH:mm") }}</p>
-            </td>
+                <a href="{{ path('navigation_show',{id:r.id}) }}">  {% if r.personneMorale == 1 %}
+                        {{ r.nomDuSiteBeneficiaireOperation }}
+                    {% else %}
+                        {{ r.name }} {{ r.prenom }}
+                    {% endif %}</a>
         {% endif %}
-
-        {% if (b.statut== 0) %}
-            <td class="table-statut-wait">
+        </td>
+        <td class="table-name">{% if r.codePostal|length <=4 %}0{% endif %}{{ r.codePostal }}</td>
+        <td class="table-name">{{ r.ville }}</td>
+        {% if (r.statut== 0) %}
+            <td class="table-name">
                 <p>En attente</p>
             </td>
         {% else %}
-            {% if date('now')> date(b.rdv) %}
-                <td class="table-statut-ok">
+            {% if date('now')> date(r.rdv) %}
+                <td class="table-name">
                     <p>Contrôlé</p>
                 </td>
             {% else %}
-                <td class="table-statut-en-cours">
+                <td class="table-name">
                     <p>En cours</p>
                 </td>
             {% endif %}
         {% endif %}
     </tr>
 {% endfor %}
+
+
+
+{# {% for b in beneficiaires %} #}
+{# <tr onclick="window.location='{{ path('call_center_Rdv',{'id': b.id}) }}'"> #}
+{# <td class="table-name"><a #}
+{# href="{{ path('call_center_Rdv',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a> #}
+{# </td> #}
+{# <td class="table-name">{% if b.codePostal|length <=4 %}0{% endif %}{{ b.codePostal }}</td> #}
+{# <td class="table-name">{{ b.ville }}</td> #}
+{# <td class="table-name">{{ b.telephone }}</td> #}
+{# {% if (b.rdv == null) %} #}
+{# <td class="table-name"> #}
+{# </td> #}
+{# {% else %} #}
+{# <td class="table-name"> #}
+{# <p>{{ b.rdv |format_datetime ( locale= 'fr', pattern="dd MMMM YYYY HH:mm") }}</p> #}
+{# </td> #}
+{# {% endif %} #}
+
+{# {% if (b.statut== 0) %} #}
+{# <td class="table-name"> #}
+{# <p>En attente</p> #}
+{# </td> #}
+{# {% else %} #}
+{# {% if date('now')> date(b.rdv) %} #}
+{# <td class="table-name"> #}
+{# <p>Contrôlé</p> #}
+{# </td> #}
+{# {% else %} #}
+{# <td class="table-name"> #}
+{# <p>En cours</p> #}
+{# </td> #}
+{# {% endif %} #}
+{# {% endif %} #}
+{# </tr> #}
+{# {% endfor %} #}

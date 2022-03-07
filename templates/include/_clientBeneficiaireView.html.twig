@@ -1,17 +1,17 @@
 <div class="table">
     <table>
-        <tr class="table-title">
-            <th class="table-title-name paddingleft20px">Bénéficiaires</th>
-            <th class="table-title-date">adresse email</th>
-            <th class="table-title-date">Numéro de téléphone</th>
-            <th class="table-title-date paddingright20px">Supprimer</th>
+        <tr class="tr-table-title">
+            <th class="table-title">Bénéficiaires</th>
+            <th class="table-title">adresse email</th>
+            <th class="table-title">Numéro de téléphone</th>
+            <th class="table-title">Supprimer</th>
         </tr>
         {% for b in beneficiaires %}
             <tr>
-                <td class="table-name paddingleft20px"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a></td>
-                <td class="table-date">{{ b.email }}</td>
-                <td class="table-date">{{ b.telephone }}</td>
-                <td class="paddingright20px">
+                <td class="table-name"><a href="{{ path('beneficiaire_show',{'id': b.id}) }}">{% if b.personneMorale == 0 %}{{ b.name }} {{ b.prenom }}{% else %}{{ b.RaisonSocialeDemandeur }}{% endif %}</a></td>
+                <td class="table-name">{{ b.email }}</td>
+                <td class="table-name">{{ b.telephone }}</td>
+                <td class="table-name">
                     <form method="post" action="{{ path('beneficiaire_delete', {'id': b.id}) }}"
                           onsubmit="return confirm('Confirmer la suppression du bénéficiaire?')">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ b.id) }}">

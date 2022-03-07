@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Références{% endblock %}
+
+{% block body %}
+    <div class="main">
+        {{ include('include/_navigation.html.twig') }}
+        <div class="content">
+            <div class="container">
+                <div class="titlereturn">
+                    <h4>Modifier la références {{ reference.reference }}</h4>
+                    <a href="{{ path('reference_index') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+                </div>
+                {{ form_start(form) }}
+                <div class="profil">
+                    <div class="name">
+                        <p>Id Kizéo</p>
+                        {{ form_row(form.idKizeoForm) }}
+                    </div>
+                    <div class="name">
+                        <p>Lot completé par le call center</p>
+                        {{ form_row(form.complet) }}
+                        <p>Lot validé par l'administrateur</p>
+                        {{ form_row(form.validation) }}
+                    </div>
+                    <div class="name">
+                        <p>date de restitution</p>
+                        {{ form_row(form.dateRestitution) }}
+                    </div>
+                    <div class="name">
+
+                    </div>
+                    <button type="submit" class="buttongreen">Modifier</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

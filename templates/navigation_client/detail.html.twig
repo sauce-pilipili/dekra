@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+{% block title %}Références{% endblock %}
+{% block body %}
+    <div class="main">
+        {{ include('include/_navigation.html.twig') }}
+        <div class="content">
+            <div class="container">
+                <div class="titlereturn">
+                    <h4>{{ ref }} {{ cdp }} {{ ope }} {{ preca }}</h4>
+                    <a href="{{ path('navigation_precarite',{ref:idRef, cdp:cdp,ope:ope}) }}" class="buttonreturn"><i
+                                class="fas fa-undo"></i> Retour</a>
+                </div>
+                <div class="search-input" style="width: 300px">
+                    <form id="filters">
+                        <label for="members-search"></label><input onkeyup="searchAjax(this.value)" class="members-search" id="members-search" type="text"
+                                                                   placeholder="Rechercher">
+                    </form>
+                </div>
+                <div class="table">
+                    <table>
+                        <tr class="tr-table-title">
+                            <th class="table-title">Bénéficiaires
+                                <span id="ordername" onclick="orderBy('name','DESC')">
+                                    <i id="chevronname" class="fa fa-chevron-down fa-1x"></i>
+                                </span>
+                            </th>
+                            <th class="table-title">code postal <span id="orderpostal"
+                                                                      onclick="orderBy('postal','DESC')">
+                                    <i id="chevronpostal" class="fa fa-chevron-down fa-1x"></i>
+                                </span></th>
+                            <th class="table-title">ville<span id="orderville" onclick="orderBy('ville','DESC')">
+                                    <i id="chevronville" class="fa fa-chevron-down fa-1x"></i>
+                                </span></th>
+
+                            <th class="table-title">statut de contrôle</th>
+                        </tr>
+                        <tbody id="bodylist">
+                        {{ include('call_center/_beneficiaireContent.html.twig') }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/search.js') }}"></script>
+    <script src="{{ asset('js/orderAjax.js') }}"></script>
+{% endblock %}

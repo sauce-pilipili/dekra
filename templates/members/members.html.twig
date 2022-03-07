@@ -9,8 +9,12 @@
                 <div class="search-container">
                     <div class="search-input">
                         <form id="filters">
-                            <label for="members-search"></label><input class="members-search" id="members-search" type="text"
-                                                                       placeholder="Rechercher un membre">
+                            <label for="members-search"></label><input
+                                    onkeyup="searchAjax(this.value)"
+                                    class="members-search"
+                                    id="members-search"
+                                    type="text"
+                                    placeholder="Rechercher un membre">
                         </form>
                     </div>
                     <div class="addanddelete">
@@ -26,19 +30,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="response-content" id="response-content">
+                <div class="response-content" id="bodylist">
                     {{ include('include/_membersContent.html.twig') }}
                 </div>
-                <div class="pagination">
-                    <div class="navigation-knp">
-                        {{ knp_pagination_render(users) }}
-                    </div>
 
-                </div>
             </div>
         </div>
     </div>
 {% endblock %}
 {% block javascripts %}
-    <script src="{{ asset('js/membersSearch.js') }}"></script>
+    <script src="{{ asset('js/search.js') }}"></script>
 {% endblock %}

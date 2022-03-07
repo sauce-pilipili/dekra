@@ -49,7 +49,26 @@ class Controleur
      */
     private $telnumber;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $kizeoId;
 
+    /**
+     * @return mixed
+     */
+    public function getKizeoId()
+    {
+        return $this->kizeoId;
+    }
+
+    /**
+     * @param mixed $kizeoId
+     */
+    public function setKizeoId($kizeoId): void
+    {
+        $this->kizeoId = $kizeoId;
+    }
 
     public function __tostring(){
         return $this->nom;

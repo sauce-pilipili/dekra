@@ -201,6 +201,9 @@
     "psr/simple-cache": {
         "version": "1.0.1"
     },
+    "scienta/doctrine-json-functions": {
+        "version": "5.0.0"
+    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },

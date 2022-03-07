@@ -8,6 +8,7 @@ use App\Repository\ControleurRepository;
 use App\Repository\ReferenceRepository;
 use App\Repository\SpecialiteRepository;
 use App\Repository\UserRepository;
+use App\service\ApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,120 +25,126 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CallCenterController extends AbstractController
 {
-    /**
-     * @Route("/call/center/", name="call_center")
-     */
-    public function index(Request $request, ReferenceRepository $referenceRepository, BeneficiaireRepository $beneficiaireRepository): Response
-    {
-//        trouver les references Emmy
-        $refEmmy = $referenceRepository->findRef();
-//            requete ajax pour affichage du pourcentage total de rdv pris
-        if ($request->isXmlHttpRequest()) {
-//            recup info refEmmy par ajax
-            $emmy = $request->get('emmy');
-            $referenceAValider = $referenceRepository->findOneByReference($emmy)->getId();
-            //recup des fiches disponible sur beneficiaires
-            $reffiche = $beneficiaireRepository->findRefficheOp($emmy);
-            // recup des precarité
-            $precarite = $beneficiaireRepository->findPrecarite($emmy);
-//        init du tableau de calcul final
-            $total = array();
-//        requete de calcul pour chaque ref emmy/refope/precarite
-            foreach ($reffiche as $r) {
-                foreach ($precarite as $pre) {
-                    $nbBenef = $beneficiaireRepository->nombreBeneficiaireDetail($emmy, $r["referenceFicheOperation"], $pre["grandPrecairePrecaireClassique"]);
-                    $nbBenefAvecRdv = $beneficiaireRepository->nombreBeneficiaireDetailrdv($emmy, $r["referenceFicheOperation"], $pre["grandPrecairePrecaireClassique"]);
-                    if ($nbBenef == 0) {
-                        $pourcentage = 0;
-                    } else {
-                        if (($nbBenefAvecRdv * 100) / $nbBenef < 40) {
-                            $pourcentage = ($nbBenefAvecRdv * 100) / $nbBenef;
-                        } else {
-                            $pourcentage = 40;
-                        }
-                    }
-                    if ($nbBenefAvecRdv != 0 || $nbBenef != 0) {
-                        array_push($total, $pourcentage);
-                    }
-                }
-            }
-//        regroupement de la somme
-            $pourcentageFinal = 0;
-            foreach ($total as $t) {
-                $pourcentageFinal += $t;
-            }
-//        calcul final de la somme par ref
-            $pourcentageFinal = $pourcentageFinal / count($total);
-            return new Jsonresponse(['pourcentage' => $pourcentageFinal, 'ref' => $referenceAValider]);
-        }
-        return $this->render('call_center/index.html.twig', [
-            'reference' => $refEmmy,
-        ]);
-    }
+//    /**
+//     * @Route("/call/center/", name="call_center")
+//     */
+//    public function index(Request $request, ReferenceRepository $referenceRepository, BeneficiaireRepository $beneficiaireRepository): Response
+//    {
+////        trouver les references Emmy
+//        $refEmmy = $referenceRepository->findRef();
+////            requete ajax pour affichage du pourcentage total de rdv pris
+//        if ($request->isXmlHttpRequest()) {
+////            recup info refEmmy par ajax
+//            $emmy = $request->get('emmy');
+//            $referenceAValider = $referenceRepository->findOneByReference($emmy)->getId();
+//            //recup des fiches disponible sur beneficiaires
+//            $reffiche = $beneficiaireRepository->findRefficheOp($emmy);
+//            // recup des precarité
+//            $precarite = $beneficiaireRepository->findPrecarite($emmy);
+////        init du tableau de calcul final
+//            $total = array();
+////        requete de calcul pour chaque ref emmy/refope/precarite
+//            foreach ($reffiche as $r) {
+//                foreach ($precarite as $pre) {
+//                    $nbBenef = $beneficiaireRepository->nombreBeneficiaireDetail($emmy, $r["referenceFicheOperation"], $pre["grandPrecairePrecaireClassique"]);
+//                    $nbBenefAvecRdv = $beneficiaireRepository->nombreBeneficiaireDetailrdv($emmy, $r["referenceFicheOperation"], $pre["grandPrecairePrecaireClassique"]);
+//                    if ($nbBenef == 0) {
+//                        $pourcentage = 0;
+//                    } else {
+//                        if (($nbBenefAvecRdv * 100) / $nbBenef < 40) {
+//                            $pourcentage = ($nbBenefAvecRdv * 100) / $nbBenef;
+//                        } else {
+//                            $pourcentage = 40;
+//                        }
+//                    }
+//                    if ($nbBenefAvecRdv != 0 || $nbBenef != 0) {
+//                        array_push($total, $pourcentage);
+//                    }
+//                }
+//            }
+////        regroupement de la somme
+//            $pourcentageFinal = 0;
+//            foreach ($total as $t) {
+//                $pourcentageFinal += $t;
+//            }
+////        calcul final de la somme par ref
+//            $pourcentageFinal = $pourcentageFinal / count($total);
+//            return new Jsonresponse(['pourcentage' => $pourcentageFinal, 'ref' => $referenceAValider, 'emmy' => $emmy]);
+//        }
+//        return $this->render('call_center/index.html.twig', [
+//            'reference' => $refEmmy,
+//        ]);
+//    }
 
-    /**
-     * @Route("call/center/emmy{id}", name="call_center_emmy")
-     */
-    public function CallCenterClient(Request $request, $id, BeneficiaireRepository $beneficiaireRepository, UserRepository $userRepository): Response
-    {
-//        trouve les ref op presente dans le fichier avec le ref emmy
-        $refFicheOp = $beneficiaireRepository->findRefficheOp($id);
-//        trouve les ref precarite presente dans le fichier avec la ref emmy
-        $refPrecarite = $beneficiaireRepository->findPrecarite($id);
-        if ($request->isXmlHttpRequest()) {
-            $emmy = $request->get('emmy');
-            $refOperation = $request->get('refOperation');
-            $precarite = $request->get('precarite');
+//    /**
+//     * @Route("call/center/emmy{id}", name="call_center_emmy")
+//     */
+//    public function CallCenterClient(Request $request, $id, BeneficiaireRepository $beneficiaireRepository, ReferenceRepository $referenceRepository, UserRepository $userRepository): Response
+//    {
 //
-            $beneficiaire = $beneficiaireRepository->findForRdvOrdercount($emmy, $refOperation, $precarite);
-            $rdv = $beneficiaireRepository->findwhereRDV($emmy, $refOperation, $precarite);
-            return new Jsonresponse(['rdv' => $rdv, 'bene' => $beneficiaire]);
-        }
-        return $this->render('call_center/client.html.twig', [
-            'refOperation' => $refFicheOp,
-            'refPrecarite' => $refPrecarite,
-            'refemmy' => $id,
-        ]);
-    }
+//
+////        trouve les ref op presente dans le fichier avec le ref emmy
+//        $refFicheOp = $beneficiaireRepository->findRefficheOp($id);
+////        trouve les ref precarite presente dans le fichier avec la ref emmy
+//        $refPrecarite = $beneficiaireRepository->findPrecarite($id);
+//        if ($request->isXmlHttpRequest()) {
+//            $emmy = $request->get('emmy');
+//            $refOperation = $request->get('refOperation');
+//            $precarite = $request->get('precarite');
+////
+//            $beneficiaire = $beneficiaireRepository->findForRdvOrdercount($emmy, $refOperation, $precarite);
+//            $rdv = $beneficiaireRepository->findwhereRDV($emmy, $refOperation, $precarite);
+//            return new Jsonresponse(['rdv' => $rdv, 'bene' => $beneficiaire]);
+//        }
+//        return $this->render('call_center/client.html.twig', [
+//            'refOperation' => $refFicheOp,
+//            'refPrecarite' => $refPrecarite,
+//            'refemmy' => $id,
+//            'ref' => $id
+//        ]);
+//    }
+
+//    /**
+//     * @Route("/call/center/{emmy}list{precarite}/filter{refoperation}", name="call_center_list_filter")
+//     *
+//     */
+//    public function CLientLotFiltered(Request $request, $emmy, $precarite, $refoperation, ReferenceRepository $referenceRepository, BeneficiaireRepository $beneficiaireRepository): Response
+//    {
+//
+//
+//        if ($request->isXmlHttpRequest()) {
+//
+//            $order = $request->get('order');
+//            $direction = $request->get('direction');
+//            $beneficiaires = $beneficiaireRepository->findListOfBeneficiaireToCall($emmy, $precarite, $refoperation, $order, $direction);
+//            return new JsonResponse([
+//                'order' => $order,
+//                'direction' => $direction,
+//                'content' => $this->renderView('call_center/_beneficiaireContent.html.twig', compact('beneficiaires'))
+//            ]);
+//        }
+//
+//        $beneficiaires = $beneficiaireRepository->findListOfBeneficiaireToCall($emmy, $precarite, $refoperation);
+//        $rdv = $beneficiaireRepository->nombreBeneficiaireDetailrdv($emmy, $refoperation, $precarite);
+//
+//        return $this->render('call_center/list.html.twig', [
+//            'beneficiaires' => $beneficiaires,
+//            'rdv' => $rdv,
+//            'emmy' => $emmy,
+//            'precarite' => $precarite,
+//            'refOperation' => $refoperation,
+//        ]);
+//    }
+
 
     /**
-     * @Route("/call/center/{emmy}list{precarite}/filter{refoperation}", name="call_center_list_filter")
-     *
+     * @Route("/call/center/rdv/{ref}/{id}", name="call_center_Rdv", methods={"GET","POST"})
      */
-    public function CLientLotFiltered(Request $request, $emmy, $precarite, $refoperation, BeneficiaireRepository $beneficiaireRepository): Response
-    {
-        if ($request->isXmlHttpRequest()){
-
-            $order= $request->get('order');
-            $direction = $request->get('direction');
-            $beneficiaires = $beneficiaireRepository->findListOfBeneficiaireToCall($emmy, $precarite, $refoperation,$order,$direction);
-            return new JsonResponse([
-                'order'=>$order,
-            'direction'=>$direction,
-                'content' => $this->renderView('call_center/_beneficiaireContent.html.twig', compact('beneficiaires'))
-            ]);
-        }
-
-        $beneficiaires = $beneficiaireRepository->findListOfBeneficiaireToCall($emmy, $precarite, $refoperation);
-        $rdv = $beneficiaireRepository->nombreBeneficiaireDetailrdv($emmy, $refoperation, $precarite);
-
-        return $this->render('call_center/list.html.twig', [
-            'beneficiaires' => $beneficiaires,
-            'rdv' => $rdv,
-            'emmy' => $emmy,
-            'precarite' => $precarite,
-            'refOperation' => $refoperation,
-        ]);
-    }
-
-
-    /**
-     * @Route("/call/center/rdv/{id}", name="call_center_Rdv", methods={"GET","POST"})
-     */
-    public function rendezVous($id, Request $request, EntityManagerInterface $em,
+    public function rendezVous($id,$ref, Request $request, EntityManagerInterface $em,
                                SpecialiteRepository $specialiteRepository,
                                BeneficiaireRepository $beneficiaireRepository,
                                ControleurRepository $controleurRepository,
+                               ApiService $api,
                                MailerInterface $mailer): Response
 
     {
@@ -203,10 +210,14 @@ class CallCenterController extends AbstractController
                         'date' => $date,
                         'beneficiaire' => $beneficiaires
                     ]));
-                $mailer->send($emailControleur);
+//                $mailer->send($emailControleur);
             }
             $beneficiaires->setStatut(1);
             $beneficiaires->setRdv($date);
+//            *************************   API   ************************************
+//            $kizeoID = $api->pushPhysique($beneficiaires, $controlmail);
+//            $beneficiaires->setKizeoID($kizeoID);
+//            **********************************************************************
             $this->getDoctrine()->getManager()->flush();
 
             if ($infoClientNonAverti) {
@@ -214,11 +225,16 @@ class CallCenterController extends AbstractController
             } else {
                 $this->addFlash('success', 'Votre message a bien été envoyé');
             }
-            return $this->redirectToRoute('call_center', [
+            return $this->redirectToRoute('navigation_detail', [
+                'ref' => $ref,
+                'cdp' => $beneficiaire->getVersionCoupDePouce(),
+                'ope' => $beneficiaire->getReferenceFicheOperation(),
+                'preca' => $beneficiaire->getGrandPrecairePrecaireClassique()
             ]);
         }
         return $this->render('call_center/rendezvous.html.twig', [
             'form' => $form->createView(),
+            'ref'=>$ref,
             'controlleurs' => $controlleurs,
             'beneficiaire' => $beneficiaires,
         ]);

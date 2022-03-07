@@ -7,7 +7,7 @@
             <div class="rdv-container">
                 <div class="titlereturn">
                     <h4>Ajouter un rendez-vous</h4>
-                    <a href="{{ path('call_center') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+                    <a href="{{ path('navigation_detail',{ref:ref,cdp:beneficiaire.versionCoupDePouce,ope:beneficiaire.referenceFicheOperation,preca: beneficiaire.grandPrecairePrecaireClassique}) }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
                 </div>
                 <div class="control-benef">
                     <div class="controleur-select-container">
@@ -19,7 +19,7 @@
                                         <div class="checkbox"><label for="checkbox"></label><input name="rdvSelect" id="checkbox" type="radio"
                                                                                                    value="{{ cont.id }}"></div>
                                         <div class="controleur-profil">
-                                            <p class="controleur-name">{{ cont.nom }} {{ cont.prenom }}</p> <br>
+                                            <p class="controleur-name">{{ cont.nom }} {{ cont.prenom }}</p>
                                             <div class="department">
                                                 <p>Département</p>
                                                 <div class="speciality-tags">
@@ -28,7 +28,6 @@
                                                     {% endfor %}
                                                 </div>
                                             </div>
-                                            <br>
                                             <div class="speciality">
                                                 <p>Spécialités</p>
 
@@ -38,11 +37,9 @@
                                                     {% endfor %}
                                                 </div>
                                             </div>
-                                            <br>
-
                                         </div>
-                                    </div> <br>
-                                    <hr> <br>
+                                    </div>
+                                    <hr><br>
                                 {% endfor %}
                                 <button class="buttongreen" id="myBtn" >Prendre Rdv</button>
                                 <div id="myModal" class="modal">
@@ -181,21 +178,6 @@
                         $("#submitEmail").remove();
                         $("#emailchange").append("<span id='emailchangespan'>" + data.email + "</span>");
 
-
-                        // if (data.bene == 0) {
-                        //     $("#ligne"+ProgressBarSpan).remove();
-                        //     result = 0;
-                        // } else {
-                        //     result = (data.rdv * 100) / data.bene
-                        // }
-                        // console.log(data.bene, data.rdv, result)
-                        // if (result == 100) {
-                        //     $("#value" + ProgressBarSpan).html(result + '%');
-                        // } else {
-                        //     $("#value" + ProgressBarSpan).html(result.toPrecision(2) + '%');
-                        //
-                        // }
-                        // $('#file' + ProgressBarSpan).val(result.toPrecision(2))
                     }
                 }
             )

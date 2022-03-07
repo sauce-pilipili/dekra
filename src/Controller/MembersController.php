@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\SuperAdminToMembersType;
+use App\Repository\ReferenceRepository;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -25,19 +26,16 @@ class MembersController extends AbstractController
     /**
      * @Route("/members/members", name="members_members", methods={"GET","POST"})
      */
-    public function members(Request $request, UserRepository $userRepository, PaginatorInterface $paginator): Response
+    public function members(Request $request, UserRepository $userRepository): Response
 
-    {   // chargement de tous les membres
-        $userAPAginer = $userRepository->findAll();
-        // recherche du membre en ajax
+    {
+        $user = $userRepository->findAll();
         if ($request->isXmlHttpRequest()) {
-            $data = $request->request->get('search');
-            $users = $userRepository->findBySearch($data);
+            $users = $userRepository->findBySearch($request->get('search'));
             return new JsonResponse([
-                'content' => $this->renderView('include/_membersContent.html.twig', compact('users')),
+                'response' => $this->renderView('include/_membersContent.html.twig', compact('users')),
             ]);
         }
-        $user = $paginator->paginate($userAPAginer, $request->query->getInt('page', 1), 6);
         return $this->render('members/members.html.twig', [
             'users' => $user,
         ]);
@@ -46,7 +44,7 @@ class MembersController extends AbstractController
     /**
      * @Route("members/{id}/edit", name="members_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, User $user, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function edit(Request $request, User $user): Response
     {
         $rolesSiPasDeChangement = $user->getRoles();
         $form = $this->createForm(SuperAdminToMembersType::class, $user);
@@ -70,4 +68,8 @@ class MembersController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+
+
+
 }

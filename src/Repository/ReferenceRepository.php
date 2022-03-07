@@ -40,4 +40,17 @@ class ReferenceRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findBySearch($value): ?Reference
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.reference LIKE :val')
+            ->setParameter('val', '%'.$value.'%')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
+
+
 }

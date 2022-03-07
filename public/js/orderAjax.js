@@ -8,6 +8,7 @@ function orderBy(order, direction){
                 'direction': direction,
             },
             success: function (data) {
+                console.log(data.content)
                 let span = document.getElementById('order'+order)
                 let chevron = document.getElementById('chevron'+order)
 

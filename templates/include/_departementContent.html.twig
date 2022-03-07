@@ -1,15 +1,15 @@
 <table class="table">
-    <tr class="table-title">
-        <th class="table-title-speciality paddingleft20px">Numéro</th>
-        <th class="table-title-speciality">Nom</th>
-        <th class="table-title-speciality table-edit">Editer</th>
-        <th class="table-title-speciality table-delete paddingright20px">Supprimer</th>
+    <tr class="tr-table-title">
+        <th class="table-title">Numéro</th>
+        <th class="table-title">Nom</th>
+        <th class="table-title">Editer</th>
+        <th class="table-title">Supprimer</th>
     </tr>
 {% for dep in departements %}
     <tr>
-        <td class="table-name paddingleft20px">{{ dep.numero }} </td>
+        <td class="table-name left20px">{{ dep.numero }} </td>
         <td class="table-name">{{ dep.name }} </td>
-        <td class="table-name">
+        <td class="table-name action">
             <div class="addicon">
                 <a href="{{ path('departements_edit', {'id': dep.id}) }}">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" height="24" width="24">
@@ -18,7 +18,7 @@
                 </a>
             </div>
         </td>
-        <td class="paddingright20px">
+        <td class="table-name action">
             <form method="post" action="{{ path('departements_delete', {'id': dep.id}) }}"
                   onsubmit="return confirm('êtes vous sûr de vouloir supprimer ce département il sera effacé de la mobilité des controleurs affecté a celui-ci');">
                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ dep.id) }}">

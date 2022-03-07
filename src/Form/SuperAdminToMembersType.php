@@ -26,6 +26,7 @@ class SuperAdminToMembersType extends AbstractType
                 [   'niveau d\'accès '=> "change",
                     'Call Center' => 'ROLE_CALL_CENTER',
                     'Client' => 'ROLE_CLIENT',
+                    'Contrôleur' => 'ROLE_CONTROLLER',
                     'Administrateur' => 'ROLE_ADMIN',
                     'Super Administrateur' => 'ROLE_SUPER_ADMIN',
                 ],

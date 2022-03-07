@@ -7,7 +7,12 @@
         <div class="container">
             <div class="titlereturn">
                 <h4>Ajout d'un lot de bénéficiaire</h4>
-                <a href="{{ path('beneficiaire') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+                {% if is_granted('ROLE_CLIENT') %}
+                <a href="{{ path('navigation_reference') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+                {% endif %}
+                {% if is_granted('ROLE_CALL_CENTER') %}
+                    <a href="{{ path('beneficiaire') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+                {% endif %}
             </div>
             <div class="lot-controleur">
                 <h3>Ajout d'un lot</h3>
@@ -15,6 +20,13 @@
                 <div class="selectbeneficiaire">
                     {{ form_row(form.select) }}
                 </div>
+{#                {% if is_granted('ROLE_SUPER_ADMIN') %}#}
+
+{#                <div class="selectbeneficiaire" style="margin-top: 25px">#}
+{#                    <h3>Client</h3>#}
+{#                    {{ form_row(form.client) }}#}
+{#                </div>#}
+{#                {% endif %}#}
                 {{ form_row(form.fichier) }}
                     <label for="file">Format fichier excel seulement</label>
                 <button class="buttongreen">Ajouter le lot</button>

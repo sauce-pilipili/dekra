@@ -7,6 +7,7 @@ use App\Form\SpecialiteType;
 use App\Repository\SpecialiteRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,8 +22,17 @@ class SpecialiteController extends AbstractController
     /**
      * @Route("/", name="specialite_index", methods={"GET"})
      */
-    public function index(SpecialiteRepository $specialiteRepository): Response
+    public function index(Request $request,SpecialiteRepository $specialiteRepository): Response
     {
+        if ($request->isXmlHttpRequest()){
+            $specialites = $specialiteRepository->findBySearch($request->get('search'));
+            return new JsonResponse([
+                'response'=>$this->renderView('specialite/_contentSpecialite.html.twig',compact('specialites')),
+                'ok'=>$request->get('search')
+            ]);
+        }
+
+
         return $this->render('specialite/index.html.twig', [
             'specialites' => $specialiteRepository->findAll(),
         ]);

@@ -1,0 +1,142 @@
+{% extends 'base.html.twig' %}
+{% block title %}Références{% endblock %}
+{% block body %}
+    <div class="main">
+        {{ include('include/_navigation.html.twig') }}
+        <div class="content">
+            <div class="container">
+                <div class="titlereturn">
+                    <h4>Les lots de bénéficiaire</h4>
+                <div class="bloc-ad-return">
+                    {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_CLIENT') %}
+                    <div class="addanddelete">
+                        <div class="addicon">
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <a href="{{ path('beneficiaire_new',{id:idClient}) }}">
+                                {% endif %}
+                                {% if is_granted('ROLE_CLIENT') %}
+                                <a href="{{ path('beneficiaire_new',{id:app.user.id}) }}">
+                                    {% endif %}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                         viewBox="0 0 19 19">
+                                        <defs>
+                                        </defs>
+                                        <path
+                                                d="M13.5,4a1.187,1.187,0,0,1,1.188,1.188v7.125h7.125a1.188,1.188,0,0,1,0,2.375H14.688v7.125a1.187,1.187,0,0,1-2.375,0V14.688H5.188a1.188,1.188,0,0,1,0-2.375h7.125V5.188A1.187,1.187,0,0,1,13.5,4Z"
+                                                transform="translate(-4 -4)"/>
+                                    </svg>
+                                </a>
+                        </div>
+                    </div>
+
+            {% endif %}
+
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <a href="{{ path('client') }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+            {% endif %}
+
+
+            {% if is_granted('ROLE_CLIENT') or is_granted('ROLE_CALL_CENTER') %}
+                <a href="{{ path('dashboard_controler') }}" class="buttonreturn"><i class="fas fa-undo"></i>
+                    Retour</a>
+            {% endif %}
+
+              </div>
+        </div>
+        <div class="table">
+            <table>
+                <tr class="tr-table-title">
+                    <th class="table-title">N° Emmy</th>
+                    <th class="table-title">N° Dekra</th>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <th class="table-title">N° IdKizeo</th>
+                    {% endif %}
+                    <th class="table-title">Date de dépôt</th>
+                    <th class="table-title">Date de restitution</th>
+                    <th class="table-title">Cloturé</th>
+                    <th class="table-title">validé</th>
+                    <th class="table-title">Restitution</th>
+                </tr>
+                {% for r in reference %}
+                    <tr>
+                        <td class="table-name left20px"><a
+                                    href="{{ path('navigation_emmy',{id : r.id}) }}">{{ r.reference }}</a></td>
+                        <td class="table-name">{{ r.idLotUnique }}</td>
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            {% if r.idKizeoForm == null %}
+                                <td class="table-name table-kizeo">
+                                    <input type='text' id='newKizeo'
+                                           name='kizeo'>
+                                    <button id='submit'
+                                            type='button'
+                                            class='buttongreenform' onclick='sendNewKizeo({{ r.id }})'>Envoyer
+                                    </button>
+                                </td>
+                            {% else %}
+                                <td class="table-name">
+                                    <p id="kizeochange"><span id="kizeochangespan">{{ r.idKizeoForm }}</span>
+                                    </p>
+                                    <span onclick="editKizeo('{{ r.id }}')" class="edit"><svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none" viewBox="0 0 24 24"
+                                                height="24" width="24">
+                                        <path xmlns="http://www.w3.org/2000/svg"
+                                              d="M16.2929 3.29289C16.6834 2.90237 17.3166 2.90237 17.7071 3.29289L20.7071 6.29289C21.0976 6.68342 21.0976 7.31658 20.7071 7.70711L11.7071 16.7071C11.5196 16.8946 11.2652 17 11 17H8C7.44772 17 7 16.5523 7 16V13C7 12.7348 7.10536 12.4804 7.29289 12.2929L16.2929 3.29289ZM9 13.4142V15H10.5858L18.5858 7L17 5.41421L9 13.4142ZM3 7C3 5.89543 3.89543 5 5 5H10C10.5523 5 11 5.44772 11 6C11 6.55228 10.5523 7 10 7H5V19H17V14C17 13.4477 17.4477 13 18 13C18.5523 13 19 13.4477 19 14V19C19 20.1046 18.1046 21 17 21H5C3.89543 21 3 20.1046 3 19V7Z"
+                                              fill="#0D0D0D"/>
+                                    </svg></span>
+                                </td>
+                            {% endif %}
+                        {% endif %}
+                        <td class="table-name">{{ r.depotDate | date('d-m-y') }}</td>
+                        <td class="table-name">{{ r.dateRestitution | date('d-m-y') }}</td>
+                        <td class="table-name action">{% if r.complet %}<span>&#9745;</span>{% else %}
+                                <span>&#9744;</span>{% endif %}
+                        </td>
+                        <td class="table-name action">{% if r.validation %}<span>&#9745;</span>{% else %}
+                                <span>&#9744;</span>{% endif %}</td>
+                        <td class="table-name action">
+                            {% if r.complet and  r.validation %}
+                                <a href="#"><i class='fas fa-compact-disc'></i>Restitution</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    </div>
+
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function editKizeo(idKizeo) {
+            $("#kizeochangespan").replaceWith("<input type='text' id='newKizeo' name='kizeo'><button id='submit'type='button'class='buttongreenform' onclick='sendNewKizeo(" + idKizeo + ")'>Envoyer</button>");
+        }
+
+        function sendNewKizeo(id) {
+            kizeoAchanger = document.getElementById('newKizeo').value
+            kizeoNouveau = document.getElementById('emailchange')
+
+
+            console.log(kizeoAchanger, id)
+            if (kizeoAchanger) {
+                $.ajax(
+                    {
+                        url: "",
+                        type: "GET",
+                        data: {
+                            'reference': id,
+                            'kizeo': kizeoAchanger,
+                        },
+                        success: function (data) {
+                            console.log(data.kizeoId)
+                            $("#newKizeo").remove();
+                            $("#submit").remove();
+                            $("#kizeochange").append("<span id='Kizeochangespan'>" + data.kizeoId + "</span>");
+                        }
+                    })
+            }
+        }
+    </script>
+{% endblock %}

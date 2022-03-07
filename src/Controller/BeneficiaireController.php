@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Beneficiaire;
 use App\Entity\Reference;
+use App\Form\DataAdminBeneficiaireType;
 use App\Form\DataBeneficiaireType;
 use App\Form\SearchBenType;
 use App\Repository\BeneficiaireRepository;
@@ -11,13 +12,14 @@ use App\Repository\DepartementsRepository;
 use App\Repository\ReferenceRepository;
 use App\Repository\SpecialiteRepository;
 use App\Repository\UserRepository;
+use DateInterval;
+use DateTime;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 
 
 /**
@@ -58,16 +60,20 @@ class BeneficiaireController extends AbstractController
     }
 
     /**
-     * @Route("/beneficiaire/new", name="beneficiaire_new", methods={"GET","POST"})
+     * @Route("/beneficiaire/new/{id}", name="beneficiaire_new", methods={"GET","POST"})
      */
-    public function new(Request $request, UserRepository $userRepository, DepartementsRepository $deprep, SpecialiteRepository $specialiteRepository, ReferenceRepository $referenceRepository): Response
-        {$em = $this->getDoctrine()->getManager();
+    public function new(Request $request,$id, UserRepository $userRepository, DepartementsRepository $deprep, SpecialiteRepository $specialiteRepository, ReferenceRepository $referenceRepository): Response
+    {
+        $em = $this->getDoctrine()->getManager();
         $client = $this->getUser();
-
-
         $form = $this->createForm(DataBeneficiaireType::class);
+
+        if($this->container->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')){
+            $client = $userRepository->find($id);
+        }
+
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() ) {
             //recuperation du fichier
             $fichier = $request->files->get('data_beneficiaire');
             // on boucle sur le bag
@@ -89,34 +95,34 @@ class BeneficiaireController extends AbstractController
                 $rows = $worksheet->toArray();
                 $feuilleLength = $spreadsheet->getActiveSheet()->getHighestDataRow();
                 //selection de la feuille personnes physiques ou morales?
+                //calcul longueur du fichier
 
+//               dd($spreadsheet->getActiveSheet()->getHighestColumn());
 
-//calucul longueur du fichier
-                for ($i = 1; $i <= $feuilleLength - 1; $i++){
+                for ($i = 1; $i <= $feuilleLength - 1; $i++) {
                     if (empty($rows[$i][0])
-                        &&empty($rows[$i][1])
-                        &&empty($rows[$i][3])
-                        &&empty($rows[$i][4])
-                        &&empty($rows[$i][5])
-                        &&empty($rows[$i][6])
-                        &&empty($rows[$i][7])
-                        &&empty($rows[$i][8])
-                        &&empty($rows[$i][9])
-                        &&empty($rows[$i][10])
-                        &&empty($rows[$i][11])
-                        &&empty($rows[$i][12])
-                        &&empty($rows[$i][13])
-                        &&empty($rows[$i][14])
-                        &&empty($rows[$i][15])
-                        &&empty($rows[$i][16])){
+                        && empty($rows[$i][1])
+                        && empty($rows[$i][3])
+                        && empty($rows[$i][4])
+                        && empty($rows[$i][5])
+                        && empty($rows[$i][6])
+                        && empty($rows[$i][7])
+                        && empty($rows[$i][8])
+                        && empty($rows[$i][9])
+                        && empty($rows[$i][10])
+                        && empty($rows[$i][11])
+                        && empty($rows[$i][12])
+                        && empty($rows[$i][13])
+                        && empty($rows[$i][14])
+                        && empty($rows[$i][15])
+                        && empty($rows[$i][16])) {
                         $feuilleLength = $i;
-
                     }
                 }
 // gestion erreur colonne ref Emmy
-                for ($o = 1; $o <= $feuilleLength - 1; $o++){
-                    if (empty($rows[$o][2])){
-                        $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient une erreur de référence Emmy à la ligne: '.$o);
+                for ($o = 1; $o <= $feuilleLength - 1; $o++) {
+                    if (empty($rows[$o][2])) {
+                        $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient une erreur de référence Emmy à la ligne: ' . $o);
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
                         return $this->render('beneficiaire/new.html.twig', [
@@ -125,9 +131,9 @@ class BeneficiaireController extends AbstractController
                     }
                 }
 // gestion erreur reference emmy differente sur la meme feuille
-                for ($p = 1; $p <= $feuilleLength - 1; $p++){
-                    if ($p>2 && $rows[$p][2]!= $rows[$p-1][2] ){
-                        $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient deux références Emmy différentes: '.$o);
+                for ($p = 1; $p <= $feuilleLength - 1; $p++) {
+                    if ($p > 2 && $rows[$p][2] != $rows[$p - 1][2]) {
+                        $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient deux références Emmy différentes: ' . $o);
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
                         return $this->render('beneficiaire/new.html.twig', [
@@ -136,7 +142,7 @@ class BeneficiaireController extends AbstractController
                     }
                 }
 //               gestion erreur reference Emmy deja insérée
-                if($referenceRepository->findOneBy(['reference'=> $rows[1][2]]) != null ){
+                if ($referenceRepository->findOneBy(['reference' => $rows[1][2]]) != null) {
                     $this->addFlash('danger', 'La feuille que vous essayez d\'insérer a déjà été insérée');
                     $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                     unlink($fichierSupp);
@@ -144,13 +150,20 @@ class BeneficiaireController extends AbstractController
                         'form' => $form->createView(),
                     ]);
                 };
-                $referenceEmmy = new Reference();
-                $referenceEmmy->setReference($rows[1][2]);
-                $referenceEmmy->setComplet(0);
-                $em->persist($referenceEmmy);
+
+                if ($form->get('select')->getData() == 'morale' && $referenceRepository->findOneBy(['reference' => "M".$rows[1][2]]) != null) {
+                    $this->addFlash('danger', 'La feuille que vous essayez d\'insérer a déjà été insérée');
+                    $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                    unlink($fichierSupp);
+                    return $this->render('beneficiaire/new.html.twig', [
+                        'form' => $form->createView(),
+                    ]);
+                };
+
+
                 if ($form->get('select')->getData() == 'physique') {
 
-                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AI') {
+                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AK') {
                         $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient une liste de personnes morales');
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
@@ -165,6 +178,14 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setClient($client);
                         $beneficiaire->setRaisonSocialeDemandeur($rows[$i][0]);
                         $beneficiaire->setSirenDemandeur($rows[$i][1]);
+                        if ( preg_match("#[/]+#",$rows[$i][2])) {
+                            $this->addFlash('danger', 'la référence EMMY ' . $rows[$i][2] . ' ligne ' . $i . ' contient un symbole "/" celui-ci n\'est pas autorisé');
+                            $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                            unlink($fichierSupp);
+                            return $this->render('beneficiaire/new.html.twig', [
+                                'form' => $form->createView(),
+                            ]);
+                        }
                         $beneficiaire->setReferenceEmmyDemande($rows[$i][2]);
                         $beneficiaire->setReferenceInterne($rows[$i][3]);
                         $beneficiaire->setName($rows[$i][4]);
@@ -212,17 +233,19 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setSurfaceDeclareeDansAHFacture($rows[$i][26]);
                         $beneficiaire->setTypeIsolantDeclare($rows[$i][27]);
                         $beneficiaire->setMarqueEtReferenceIsolantDeclare($rows[$i][28]);
-                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][29]);
-                        $beneficiaire->setConformiteApresCorrection($rows[$i][30]);
-                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][31]);
-                        $beneficiaire->setCommentaireGeneraux($rows[$i][32]);
-                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][33]);
-                        $beneficiaire->setVersionCoupDePouce($rows[$i][34]);
+                        $beneficiaire->setValeurRouLambdadeclare($rows[$i][29]);
+                        $beneficiaire->setEpaisseurMinTheorique($rows[$i][30]);
+                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][31]);
+                        $beneficiaire->setConformiteApresCorrection($rows[$i][32]);
+                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][33]);
+                        $beneficiaire->setCommentaireGeneraux($rows[$i][34]);
+                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][35]);
+                        $beneficiaire->setVersionCoupDePouce($rows[$i][36]);
                         $em->persist($beneficiaire);
                     }
                 }
                 if ($form->get('select')->getData() == 'morale') {
-                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AM') {
+                    if ($spreadsheet->getActiveSheet()->getHighestColumn() != 'AO') {
                         $this->addFlash('danger', 'La feuille que vous essayez d\'insérer contient une liste de personnes physiques');
                         $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                         unlink($fichierSupp);
@@ -238,7 +261,15 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setClient($client);
                         $beneficiaire->setRaisonSocialeDemandeur($rows[$i][0]);
                         $beneficiaire->setSirenDemandeur($rows[$i][1]);
-                        $beneficiaire->setReferenceEmmyDemande($rows[$i][2]);
+                        if ( preg_match("#[/]+#",$rows[$i][2])) {
+                            $this->addFlash('danger', 'la référence EMMY ' . $rows[$i][2] . ' ligne ' . $i . ' contient un symbole "/" celui-ci n\'est pas autorisé');
+                            $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
+                            unlink($fichierSupp);
+                            return $this->render('beneficiaire/new.html.twig', [
+                                'form' => $form->createView(),
+                            ]);
+                        }
+                        $beneficiaire->setReferenceEmmyDemande("M".$rows[$i][2]);
                         $beneficiaire->setReferenceInterne($rows[$i][3]);
                         $beneficiaire->setNomDuSiteBeneficiaireOperation($rows[$i][4]);
                         $beneficiaire->setAdresse($rows[$i][5]);
@@ -246,7 +277,7 @@ class BeneficiaireController extends AbstractController
                         $dep = $deprep->findOneBy(['numero' => $rows[$i][7]]);
                         //gestion erreur sur department
                         if (!$dep) {
-                            $this->addFlash('danger', 'le numéro de département '. $rows[$i][7] . ' du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
+                            $this->addFlash('danger', 'le numéro de département ' . $rows[$i][7] . ' du client ' . $rows[$i][4] . ' ligne ' . $i . ' colonne I n\'est pas valable');
                             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
                             unlink($fichierSupp);
                             return $this->render('beneficiaire/new.html.twig', [
@@ -286,21 +317,42 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setSirenOrganismeControle($rows[$i][27]);
                         $beneficiaire->setRaisonSocialeOrganismeControle($rows[$i][28]);
                         $beneficiaire->setSiretEntrepriseAyantRealiseOperation($rows[$i][29]);
-                        $beneficiaire->setSurfaceDeclareeDansAHFacture($rows[$i][26]);
-                        $beneficiaire->setTypeIsolantDeclare($rows[$i][27]);
-                        $beneficiaire->setMarqueEtReferenceIsolantDeclare($rows[$i][28]);
-                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][29]);
-                        $beneficiaire->setConformiteApresCorrection($rows[$i][30]);
-                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][31]);
-                        $beneficiaire->setCommentaireGeneraux($rows[$i][32]);
-                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][33]);
-                        $beneficiaire->setVersionCoupDePouce($rows[$i][34]);
+                        $beneficiaire->setSurfaceDeclareeDansAHFacture($rows[$i][30]);
+                        $beneficiaire->setTypeIsolantDeclare($rows[$i][31]);
+                        $beneficiaire->setMarqueEtReferenceIsolantDeclare($rows[$i][32]);
+                        $beneficiaire->setValeurRouLambdadeclare($rows[$i][33]);
+                        $beneficiaire->setEpaisseurMinTheorique($rows[$i][34]);
+                        $beneficiaire->setActionCorrectiveMeneeSuiteAudit($rows[$i][35]);
+                        $beneficiaire->setConformiteApresCorrection($rows[$i][36]);
+                        $beneficiaire->setOperationRetireOuIssueDossierPrecedent($rows[$i][37]);
+                        $beneficiaire->setCommentaireGeneraux($rows[$i][38]);
+                        $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][39]);
+                        $beneficiaire->setVersionCoupDePouce($rows[$i][40]);
 
                         $em->persist($beneficiaire);
                     }
                 }
             }
 
+            $referenceEmmy = new Reference();
+            if ($form->get('select')->getData() == 'morale'){
+                $referenceEmmy->setReference("M".$rows[1][2]);
+            }else{
+                $referenceEmmy->setReference($rows[1][2]);
+            }
+
+            $referenceEmmy->setComplet(0);
+            $referenceEmmy->setValidation(0);
+            $date = new \DateTime('now');
+            $time = new \DateTime(date_format($date,'Y-m-d H:i:s' ));
+            $time->add(new DateInterval('P45D'));
+            $referenceEmmy->setDepotDate($date);
+            $referenceEmmy->setDateRestitution($time);
+            $referenceEmmy->setClient($client);
+            $em->persist($referenceEmmy);
+            $em->flush();
+            $referenceEmmy->setIdLotUnique(rtrim(chunk_split(str_pad($referenceEmmy->getId(), 9, 0, STR_PAD_LEFT), 3, "-"), "-"));
+            $beneficiaire->setDekraID(uniqid() . $beneficiaire->getId());
             $em->flush();
             // on supprime le fichier
             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);
@@ -339,5 +391,17 @@ class BeneficiaireController extends AbstractController
         }
         return $this->redirectToRoute('beneficiaire');
     }
+
+
+//    /**
+//     * @Route("beneficiaire/extraction{id}", name="beneficiaire_extraction", methods={"POST"})
+//     */
+//    public function extraction(Request $request, Beneficiaire $beneficiaire): Response
+//    {
+//        if ($this->isCsrfTokenValid('extract' . $beneficiaire->getId(), $request->request->get('_token'))) {
+//
+//        }
+//        return $this->redirectToRoute('beneficiaire');
+//    }
 
 }

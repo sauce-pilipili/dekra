@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+{% block title %}Bénéficiaires{% endblock %}
+{% block body %}
+    <div class="main">
+    {{ include('include/_navigation.html.twig') }}
+    <div class="content">
+    <div class="container">
+        {% for message in app.flashes('success') %}
+            <div class="alert success-alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('danger') %}
+            <div class="alert danger-alert">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('success') %}
+            <div class="alert success-alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('danger') %}
+            <div class="alert danger-alert">{{ message }}</div>
+        {% endfor %}
+        <div class="titlereturn">
+            <h4>Bénéficiaire</h4>
+            <a href="{{ path('navigation_detail',{cdp:cdp,ref:ref,ope:ope,preca:preca}) }}" class="buttonreturn"><i class="fas fa-undo"></i> Retour</a>
+        </div>
+
+        <div class="fiche">
+            <div class="row">
+                <p class="row-name">Nom du client</p>
+                <p>{{ beneficiaire.client.name }}</p>
+            </div>
+            <hr>
+            <div class="row">
+                <p class="row-name">Nom du bénéficiaire</p>
+                <p> {% if beneficiaire.personneMorale == 1 %}
+                        {{ beneficiaire.nomDuSiteBeneficiaireOperation }}
+                    {% else %}
+                        {{ beneficiaire.name }} {{ beneficiaire.prenom }}
+                    {% endif %}</p>
+            </div>
+            <hr>
+
+            <div class="row">
+                <p class="row-name">Adresse mail du bénéficiaire</p>
+                <p>{{ beneficiaire.email }}</p>
+            </div>
+            <hr>
+            <div class="row">
+                <p class="row-name">Téléphone du bénéficiaire</p>
+                <p>{{ beneficiaire.telephone }}</p>
+            </div>
+            <hr>
+            <div class="row">
+                <p class="row-name">Adresse d'intervention</p>
+                <p>{{ beneficiaire.adresse }} {{ beneficiaire.codepostal }} {{ beneficiaire.ville }}</p>
+            </div>
+            <hr>
+            <div class="row">
+                <p class="row-name">Date du rendez-vous</p>
+                {% if beneficiaire.rdv == null %}
+                    <p>Aucun rendez-vous pour le moment</p>
+                {% else %}
+                    <p>{{ beneficiaire.statut }}</p>
+                {% endif %}
+            </div>
+            <hr>
+            <div class="row">
+                <p class="row-name">Résultat</p>
+                {% if beneficiaire.statut == 0 %}
+                    <p>En attente du rendez-vous</p>
+                {% else %}
+                    <p>controlé</p>
+                {% endif %}
+            </div>
+            <br><br>
+            <button class="buttongreen">Extraction PDF</button> message: DEV ce bouton ne fonctionnera que lors des essais
+        </div>
+    </div>
+{% endblock %}

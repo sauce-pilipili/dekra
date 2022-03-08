@@ -35,7 +35,11 @@
                             <th class="table-title">statut de contrôle</th>
                         </tr>
                         <tbody id="bodylist">
-                        {{ include('call_center/_beneficiaireContent.html.twig') }}
+                        {% if is_granted('ROLE_CALL_CENTER') %}
+                            {{ include('call_center/_beneficiaireCallCenterContent.html.twig') }}
+                        {% else %}
+                            {{ include('call_center/_beneficiaireContent.html.twig') }}
+                        {% endif %}
                         </tbody>
                     </table>
                 </div>

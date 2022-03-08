@@ -28,16 +28,11 @@ class RestitutionController extends AbstractController
         $form = $this->createForm(SearchBenType::class);
         $form->handleRequest($request);
 
-       // $beneficiaire = $beneficiaireRepository->find(14981);
-       // $idFormKizeo = $referenceRepository->findOneBy(['reference' => $beneficiaire->getReferenceEmmyDemande()]);
-       // $kizeo = $idFormKizeo->getIdKizeoForm();
-       // $ben = $beneficiaire->getKizeoID();
-        $string = "465464/fef";
-        if ( preg_match("#[/]+#",$string)) {
-            dd('coucou');
-        } else {
-            dd('non');
-        }
+        $beneficiaire = $beneficiaireRepository->find(19679);
+        $idFormKizeo = $referenceRepository->findOneBy(['reference' => $beneficiaire->getReferenceEmmyDemande()]);
+        $kizeo = $idFormKizeo->getIdKizeoForm();
+        $ben = $beneficiaire->getKizeoID();
+
         $response = $httpClient->request(
             'GET',
             "https://www.kizeoforms.com/rest/v3/forms/$kizeo/data/$ben?format=simple",

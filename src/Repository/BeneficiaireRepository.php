@@ -245,7 +245,7 @@ class BeneficiaireRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->select('b.versionCoupDePouce')
             ->andWhere('b.ReferenceEmmyDemande LIKE :emmy')
-            ->setParameter('emmy', "%".$emmy."%")
+            ->setParameter('emmy', "%" . $emmy . "%")
             ->andWhere('b.versionCoupDePouce IS NOT NULL')
             ->distinct()
             ->getQuery()
@@ -294,7 +294,39 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function findListOfBeneficiaireSearch($ref, $cdp, $preca, $ope,$search)
+
+    /**
+     * @return integer Returns an array of Beneficiaire objects
+     */
+    public function findCallCenterRDV($emmy, $version= null, $refOperation = null, $precarite= null)
+    {
+
+        $qb = $this->createQueryBuilder('b')
+            ->select('count(b)')
+            ->where('b.ReferenceEmmyDemande = :ref')
+            ->andWhere('b.rdv IS NOT NULL')
+            ->setParameter('ref', $emmy);
+        if ($version) {
+            $qb->andwhere('b.versionCoupDePouce = :version')
+                ->setParameter('version', $version);
+        }
+        if ($refOperation) {
+            $qb->andwhere('b.referenceFicheOperation = :fiche')
+                ->setParameter('fiche', $refOperation);
+        }
+        if ($precarite) {
+            $qb->andwhere('b.grandPrecairePrecaireClassique = :preca')
+                ->setParameter('preca', $precarite);
+        }
+        return $qb
+            ->getQuery()
+            ->getSingleScalarResult();
+
+
+    }
+
+
+    public function findListOfBeneficiaireSearch($ref, $cdp, $preca, $ope, $search)
     {
 
         $qb = $this->createQueryBuilder('b')
@@ -308,9 +340,9 @@ class BeneficiaireRepository extends ServiceEntityRepository
             ->andwhere('b.grandPrecairePrecaireClassique = :preca')
             ->setParameter('preca', $preca)
             ->andWhere('b.name LIKE :search')
-            ->setParameter('search', "%".$search."%");
+            ->setParameter('search', "%" . $search . "%");
         return $qb
-            ->orderBy('b.name','ASC')
+            ->orderBy('b.name', 'ASC')
             ->getQuery()
             ->getResult();
 

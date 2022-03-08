@@ -53,6 +53,10 @@
                     {% endif %}
                     <th class="table-title">Date de dépôt</th>
                     <th class="table-title">Date de restitution</th>
+{#                    {% if is_granted('ROLE_CALL_CENTER') %}#}
+
+{#                   <th class="table-title">cloture</th>#}
+{#                    {% endif %}#}
                     <th class="table-title">Cloturé</th>
                     <th class="table-title">validé</th>
                     <th class="table-title">Restitution</th>
@@ -89,6 +93,9 @@
                         {% endif %}
                         <td class="table-name">{{ r.depotDate | date('d-m-y') }}</td>
                         <td class="table-name">{{ r.dateRestitution | date('d-m-y') }}</td>
+{#                        {% if is_granted('ROLE_CALL_CENTER') %}#}
+{#                        <td class="table-name"><input type="checkbox"></td>#}
+{#                        {% endif %}#}
                         <td class="table-name action">{% if r.complet %}<span>&#9745;</span>{% else %}
                                 <span>&#9744;</span>{% endif %}
                         </td>

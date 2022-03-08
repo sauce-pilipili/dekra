@@ -140,7 +140,7 @@ class CallCenterController extends AbstractController
     /**
      * @Route("/call/center/rdv/{ref}/{id}", name="call_center_Rdv", methods={"GET","POST"})
      */
-    public function rendezVous($id,$ref, Request $request, EntityManagerInterface $em,
+    public function rendezVous($id, $ref, Request $request, EntityManagerInterface $em,
                                SpecialiteRepository $specialiteRepository,
                                BeneficiaireRepository $beneficiaireRepository,
                                ControleurRepository $controleurRepository,
@@ -148,11 +148,18 @@ class CallCenterController extends AbstractController
                                MailerInterface $mailer): Response
 
     {
-        $beneficiaire = $beneficiaireRepository->find($id);
 
+
+
+//        recherche du benef
+        $beneficiaires = $beneficiaireRepository->show($id);
+//        recherche de travaux similaire sur meme fiche ope
+        $opeSimilaires = $beneficiaireRepository->findBy(["name" => $beneficiaires->getName(), "prenom" => $beneficiaires->getPrenom(), "adresse" => $beneficiaires->getAdresse()]);
+
+//        AJAX de changement email
         if ($request->isXmlHttpRequest()) {
             $email = $request->get('mail');
-            $beneficiaire->setEmail($email);
+            $beneficiaires->setEmail($email);
             $em->flush();
             $newMail = $beneficiaireRepository->find($id);
             return new Jsonresponse(['email' => $newMail->getEmail(),]);
@@ -160,11 +167,13 @@ class CallCenterController extends AbstractController
 //formulaire de contact
         $form = $this->createForm(RendezVousType::class);
         $form->handleRequest($request);
-        // hydratation des elements
-        $beneficiaires = $beneficiaireRepository->show($id);
+
+        // hydratation des elements pour comparaison visuelle du call center
         $referenceControle = $beneficiaires->getReferenceFicheOperation();
         $specialite = $specialiteRepository->findOneBy(['referenceOperation' => $referenceControle]);
         $controlleurs = $controleurRepository->findControleurByData($beneficiaires->getDepartement(), $specialite);
+
+
         //fomulaire de prise de rendez vous
         if ($form->isSubmitted() && $form->isValid()) {
             $infoClientNonAverti = null;
@@ -187,7 +196,7 @@ class CallCenterController extends AbstractController
                         'beneficiaire' => $beneficiaires
                     ]));
                 try {
-                    $mailer->send($emailBeneficiaire);
+//                    $mailer->send($emailBeneficiaire);
                 } catch (ExceptionInterface $exception) {
                     $this->addFlash('danger', 'l\'adresse du bénéficiaire n\'est pas valable ou le nom de domaine n\'existe pas');
                     return $this->redirectToRoute('call_center_Rdv', [
@@ -213,10 +222,17 @@ class CallCenterController extends AbstractController
 //                $mailer->send($emailControleur);
             }
             $beneficiaires->setStatut(1);
-            $beneficiaires->setRdv($date);
+//            mise en base de la date du RDV pour toute les entité liées
+
 //            *************************   API   ************************************
-//            $kizeoID = $api->pushPhysique($beneficiaires, $controlmail);
-//            $beneficiaires->setKizeoID($kizeoID);
+//            envoie toutes les infos a l'api kizeo et retourne le numero id kizeo pour chacun'
+
+            $kizeoID = $api->push($beneficiaires, $controlmail, $opeSimilaires);
+
+            foreach ($opeSimilaires as $ope) {
+                $ope->setRdv($date);
+                $ope->setKizeoID($kizeoID);
+            }
 //            **********************************************************************
             $this->getDoctrine()->getManager()->flush();
 
@@ -227,16 +243,17 @@ class CallCenterController extends AbstractController
             }
             return $this->redirectToRoute('navigation_detail', [
                 'ref' => $ref,
-                'cdp' => $beneficiaire->getVersionCoupDePouce(),
-                'ope' => $beneficiaire->getReferenceFicheOperation(),
-                'preca' => $beneficiaire->getGrandPrecairePrecaireClassique()
+                'cdp' => $beneficiaires->getVersionCoupDePouce(),
+                'ope' => $beneficiaires->getReferenceFicheOperation(),
+                'preca' => $beneficiaires->getGrandPrecairePrecaireClassique()
             ]);
         }
         return $this->render('call_center/rendezvous.html.twig', [
             'form' => $form->createView(),
-            'ref'=>$ref,
+            'ref' => $ref,
             'controlleurs' => $controlleurs,
             'beneficiaire' => $beneficiaires,
+            'operationsSimilaires' => $opeSimilaires
         ]);
     }
 }

@@ -46,7 +46,7 @@ class NavigationClientController extends AbstractController
      * toute les reference emmy du client connecté par la voie admin
      * @Route("/reference/admin/{id}", name="navigation_admin")
      */
-    public function indexAdmin($id,Request $request,ReferenceRepository $referenceRepository): Response
+    public function indexAdmin($id, Request $request, ReferenceRepository $referenceRepository): Response
     {
         if ($request->isXmlHttpRequest()) {
             $reference = $referenceRepository->find($request->get('reference'));
@@ -54,18 +54,16 @@ class NavigationClientController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
 
             return new Jsonresponse(['kizeoId' => $reference->getIdKizeoForm(),
-                ]);
+            ]);
         }
-
         //reference du client connecté
         $reference = $referenceRepository->findBy(['client' => $id]);
         return $this->render('navigation_client/index.html.twig', [
             'reference' => $reference,
-            'idClient'=>$id,
+            'idClient' => $id,
 
         ]);
     }
-
 
 
     /**
@@ -78,7 +76,11 @@ class NavigationClientController extends AbstractController
         $client = $referenceRepository->find($id)->getClient()->getId();
         $coupDePouce = $beneficiaireRepository->findCoupDePouce($emmy);
         if ($request->isXmlHttpRequest()) {
-            $result = $beneficiaireRepository->nombreSatisfaisant($emmy, $request->get('cdp'));
+            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_CALL_CENTER')) {
+                $result = $beneficiaireRepository->findCallCenterRDV($emmy, $request->get('cdp'));
+            } else {
+                $result = $beneficiaireRepository->nombreSatisfaisant($emmy, $request->get('cdp'));
+            }
             $content = $beneficiaireRepository->nombreDossierDepose($emmy, $request->get('cdp'));
             return new JsonResponse(['content' => $content, 'result' => $result]);
         }
@@ -101,7 +103,12 @@ class NavigationClientController extends AbstractController
         $ref = $referenceRepository->find($ref)->getReference();
         $result = $beneficiaireRepository->findByCDPDossier($ref, $cdp);
         if ($request->isXmlHttpRequest()) {
-            $result = $beneficiaireRepository->nombreSatisfaisant($ref, $request->get('cdp'), $request->get('fiche'));
+            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_CALL_CENTER')) {
+                $result = $beneficiaireRepository->findCallCenterRDV($ref, $request->get('cdp'), $request->get('fiche'));
+            } else {
+                $result = $beneficiaireRepository->nombreSatisfaisant($ref, $request->get('cdp'), $request->get('fiche'));
+            }
+
             $content = $beneficiaireRepository->nombreDossierDepose($ref, $request->get('cdp'), $request->get('fiche'));
             return new JsonResponse(['content' => $content, 'result' => $result, 'pouce' => $request->get('pouce'), 'fiche' => $request->get('fiche')]);
         }
@@ -125,7 +132,14 @@ class NavigationClientController extends AbstractController
         $result = $beneficiaireRepository->findByPrecaritéByCDPDossier($ref, $cdp, $ope);
 
         if ($request->isXmlHttpRequest()) {
-            $result = $beneficiaireRepository->nombreSatisfaisant($ref, $request->get('cdp'), $request->get('fiche'), $request->get('preca'));
+            if ($this->container->get('security.authorization_checker')->isGranted('ROLE_CALL_CENTER')) {
+                $result = $beneficiaireRepository->findCallCenterRDV($ref, $request->get('cdp'), $request->get('fiche'), $request->get('preca'));
+            } else {
+                $result = $beneficiaireRepository->nombreSatisfaisant($ref, $request->get('cdp'), $request->get('fiche'), $request->get('preca'));
+            }
+
+
+//            $result = $beneficiaireRepository->nombreSatisfaisant($ref, $request->get('cdp'), $request->get('fiche'), $request->get('preca'));
             $content = $beneficiaireRepository->nombreDossierDepose($ref, $request->get('cdp'), $request->get('fiche'), $request->get('preca'));
             return new JsonResponse(['content' => $content, 'result' => $result]);
         }
@@ -148,35 +162,53 @@ class NavigationClientController extends AbstractController
         $idRef = $ref;
         $ref = $referenceRepository->find($ref)->getReference();
         $result = $beneficiaireRepository->findlistBycriteria($ref, $cdp, $ope, $preca);
-        if ($request->isXmlHttpRequest()&&$request->get('order') || $request->isXmlHttpRequest()&&$request->get('direction')) {
-            $order = $request->get('order');
-            $direction = $request->get('direction');
-            $result = $beneficiaireRepository->findListOfBeneficiaireToCall($ref, $cdp,$preca, $ope, $order, $direction);
-            return new JsonResponse([
-                'order' => $order,
-                'direction' => $direction,
-                'content' => $this->renderView('call_center/_beneficiaireContent.html.twig', compact('result'))
-            ]);
-        }
-        if ($request->isXmlHttpRequest()&& $request->get('search')) {
-            $result = $beneficiaireRepository->findListOfBeneficiaireSearch($ref, $cdp,$preca, $ope,$request->get('search'));
-            return new JsonResponse([
-                'content' => $this->renderView('call_center/_beneficiaireContent.html.twig', compact('result'))
-            ]);
-        }
-
 
         if ($request->isXmlHttpRequest()) {
-            $result = $beneficiaireRepository->nombreSatisfaisantCDP(
-                $ref,
-                $request->get('cdp'),
-                $request->get('fiche'),
-                substr($request->get('fiche'), -3, 3),
-                $request->get('preca'));
+            if ($request->get('order') || $request->get('direction')) {
+                $order = $request->get('order');
+                $direction = $request->get('direction');
+                $result = $beneficiaireRepository->findListOfBeneficiaireToCall($ref, $cdp, $preca, $ope, $order, $direction);
+                if ($this->getUser()->getRoles() == 'ROLE_CALL_CENTER' ) {
+                    return new JsonResponse([
+                        'order' => $order,
+                        'direction' => $direction,
+                        'content' => $this->renderView('call_center/_beneficiaireCallCenterContent.html.twig', compact('result'))
+                    ]);
+                } else {
+                    return new JsonResponse([
+                        'order' => $order,
+                        'direction' => $direction,
+                        'content' => $this->renderView('call_center/_beneficiaireContent.html.twig', compact('result'))
+                    ]);
+                }
+            }
+            if ($request->get('search')) {
+                $result = $beneficiaireRepository->findListOfBeneficiaireSearch($ref, $cdp, $preca, $ope, $request->get('search'));
+                if ($this->getUser()->getRoles() == 'ROLE_CALL_CENTER' ) {
+                    return new JsonResponse([
+                        'content' => $this->renderView('call_center/_beneficiaireCallCenterContent.html.twig', compact('result'))
+                    ]);
+                } else {
+                    return new JsonResponse([
+                        'content' => $this->renderView('call_center/_beneficiaireContent.html.twig', compact('result'))
+                    ]);
+                }
+            }
 
-            $content = $beneficiaireRepository->nombreDossierDeposeavecCdp($ref, $request->get('pouce'), $request->get('fiche'), $request->get('preca'));
-            return new JsonResponse(['content' => $content, 'result' => $result]);
         }
+
+
+//        if ($request->isXmlHttpRequest()) {
+//            $result = $beneficiaireRepository->nombreSatisfaisantCDP(
+//                $ref,
+//                $request->get('cdp'),
+//                $request->get('fiche'),
+//                substr($request->get('fiche'), -3, 3),
+//                $request->get('preca'));
+//
+//            $content = $beneficiaireRepository->nombreDossierDeposeavecCdp($ref, $request->get('pouce'), $request->get('fiche'), $request->get('preca'));
+//            return new JsonResponse(['content' => $content, 'result' => $result]);
+//        }
         return $this->render('navigation_client/detail.html.twig', [
             'result' => $result,
             'idRef' => $idRef,
@@ -192,10 +224,11 @@ class NavigationClientController extends AbstractController
      * detail d'un beneficiaire avec retour
      * @Route("/show{id}", name="navigation_show", methods={"GET"})
      */
-    public function show($id, ReferenceRepository $referenceRepository, BeneficiaireRepository $beneficiaireRepository)
+    public
+    function show($id, ReferenceRepository $referenceRepository, BeneficiaireRepository $beneficiaireRepository)
     {
         $beneficiaire = $beneficiaireRepository->show($id);
-        $ref = $referenceRepository->findOneBy(['reference' =>$beneficiaire->getReferenceEmmyDemande()]);
+        $ref = $referenceRepository->findOneBy(['reference' => $beneficiaire->getReferenceEmmyDemande()]);
         $ref = $ref->getId();
         return $this->render('navigation_client/show.html.twig', [
             'beneficiaire' => $beneficiaire,

@@ -21,7 +21,12 @@
                         <tr class="tr-table-title">
                             <th class="table-title">Dossier</th>
                             <th class="table-title">Dossier déposés</th>
-                            <th class="table-title">Dossier satisfaisant</th>
+                            {% if is_granted('ROLE_CALL_CENTER') %}
+                                <th class="table-title">RDV pris</th>
+                            {% endif %}
+                            {% if not is_granted('ROLE_CALL_CENTER') %}
+                                <th class="table-title">Dossier satisfaisant</th>
+                            {% endif %}
                             <th class="table-title">Pourcentage terminé</th>
                         </tr>
                         <script src="{{ asset('js/stat.js') }}"></script>

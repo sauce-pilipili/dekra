@@ -1,7 +1,8 @@
 {% for r in result %}
     <tr>
         <td class="table-name">
-                <a href="{{ path('navigation_show',{id:r.id}) }}">  {% if r.personneMorale == 1 %}
+                <a href="{{ path('call_center_Rdv',{ref:idRef,id:r.id}) }}">
+                    {% if r.personneMorale == 1 %}
                         {{ r.nomDuSiteBeneficiaireOperation }}
                     {% else %}
                         {{ r.name }} {{ r.prenom }}

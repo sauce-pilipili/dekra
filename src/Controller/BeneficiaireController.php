@@ -241,6 +241,7 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setCommentaireGeneraux($rows[$i][34]);
                         $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][35]);
                         $beneficiaire->setVersionCoupDePouce($rows[$i][36]);
+                        $beneficiaire->setDekraID(uniqid().$rows[$i][3]);
                         $em->persist($beneficiaire);
                     }
                 }
@@ -328,7 +329,7 @@ class BeneficiaireController extends AbstractController
                         $beneficiaire->setCommentaireGeneraux($rows[$i][38]);
                         $beneficiaire->setGrandPrecairePrecaireClassique($rows[$i][39]);
                         $beneficiaire->setVersionCoupDePouce($rows[$i][40]);
-
+                        $beneficiaire->setDekraID(uniqid().$rows[$i][3]);
                         $em->persist($beneficiaire);
                     }
                 }
@@ -352,7 +353,7 @@ class BeneficiaireController extends AbstractController
             $em->persist($referenceEmmy);
             $em->flush();
             $referenceEmmy->setIdLotUnique(rtrim(chunk_split(str_pad($referenceEmmy->getId(), 9, 0, STR_PAD_LEFT), 3, "-"), "-"));
-            $beneficiaire->setDekraID(uniqid() . $beneficiaire->getId());
+
             $em->flush();
             // on supprime le fichier
             $fichierSupp = ($this->getParameter('document_directory') . '/' . $document);

@@ -6,8 +6,7 @@ function searchAjax(value) {
             search: value
         },
         success: function (data) {
-            console.log(data.result)
-            $('#bodylist').html(data.result);
+            $('#bodylist').html(data.content);
         },
     })
 
